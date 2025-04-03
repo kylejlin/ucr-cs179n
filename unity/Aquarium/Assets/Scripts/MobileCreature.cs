@@ -1,8 +1,7 @@
 using UnityEngine;
 
-public class Entity : MonoBehaviour
+public class MobileCreature : Entity
 {
-    public float[] position = {0, 0, 0};
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
