@@ -2,13 +2,13 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public GameObject trilobite;
+    public MobileCreature trilobite;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Instantiate(trilobite, new Vector3(0, 0, 0), Quaternion.identity); //spawns trilobite at origin and not rotated
-
+        MobileCreature newTrilobite = Instantiate(trilobite, new Vector3(0, 0, 0), Quaternion.identity); //spawns trilobite at origin and not rotated
+        newTrilobite.entityName = "Bob";
     }
 
     // Update is called once per frame
