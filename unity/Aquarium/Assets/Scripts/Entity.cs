@@ -16,4 +16,11 @@ public class Entity : MonoBehaviour
     {
         
     }
+
+    public T FindClosest<T>() where T : new()
+    {
+        var objs = GameObject.FindObjectsByType<T>(FindObjectsSortMode.None);
+        if(objs.Length == 0) return default(T);
+        return objs[0];
+    }
 }
