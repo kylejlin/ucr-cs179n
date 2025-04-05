@@ -20,7 +20,6 @@ public class Aquarium : MonoBehaviour
     public void addEntity(Entity newEntity, Vector3 position, Quaternion rotation)
     {
        entities.Add(Instantiate(newEntity, position, rotation));
-        print("Number of entities in tank: ");
-        print(entities.Count);
+        print("Number of entities in tank: " + entities.Count);
     }
 }
