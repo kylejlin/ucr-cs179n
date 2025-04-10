@@ -5,6 +5,9 @@ public class Entity : MonoBehaviour
     //add code for rigidbody? all entities should have a rigidbody?
     public float hunger = 0;
     public string entityName = "NoName";
+    public int maxHealth = 10;
+    public int health = 10;
+    public int value = 10;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
