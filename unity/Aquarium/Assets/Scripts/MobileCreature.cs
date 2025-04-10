@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class MobileCreature : Entity
+public class MobileCreature : Creature
 {
     public bool canSwim = false;
     public float speed = 1;

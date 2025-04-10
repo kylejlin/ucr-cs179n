@@ -20,6 +20,8 @@ public class Aquarium : MonoBehaviour
 
     public void addEntity(Entity newEntity, Vector3 position, Quaternion rotation)
     {
-       entities.Add(Instantiate(newEntity, position, rotation, transform)); //add entity as child of this Aquarium
+        Entity e = (Instantiate(newEntity, position, rotation, transform));
+
+        entities.Add(e); //add entity as child of this Aquarium
     }
 }
