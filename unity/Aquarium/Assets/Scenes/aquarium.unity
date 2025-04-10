@@ -282,7 +282,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   algea: {fileID: 1079055378292134387, guid: a54cc9b6c2b26d74abd6713248a8f3fc, type: 3}
   trilobite: {fileID: 1987487008188932223, guid: 8b1e7fb18d2e6364a93956b2d7c19729, type: 3}
-  trilobite1: {fileID: 1987487008188932223, guid: 8b1e7fb18d2e6364a93956b2d7c19729, type: 3}
   aquarium: {fileID: 595684618}
 --- !u!4 &888627309
 Transform:
