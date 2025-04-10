@@ -12,7 +12,6 @@ public enum Rarity
 public class GameManager : MonoBehaviour
 {
     public Aquarium aquarium; // this will have to be changed: it should be spawned, not referenced, but this is convenient for the MVP
-
     // we can have a list of all the creatures but maybe also three lists, I just feel like maybe it is easier to change from three list to one if we really need to, so I started with three lists
     public List<GameObject> algaes = new List<GameObject>();
     public List<GameObject> trilobites = new List<GameObject>();

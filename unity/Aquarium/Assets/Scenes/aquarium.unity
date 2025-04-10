@@ -282,7 +282,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   algea: {fileID: 1079055378292134387, guid: a54cc9b6c2b26d74abd6713248a8f3fc, type: 3}
   trilobite: {fileID: 1987487008188932223, guid: 8b1e7fb18d2e6364a93956b2d7c19729, type: 3}
-  trilobite1: {fileID: 1987487008188932223, guid: 8b1e7fb18d2e6364a93956b2d7c19729, type: 3}
   aquarium: {fileID: 595684618}
 --- !u!4 &888627309
 Transform:
@@ -430,7 +429,7 @@ Transform:
   m_GameObject: {fileID: 2115515212}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 8.22, z: -0.64}
+  m_LocalPosition: {x: 0, y: 60, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
