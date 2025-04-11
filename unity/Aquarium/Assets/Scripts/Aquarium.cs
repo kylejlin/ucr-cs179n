@@ -18,17 +18,12 @@ public class Aquarium : MonoBehaviour
         
     }
 
-    public void addEntity(Entity newEntity, Vector3 position, Quaternion rotation)
+    public Entity addEntity(Entity newEntity, Vector3 position, Quaternion rotation) //returns a reference to the newly created object 
     {
         Entity e = (Instantiate(newEntity, position, rotation, transform));//add entity as child of this Aquarium
         entities.Add(e);
 
-        Creature closeObject = e.FindClosest<ImmobileCreature>();
-        if ((closeObject ?? false))
-        {
-            print(e.transform.localScale.x);
-        }
-        else { print("null"); }
+        return e;
 
     }
 }
