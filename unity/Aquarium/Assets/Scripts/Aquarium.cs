@@ -26,7 +26,7 @@ public class Aquarium : MonoBehaviour
 
         return e;
     }
-    public void addEntity(GameObject newEntity)
+    public Entity addEntity(GameObject newEntity)
     {
         Vector3 randomPosition = new Vector3(
             Random.Range(-dimensions.x / 2, dimensions.x / 2),
@@ -40,8 +40,10 @@ public class Aquarium : MonoBehaviour
             Random.Range(0, 360)
         );
 
-        entities.Add(Instantiate(newEntity, randomPosition, randomRotation, gameObject.transform).GetComponent<Entity>());
+        Entity e = Instantiate(newEntity, randomPosition, randomRotation, gameObject.transform).GetComponent<Entity>();
+        entities.Add(e);
         print("Number of entities in tank: " + entities.Count);
+        return e;
     }
 
     public int calcCoin()
