@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ImmobileCreature : Entity
+public class ImmobileCreature : Creature
 {
     [HideInInspector]
     public int health;
@@ -32,5 +32,12 @@ public class ImmobileCreature : Entity
         {
             health = 100; // todo: change to maxHealth
         }
+    }
+
+    public void getEaten(float amount) //TODO: needs to check for death
+    {
+        currFullHealth -= amount;
+        currHealth -= amount;
+        setScaleTo(transform.localScale.x - amount / maxHealth * maxSize);
     }
 }

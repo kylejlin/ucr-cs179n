@@ -18,10 +18,13 @@ public class Aquarium : MonoBehaviour
 
     }
 
-    public void addEntity(GameObject newEntity, Vector3 position, Quaternion rotation)
+
+    public Entity addEntity(GameObject newEntity, Vector3 position, Quaternion rotation) //returns a reference to the newly created object 
     {
-        entities.Add(Instantiate(newEntity, position, rotation).GetComponent<Entity>());
-        print("Number of entities in tank: " + entities.Count);
+        Entity e = Instantiate(newEntity, position, rotation, gameObject.transform).GetComponent<Entity>();
+        entities.Add(e);
+
+        return e;
     }
     public void addEntity(GameObject newEntity)
     {

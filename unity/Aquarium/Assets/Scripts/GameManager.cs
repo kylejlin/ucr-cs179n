@@ -35,8 +35,6 @@ public class GameManager : MonoBehaviour
         decorations.AddRange(decorationprefabs);
         InitIDs(decorations);
 
-        Debug.Log(trilobites);
-
 
         levels.Add(new LevelData(100, new List<int>() { 0 }, new List<int>() { 0 }, new List<int>() { 0 }));
         levels.Add(new LevelData(200, new List<int>() { 1 }, new List<int>() { 1 }, new List<int>() { 1 }));

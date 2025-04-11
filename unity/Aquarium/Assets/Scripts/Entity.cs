@@ -19,12 +19,28 @@ public class Entity : MonoBehaviour
 
     }
 
-    public T FindClosest<T>() where T : new() //get all objects of one type, then check their positions and return the closest
+
+    public T FindClosest<T>() where T : Entity  //get all objects of one type, then check their positions and return the closest
 
     {
-        return (default(T));
-        //var objs = GameObject.FindObjectsByType<T>(FindObjectsSortMode.None);
-        //if(objs.Length == 0) return default(T);
-        //return objs[0];
+        T[] foundEntities = getAllOfType<T>();
+        if (foundEntities == null) return default(T);
+        return foundEntities[0];
+    }
+
+    public T[] getAllOfType<T>() where T : Entity //RETURNS NULL IF EMPTY
+    {
+        Object[] foundObjects = FindObjectsByType(typeof(T), FindObjectsSortMode.None); //find all of the type
+        if (foundObjects.Length == 0) return null;
+
+
+        T[] foundEntities = new T[foundObjects.Length]; //cast to T
+        for (int i = 0; i < foundObjects.Length; i++) foundEntities[i] = (T)foundObjects[i];
+        return foundEntities;
+    }
+
+    protected void setScaleTo(float scaleFactor) //limited to proportional scaling only
+    {
+        transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
     }
 }
