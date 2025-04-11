@@ -1,0 +1,232 @@
+BreedData
+LevelData // what type unlock for each level and the xpCap for each level
+AlgaesData // what type of algaes
+TrilobitesData // what type of trilobites
+DecorationsData // what type of decorations
+
+
+
+GameManager{
+    Tank[] tanks // right now we only have one tank
+    set<AlgaeType> algaesGallery // gallery of algaes 
+    set<DecorationType> decorationsGallery // gallery of decorations
+    set<TrilobiteType> trilobitesGallery // gallery of trilobites
+    int level // level of the game
+    int xpCap
+    int currentXP
+
+    int coin // how much money you have
+    float[][][] breedingMap // the index 1 and 2 is the id for the trilobites being breeded and index 3 is the percentage of the chance to breed for each type of trilobites
+
+    void init()
+    {
+        tanks = new Tank[1]
+        tanks[0] = new Tank()
+        algaesGallery = new set<Algae>()
+        decorationsGallery = new set<Decorations>()
+        trilobitesGallery = new set<Trilobites>()
+        coin = 100
+        breadingMap = BreedData
+
+        for a in AlgaesData:
+            Algae algae = new Algae(a)
+            algaesGallery.add(algae)
+        for t in TrilobitesData:
+            Trilobite trilobite = new Trilobite(t)
+            trilobitesGallery.add(trilobite)
+        for d in DecorationsData:
+            Decoration decoration = new Decoration(d)
+            decorationsGallery.add(decoration)
+        
+        level = 1
+        xpCap = LevelData[level].xpCap
+        currentXP = 0
+
+    }
+    
+    void levelUp(int xp)
+    {
+        currentXP += xp
+        if (currentXP >= xpCap)
+        {
+            level++
+            xpCap = LevelData[level].xpCap
+            currentXP = 0
+            for a in LevelData[level].algaes:
+                a.unlock()
+            for t in LevelData[level].trilobites:
+                t.unlock()      
+            for d in LevelData[level].decorations:
+                d.unlock()
+        }
+    }
+    void getCoin() // go through all the tanks and get the coin, calls every cycle
+    {
+        for tank in tanks:
+            coin += tank.getCoin()
+        gameManager.levelUp()
+    }
+
+    void breedTrilobites(Trilobite A, Trilobite B, Tank tank)  // breed two trilobites and return the new one, you can only breed if the trilobites's happiness is over 70%
+    {
+        TrilobitesType newTrilobitesType = sample based on breedingMap[A.type][B.type]
+        Trilobite newTrilobites = new Trilobite(newTrilobitesType)
+        trilobites.add(newTrilobites)
+        tank.addTrilobites(newTrilobites)
+    }
+
+    void buyTrilobites()
+    {
+        open the ui and show the trilobites gallery
+        // when the user click on a trilobite, check if the user has enough money to buy it
+        gameManager.levelUp()
+
+    }
+    void buyAlgaes(){
+        open the ui and show the algaes gallery
+        // when the user click on a algae, check if the user has enough money to buy it
+        gameManager.levelUp()
+    }
+    void buyDecoration(){
+        open the ui and show the decorations gallery
+        // when the user click on a decoration, check if the user has enough money to buy it
+        gameManager.levelUp()
+    }   
+
+    void sellTrilobites(Trilobite trilobite)
+    {
+        trilobites.remove(trilobite)
+        coin += trilobite.type.sellMoney
+    }
+    void sellAlgaes(Algae algae)
+    {
+        algaes.remove(algae)
+        coin += algae.type.sellMoney
+    }
+    addTank() // later
+}
+
+Tank {
+    Algae[] algaes
+    Trilobite[] trilobites
+    Decoration[] decorations
+
+    int calcCoin() // calulate coin based on trilobites happiness
+
+    void addAlgae(Algae algae)
+    {
+        algaes.add(algae)
+    }
+
+    void addTrilobite(Trilobite trilobite)
+    {
+        trilobites.add(trilobite)
+    }
+
+    float getHunger() // calulate hunger percentage based on trilobites
+    {
+        for trilobite in trilobites:
+            hunger += trilobite.hunger
+    }
+    int getHappynessBonus() // calulate happiness bonus based on the decorations
+    {
+        for decoration in decorations:
+            happiness += decoration.type.moneyBonus
+    }
+    int getAlgaesHealth() // calulate algaes health based on algaes
+    {
+        for algae in algaes:
+            health += algae.health
+    }
+    int getTrilobitesConsume() // calulate total consume based on algaes
+    {
+        for trilobite in trilobites:
+            consume += trilobite.type.consumeRate
+    }
+
+}
+
+
+TrilobitesType{
+    int id   // id of the type start from 0
+    string name // name of the type
+    Rarity rarity // common, rare, epic
+    int consumeRate 
+    int buyMoney
+    int sellMoney
+}
+
+AlgaeType{
+    int id   // id of the type start from 0
+    string name // name of the type
+    int buyMoney
+    int sellMoney
+    int maxHealth
+    int growthRate
+}
+
+DecorationType{
+    int id   // id of the type start from 0
+    string name // name of the type
+    int buyMoney
+    int sellMoney
+    int moneyBonus
+}
+
+
+Decoration {
+    int id
+    DecorationType type
+}
+
+Algae
+{
+    int id
+    vector3 position
+    AlgaeType type
+    int health
+    void beingEaten(int amount)
+    {
+        health -= amount
+        if(health <= 0)
+        {
+            die()
+        }
+    }
+    grow()
+}
+
+trilobites
+{
+    id
+    vector3 position
+    name
+    type
+    hunger
+    void upDate()
+    {
+        if(isHungry())
+        {
+            eat()
+        }
+        hunger += consumeRate
+    }
+    bool isHungry()
+    void eat()
+    {
+        Algae = closestAlgae// find the closest algae
+        if(Algae != null)
+        {
+            Algae.beingEaten(hunger)
+            hunger = 0
+        }
+    }
+    void swim()
+    {
+        // fuck around
+    }
+    void rename(string newName)
+    {
+        name = newName
+    }
+}
