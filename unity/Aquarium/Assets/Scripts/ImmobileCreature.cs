@@ -3,9 +3,7 @@ using UnityEngine;
 public class ImmobileCreature : Creature
 {
     [HideInInspector]
-    public int health;
-    public int maxHealth;
-    public int growthRate;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -17,27 +15,18 @@ public class ImmobileCreature : Creature
     {
 
     }
+
     public void beingEaten(int amount)
     {
+        if (amount < 0) { Debug.Log("Error: beingEaten() amount negative"); return; }
+
         health -= amount;
         if (health <= 0)
         {
             Destroy(gameObject);
+            return;
         }
-    }
-    public void grow(int amount)
-    {
-        health += amount;
-        if (health > 100) // todo: change to maxHealth
-        {
-            health = 100; // todo: change to maxHealth
-        }
+        setScaleTo(health / maxHealth);
     }
 
-    public void getEaten(float amount) //TODO: needs to check for death
-    {
-        currFullHealth -= amount;
-        currHealth -= amount;
-        setScaleTo(transform.localScale.x - amount / maxHealth * maxSize);
-    }
 }
