@@ -24,6 +24,7 @@ public class Aquarium : MonoBehaviour
         if (newEntity == null) { Debug.LogWarning("Null entity passed into addEntity"); return null; }
         Entity e = Instantiate(newEntity.gameObject, position, rotation, gameObject.transform).GetComponent<Entity>();
         entities.Add(e);
+        e.parentAquarium = this;
 
         return e;
     }
@@ -45,6 +46,8 @@ public class Aquarium : MonoBehaviour
 
         Entity e = Instantiate(newEntity.gameObject, randomPosition, randomRotation, gameObject.transform).GetComponent<Entity>();
         entities.Add(e);
+        e.parentAquarium = this;
+        
         return e;
     }
 
