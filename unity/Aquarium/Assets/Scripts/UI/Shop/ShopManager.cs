@@ -37,5 +37,4 @@ public class ShopManager : MonoBehaviour
             // button.onClick.AddListener(() => ShowBigModel(item));
         }
     }
-
 }

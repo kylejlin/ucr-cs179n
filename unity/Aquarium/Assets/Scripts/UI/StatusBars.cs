@@ -45,7 +45,6 @@ public class gameObject : MonoBehaviour
         int hungerValue = gameManager.getHunger();
         int supplyValue = gameManager.getAlgaesHealth();
         consume.value = (float)supplyValue / (hungerValue + supplyValue);
-        Debug.Log(consume.value);
         hunger.text = "Hunger: " + hungerValue.ToString();
         supply.text = "Supply: " + supplyValue.ToString();
     }
