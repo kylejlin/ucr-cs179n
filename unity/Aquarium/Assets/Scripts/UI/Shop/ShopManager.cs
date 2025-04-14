@@ -28,11 +28,11 @@ public class ShopManager : MonoBehaviour
     {
 
         Debug.Log("PopulateShop");
-        foreach (GameObject item in gameManager.trilobites)
+        foreach (Entity item in gameManager.creatures)
         {
             Debug.Log(item.name);
             // Create a button for each preview item in the grid
-            GameObject previewButton = Instantiate(previewPrefab, previewGrid);
+            GameObject previewButton = Instantiate(previewPrefab.gameObject, previewGrid);
             previewButton.GetComponent<Image>().sprite = item.GetComponentInChildren<SpriteRenderer>().sprite;
             Button button = previewButton.GetComponent<Button>();
 
@@ -40,7 +40,7 @@ public class ShopManager : MonoBehaviour
             button.onClick.AddListener(() => ShowBigModel(item));
         }
     }
-    void ShowBigModel(GameObject item)
+    void ShowBigModel(Entity item)
     {
         // Set the large 3D model's RenderTexture to the RawImage
         RenderTexture renderTexture = new RenderTexture(1024, 1024, 16);
@@ -49,7 +49,7 @@ public class ShopManager : MonoBehaviour
         SelectedItem.texture = renderTexture;
 
         // Instantiate the model in the scene for the camera to render
-        GameObject modelInstance = Instantiate(item, Vector3.zero, Quaternion.identity);
+        GameObject modelInstance = Instantiate(item.gameObject, Vector3.zero, Quaternion.identity);
         modelInstance.SetActive(true); // Make sure the model is active
     }
 }
