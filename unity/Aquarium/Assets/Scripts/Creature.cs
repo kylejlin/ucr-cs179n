@@ -9,14 +9,13 @@ public class Creature : Entity
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        //base.Start();
 
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     public void grow(int amount)
@@ -28,6 +27,6 @@ public class Creature : Entity
         {
             health = maxHealth; 
         }
-        setScaleTo(health/maxHealth);
+        setScaleTo((float)health/maxHealth);
     }
 }

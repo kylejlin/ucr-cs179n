@@ -17,7 +17,7 @@ public class Temp : MonoBehaviour
 
     void AddTrilobite(int index)
     {
-        gameManager.addEntity(gameManager.trilobites[index], gameManager.aquarium);
+        gameManager.addEntity(gameManager.creatures[index], gameManager.aquarium);
     }
 
     void Update()
