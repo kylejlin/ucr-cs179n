@@ -26,7 +26,7 @@ public class ImmobileCreature : Creature
             Destroy(gameObject);
             return;
         }
-        setScaleTo(health / maxHealth);
+        setScaleTo((float)health / maxHealth);
     }
 
 }

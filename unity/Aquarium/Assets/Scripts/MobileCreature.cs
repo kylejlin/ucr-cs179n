@@ -7,9 +7,10 @@ public class MobileCreature : Creature
     public float speed = 1;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
-    {
-        grow(5);
-        Debug.Log("hello");
+    {   
+        MobileCreature friend = FindClosest<MobileCreature>();
+        if(friend == default(MobileCreature)) Debug.Log("None found");
+        else Debug.Log("nearest trilo pos:"+friend.transform.localPosition.x);
     }
 
     // Update is called once per frame
