@@ -6,7 +6,6 @@ public class ShopManager : MonoBehaviour
     private Transform previewGrid; // Reference to the Preview Grid in the UI
     private GameObject previewPrefab; // Prefab for the preview items
     private RawImage SelectedItem; // The RawImage to display the big model
-    private Camera modelCamera; // Camera that renders the 3D model
     private GameManager gameManager;
     void Start()
     {
@@ -14,7 +13,6 @@ public class ShopManager : MonoBehaviour
         previewGrid = gameObject.transform.Find("PreviewGrid");
         previewPrefab = Resources.Load<GameObject>("Shop/ShopItem");
         SelectedItem = gameObject.transform.Find("SelectedItem").gameObject.GetComponent<RawImage>();
-        modelCamera = gameObject.transform.Find("ModelCamera").gameObject.GetComponent<Camera>();
 
         PopulateShop();
     }
@@ -45,7 +43,6 @@ public class ShopManager : MonoBehaviour
         // Set the large 3D model's RenderTexture to the RawImage
         RenderTexture renderTexture = new RenderTexture(1024, 1024, 16);
         renderTexture.Create();
-        modelCamera.targetTexture = renderTexture;
         SelectedItem.texture = renderTexture;
 
         // Instantiate the model in the scene for the camera to render
