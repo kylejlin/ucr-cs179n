@@ -21,7 +21,7 @@ public class Aquarium : MonoBehaviour
 
     public Entity addEntity(Entity newEntity, Vector3 position, Quaternion rotation) //returns a reference to the newly created object 
     {
-        if (newEntity == null) { Debug.LogWarning("Error: Null entity passed into addEntity"); return null; }
+        if (newEntity == null) { Debug.LogWarning("Null entity passed into addEntity"); return null; }
         Entity e = Instantiate(newEntity.gameObject, position, rotation, gameObject.transform).GetComponent<Entity>();
         entities.Add(e);
 
@@ -30,7 +30,7 @@ public class Aquarium : MonoBehaviour
 
     public Entity addEntity(Entity newEntity)
     {
-        if (newEntity == null) { Debug.LogWarning("Error: Null entity passed into addEntity"); return null; }
+        if (newEntity == null) { Debug.LogWarning("Null entity passed into addEntity"); return null; }
         Vector3 randomPosition = new Vector3(
             Random.Range(-dimensions.x / 2, dimensions.x / 2),
             Random.Range(0, dimensions.y),
@@ -46,6 +46,14 @@ public class Aquarium : MonoBehaviour
         Entity e = Instantiate(newEntity.gameObject, randomPosition, randomRotation, gameObject.transform).GetComponent<Entity>();
         entities.Add(e);
         return e;
+    }
+
+    public Entity removeEntity(Entity entity)
+    {
+        if(entity == null) { Debug.LogWarning("Null entity passed into removeEntity"); return null; }
+        if(entities.Remove(entity)) { return entity; }
+        else { Debug.LogWarning("Entity not found in entity list"); return null;}
+        
     }
 
     public int calcCoin()
