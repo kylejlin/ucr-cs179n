@@ -8,7 +8,8 @@ public class MobileCreature : Creature
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        grow(5);
+        Debug.Log("hello");
     }
 
     // Update is called once per frame
