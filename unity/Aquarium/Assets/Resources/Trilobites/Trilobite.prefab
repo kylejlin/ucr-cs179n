@@ -309,6 +309,9 @@ MonoBehaviour:
   id: 0
   buyMoney: 20
   sellMoney: 5
+  hunger: 0
+  currFullHealth: 10
+  currHealth: 10
   canSwim: 1
   consumeRate: 8
   rarity: 0
@@ -413,7 +416,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8732542644337690804}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
@@ -422,4 +425,4 @@ Transform:
   - {fileID: 5428519074565596182}
   - {fileID: 1882052469758951969}
   m_Father: {fileID: 5479246289493934708}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}

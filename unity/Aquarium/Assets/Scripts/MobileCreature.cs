@@ -14,7 +14,20 @@ public class MobileCreature : Creature
 
     // Update is called once per frame
     void Update()
-    {
+    {   
+        Vector3 vec = new Vector3(0,0,1); //move forward
+        move(vec);
+    }
 
+    //Takes in Vector3 velocity to move mobileCreature
+    public void move(Vector3 velocity)
+    {
+        transform.Translate(velocity * Time.deltaTime);
+    }
+
+    public void idleMovement(){
+        //if(collision.gameObject.CompareTag("myObject")){
+
+        //}
     }
 }
