@@ -18,7 +18,7 @@ public class ImmobileCreature : Creature
 
     public void beingEaten(int amount)
     {
-        if (amount < 0) { Debug.Log("Error: beingEaten() amount negative"); return; }
+        if (amount < 0) { Debug.LogWarning("beingEaten() amount negative"); return; }
 
         health -= amount;
         if (health <= 0)

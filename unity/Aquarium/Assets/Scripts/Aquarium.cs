@@ -21,6 +21,7 @@ public class Aquarium : MonoBehaviour
 
     public Entity addEntity(GameObject newEntity, Vector3 position, Quaternion rotation) //returns a reference to the newly created object 
     {
+        if (newEntity == null) { Debug.LogWarning("Error: Null entity passed into addEntity"); return null; }
         Entity e = Instantiate(newEntity, position, rotation, gameObject.transform).GetComponent<Entity>();
         entities.Add(e);
 
@@ -29,6 +30,7 @@ public class Aquarium : MonoBehaviour
 
     public Entity addEntity(GameObject newEntity)
     {
+        if(newEntity == null) { Debug.LogWarning("Error: Null entity passed into addEntity"); return null; }
         Vector3 randomPosition = new Vector3(
             Random.Range(-dimensions.x / 2, dimensions.x / 2),
             Random.Range(0, dimensions.y),

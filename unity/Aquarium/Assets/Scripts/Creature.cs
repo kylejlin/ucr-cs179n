@@ -9,7 +9,7 @@ public class Creature : Entity
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        //base.Start();
     }
 
     // Update is called once per frame
@@ -20,7 +20,7 @@ public class Creature : Entity
 
     public void grow(int amount)
     {
-        if(amount<0) { Debug.Log("Error: grow() amount negative"); return; }
+        if(amount<0) { Debug.LogWarning("grow() amount negative"); return; }
         health += amount;
         if (health > maxHealth) 
         {
