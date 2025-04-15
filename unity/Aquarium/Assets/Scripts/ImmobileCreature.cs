@@ -7,26 +7,25 @@ public class ImmobileCreature : Creature
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        size = 0.1f;
+        setScaleTo(size);
+        health = 2;
+        maxHealth = 10;
+        growthRate = 0.4f;
+        count += Random.Range(-5, 0);
     }
 
     // Update is called once per frame
     void Update()
     {
-
-    }
-
-    public void beingEaten(int amount)
-    {
-        if (amount < 0) { Debug.LogWarning("beingEaten() amount negative"); return; }
-
-        health -= amount;
-        if (health <= 0)
+        count += Time.deltaTime;
+        if (count > 5)
         {
-            Destroy(gameObject);
-            return;
+            grow(growthRate);
+            count = 0;
+            if ((size == adultSize) && (health == adultHealth)) { duplicate(); print("boom"); }
         }
-        setScaleTo((float)health / maxHealth);
+        eat(5 * Time.deltaTime);
     }
 
 }

@@ -9,6 +9,7 @@ public class Entity : MonoBehaviour
     private int sellMoney;
     private Rarity rarity;
     public Aquarium parentAquarium = null;
+    protected double count = 0; //to count deltaTime 
 
 
     void Start()
@@ -62,7 +63,6 @@ public class Entity : MonoBehaviour
     {
         if (scaleFactor <= 0) { Debug.LogWarning("setScaleTo() scaleFactor cannot be <= 0 "); return; }
         transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
-        Debug.Log(scaleFactor);
 
     }
 
