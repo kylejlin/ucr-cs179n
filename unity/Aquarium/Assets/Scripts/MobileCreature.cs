@@ -1,5 +1,12 @@
 using UnityEngine;
 
+public enum BehaviorState
+{
+    Idle,
+    Hunting,
+    Dying,
+}
+
 public class MobileCreature : Creature
 {
     public bool canSwim = false;
@@ -15,13 +22,7 @@ public class MobileCreature : Creature
 
     public static float metabolismRate = 1;
 
-    public static int IDLE = 0;
-
-    public static int HUNTING = 1;
-
-    public static int DYING = 2;
-
-    public int state = IDLE;
+    public BehaviorState state = BehaviorState.Idle;
 
     public static float maxEatingDistance = 5;
 
@@ -41,28 +42,28 @@ public class MobileCreature : Creature
 
         if (energy <= huntingEnergyThreshold)
         {
-            state = HUNTING;
+            state = BehaviorState.Hunting;
         }
         else if (energy <= 0)
         {
             // The creature starved to death. 
-            state = DYING;
+            state = BehaviorState.Dying;
         }
         else
         {
-            state = IDLE;
+            state = BehaviorState.Idle;
         }
 
 
-        if (state == IDLE)
+        if (state == BehaviorState.Idle)
         {
             UpdateIdle();
         }
-        else if (state == HUNTING)
+        else if (state == BehaviorState.Hunting)
         {
             UpdateHunting();
         }
-        else if (state == DYING)
+        else if (state == BehaviorState.Dying)
         {
             UpdateDying();
         }
