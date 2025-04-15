@@ -12,7 +12,7 @@ public class Entity : MonoBehaviour
 
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -30,13 +30,13 @@ public class Entity : MonoBehaviour
 
         T closest = default(T);
 
-        foreach(T entity in foundEntities)
+        foreach (T entity in foundEntities)
         {
             float newDist = getSqrDistTo(entity);
-            if(newDist <= 0) continue; // dont count yourself
+            if (newDist <= 0) continue; // dont count yourself
 
-            if(closest == default(T)) closest = entity; 
-            else if ((newDist < getSqrDistTo(closest))) 
+            if (closest == default(T)) closest = entity;
+            else if ((newDist < getSqrDistTo(closest)))
             {
                 closest = entity;
             }
@@ -65,7 +65,7 @@ public class Entity : MonoBehaviour
 
     }
 
-    public float getSqrDistTo(Entity entity) { return (transform.localPosition - entity.transform.localPosition).sqrMagnitude;  }
+    public float getSqrDistTo(Entity entity) { return (transform.localPosition - entity.transform.localPosition).sqrMagnitude; }
     public int getID() { return id; }
     public int getBuyMoney() { return buyMoney; }
     public int getSellMoney() { return sellMoney; }
