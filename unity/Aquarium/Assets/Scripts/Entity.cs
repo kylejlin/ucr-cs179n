@@ -5,14 +5,17 @@ public class Entity : MonoBehaviour
     public string entityName = "NoName";
     [HideInInspector]
     public int id; //id of the entity
+    [SerializeField]
     private int buyMoney;
+    [SerializeField]
     private int sellMoney;
+    [SerializeField]
     private Rarity rarity;
 
 
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -30,7 +33,7 @@ public class Entity : MonoBehaviour
 
         T closest = default(T);
 
-        foreach(T entity in foundEntities)
+        foreach (T entity in foundEntities)
         {
             if ((getSqrDistTo(entity) < getSqrDistTo(closest) && (getSqrDistTo(entity) > 0))) // dont count yourself
             {
@@ -61,7 +64,7 @@ public class Entity : MonoBehaviour
 
     }
 
-    public float getSqrDistTo(Entity entity) { return (transform.localPosition - entity.transform.localPosition).sqrMagnitude;  }
+    public float getSqrDistTo(Entity entity) { return (transform.localPosition - entity.transform.localPosition).sqrMagnitude; }
     public int getID() { return id; }
     public int getBuyMoney() { return buyMoney; }
     public int getSellMoney() { return sellMoney; }

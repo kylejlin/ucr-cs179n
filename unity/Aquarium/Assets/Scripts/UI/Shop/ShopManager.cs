@@ -1,19 +1,28 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
+using System.Linq;
 
 public class ShopManager : MonoBehaviour
 {
-    private Transform previewGrid; // Reference to the Preview Grid in the UI
-    private GameObject previewPrefab; // Prefab for the preview items
+    private GameObject ShopGrid;
+    private ShopItem ShopItem;
     private GameManager gameManager;
     private Entity SelectedEntity;
+    private SelectedItem SelectedItemPreview;
+    private CategoryTabs categoryTabs;
+    public List<ShopItem> ShopItems = new List<ShopItem>();
     void Start()
     {
         gameManager = GameObject.Find("GameManager").gameObject.GetComponent<GameManager>();
-        previewGrid = gameObject.transform.Find("PreviewGrid");
-        previewPrefab = Resources.Load<GameObject>("Shop/ShopItem");
-
+        ShopGrid = gameObject.transform.Find("ShopGrid").gameObject;
+        SelectedItemPreview = gameObject.transform.Find("SelectedItem").gameObject.GetComponent<SelectedItem>();
+        ShopItem = Resources.Load<GameObject>("Shop/ShopItem").GetComponent<ShopItem>();
+        SelectedEntity = gameManager.creatures[0];
+        SelectedItemPreview.Setup(SelectedEntity);
+        categoryTabs = gameObject.transform.Find("CategoryTabs").gameObject.GetComponent<CategoryTabs>();
         PopulateShop();
+        categoryTabs.SetCategory(typeof(MobileCreature));
     }
 
     // Update is called once per frame
@@ -23,18 +32,24 @@ public class ShopManager : MonoBehaviour
     }
     void PopulateShop()
     {
-
-        Debug.Log("PopulateShop");
-        foreach (GameObject item in gameManager.creatures)
+        foreach (Entity item in gameManager.creatures)
         {
-            // Debug.Log(item.name);
-            // Create a button for each preview item in the grid
-            GameObject previewButton = Instantiate(previewPrefab, previewGrid);
-            // previewButton.GetComponent<Image>().sprite = item.GetComponentInChildren<SpriteRenderer>().sprite;
-            // Button button = previewButton.GetComponent<Button>();
+            ShopItem shopButton = Instantiate(ShopItem.gameObject, ShopGrid.transform).GetComponent<ShopItem>();
+            shopButton.Setup(item);
+            ShopItems.Add(shopButton);
+            print(shopButton.getButton());
+            shopButton.getButton().onClick.AddListener(() => select(item));
 
-            // // Set the action for the button (show the large model)
-            // button.onClick.AddListener(() => ShowBigModel(item));
         }
+    }
+    public void CloseShop()
+    {
+        gameObject.SetActive(false);
+    }
+    public void select(Entity entity)
+    {
+        SelectedEntity = entity;
+        SelectedItemPreview.ChangeSelected(SelectedEntity);
+
     }
 }

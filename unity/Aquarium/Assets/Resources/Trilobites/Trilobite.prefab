@@ -48,7 +48,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entityName: Trilobite1
-  id: 0
+  id: 2
+  buyMoney: 10
+  sellMoney: 8
+  rarity: 0
   hunger: 0
   health: 10
   canSwim: 1

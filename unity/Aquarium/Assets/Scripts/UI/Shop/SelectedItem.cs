@@ -3,21 +3,32 @@ using UnityEngine.UI;
 
 public class SelectedItem : Preview
 {
+    Button buyButton;
+    GameManager gameManager;
+    ShopManager shopManager;
     void Start()
     {
-        ShopManager parent = GetComponentInParent<ShopManager>();
-
-        Button button = gameObject.GetComponent<Button>();
-        AddTrilobite1.onClick.AddListener(() => AddTrilobite(0));
+        gameManager = GameObject.Find("GameManager").gameObject.GetComponent<GameManager>();
+        shopManager = GetComponentInParent<ShopManager>();
+        buyButton = gameObject.transform.Find("BuyButton").gameObject.GetComponent<Button>();
+        buyButton.onClick.AddListener(() => BuyItem());
     }
     void Update()
     {
 
     }
-
-    void selectItem()
+    void BuyItem()
     {
-
+        if (gameManager.CanBuy(this.getEntity().getBuyMoney()))
+        {
+            gameManager.buy(this.getEntity().getBuyMoney());
+            gameManager.addEntity(this.getEntity(), gameManager.aquarium);
+            shopManager.CloseShop();
+        }
+        else
+        {
+            Debug.Log("Not enough coins");
+        }
     }
 
 }
