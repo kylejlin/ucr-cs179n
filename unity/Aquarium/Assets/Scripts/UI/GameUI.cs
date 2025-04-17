@@ -16,7 +16,8 @@ public class GameUI : MonoBehaviour
     void Start()
     {
         // gameManager = GameObject.Find("GameManager").gameObject.GetComponent<GameManager>();
-        ShopUI = GameObject.Find("ShopUI");
+        ShopUI = GameObject.Find("ShopUI").gameObject;
+        ShopUI.SetActive(false);
         menu = gameObject.transform.Find("Menu").gameObject;
         MenuItems = menu.transform.Find("MenuItems").gameObject;
         ShopButton = MenuItems.transform.Find("ShopButton").gameObject.GetComponent<Button>();

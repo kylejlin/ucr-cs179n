@@ -18,7 +18,7 @@ public class ShopUI : MonoBehaviour
     void Start()
     {
         gameManager = GameObject.Find("GameManager").gameObject.GetComponent<GameManager>();
-        GameUI = GameObject.Find("GameUI").gameObject;
+        GameUI = transform.parent.Find("GameUI").gameObject;
         ShopGrid = gameObject.transform.Find("ShopGrid").gameObject;
         SelectedItemPreview = gameObject.transform.Find("SelectedItem").gameObject.GetComponent<SelectedItem>();
         categoryTabs = gameObject.transform.Find("CategoryTabs").gameObject.GetComponent<CategoryTabs>();

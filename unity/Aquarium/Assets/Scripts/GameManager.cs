@@ -17,7 +17,7 @@ public class GameManager : MonoBehaviour
     public List<Entity> creatures = new List<Entity>();
     public List<Entity> decorations = new List<Entity>();
 
-    int money = 1000; // todo: 
+    int money = 20; // todo: 
     public int level = 1; // todo:
     public int xpCap = 0;
     public int xp = 0;
