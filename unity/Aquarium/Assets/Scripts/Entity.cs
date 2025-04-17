@@ -35,7 +35,11 @@ public class Entity : MonoBehaviour
 
         foreach (T entity in foundEntities)
         {
-            if ((getSqrDistTo(entity) < getSqrDistTo(closest) && (getSqrDistTo(entity) > 0))) // dont count yourself
+            float newDist = getSqrDistTo(entity);
+            if (newDist <= 0) continue; // dont count yourself
+
+            if (closest == default(T)) closest = entity;
+            else if ((newDist < getSqrDistTo(closest)))
             {
                 closest = entity;
             }
