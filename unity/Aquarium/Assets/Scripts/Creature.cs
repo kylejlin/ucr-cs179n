@@ -42,19 +42,19 @@ public class Creature : Entity
     }
 
     /// <summary> make identical copy (for now, in a random position nearby. This is probably temporary). </summary>
-    public void duplicate() 
+    public void duplicate(Vector3 position) 
     {
         if (parentAquarium == null) { Debug.LogWarning("Could not find Aquarium parent"); return; }
 
-        Vector3 randVec = new Vector3(Random.Range(-2, 2), 0, Random.Range(-2, 2));
-        parentAquarium.addEntity(this, randVec + transform.localPosition, transform.localRotation); //spawn nearby in same aquarium
+        parentAquarium.addEntity(this, position, transform.localRotation); //spawn nearby in same aquarium
         beingEaten(2, true); //lose some health //this should be the same amount as the new creature spawned has, but for now is hard-coded
     }
 
-    /// <summary> try to duplicate, but dont if there are already too many of T nearby. </summary>
-    public void duplicate<T>(float minSpace) where T : Entity
+    /// <summary> try to duplicate, but dont if there is a T too close to the attempted spawn location or too many of T in the aquarium as a whole. </summary>
+    public void tryDuplicate<T>(float minSpace = 0, float maxDensityInTankPerUnitCubed = int.MaxValue) where T : Entity
     {
-        // 
+        Vector3 randVec = new Vector3(Random.Range(-5, 5), 0, Random.Range(-5, 5)); //for now range is hardcoded to 5. In the future it should be a creature parameter 
+
 
     }
 
