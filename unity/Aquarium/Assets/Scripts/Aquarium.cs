@@ -19,15 +19,18 @@ public class Aquarium : MonoBehaviour
     }
 
 
-    public Entity addEntity(GameObject newEntity, Vector3 position, Quaternion rotation) //returns a reference to the newly created object 
+    public Entity addEntity(Entity newEntity, Vector3 position, Quaternion rotation) //returns a reference to the newly created object 
     {
-        Entity e = Instantiate(newEntity, position, rotation, gameObject.transform).GetComponent<Entity>();
+        if (newEntity == null) { Debug.LogWarning("Error: Null entity passed into addEntity"); return null; }
+        Entity e = Instantiate(newEntity.gameObject, position, rotation, gameObject.transform).GetComponent<Entity>();
         entities.Add(e);
 
         return e;
     }
-    public Entity addEntity(GameObject newEntity)
+
+    public Entity addEntity(Entity newEntity)
     {
+        if (newEntity == null) { Debug.LogWarning("Error: Null entity passed into addEntity"); return null; }
         Vector3 randomPosition = new Vector3(
             Random.Range(-dimensions.x / 2, dimensions.x / 2),
             Random.Range(0, dimensions.y),
@@ -40,9 +43,8 @@ public class Aquarium : MonoBehaviour
             Random.Range(0, 360)
         );
 
-        Entity e = Instantiate(newEntity, randomPosition, randomRotation, gameObject.transform).GetComponent<Entity>();
+        Entity e = Instantiate(newEntity.gameObject, randomPosition, randomRotation, gameObject.transform).GetComponent<Entity>();
         entities.Add(e);
-        print("Number of entities in tank: " + entities.Count);
         return e;
     }
 

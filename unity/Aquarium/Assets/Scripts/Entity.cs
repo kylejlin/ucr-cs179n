@@ -5,8 +5,10 @@ public class Entity : MonoBehaviour
     public string entityName = "NoName";
     [HideInInspector]
     public int id; //id of the entity
-    public int buyMoney;
-    public int sellMoney;
+    private int buyMoney;
+    private int sellMoney;
+    private Rarity rarity;
+
 
     void Start()
     {
@@ -19,15 +21,31 @@ public class Entity : MonoBehaviour
 
     }
 
-
-    public T FindClosest<T>() where T : Entity  //get all objects of one type, then check their positions and return the closest
+    /// <returns> entity of type T that is closest to the caller or null if there are none found </returns>
+    public T FindClosest<T>() where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
 
     {
         T[] foundEntities = getAllOfType<T>();
         if (foundEntities == null) return default(T);
-        return foundEntities[0];
+
+        T closest = default(T);
+
+        foreach (T entity in foundEntities)
+        {
+            float newDist = getSqrDistTo(entity);
+            if (newDist <= 0) continue; // dont count yourself
+
+            if (closest == default(T)) closest = entity;
+            else if ((newDist < getSqrDistTo(closest)))
+            {
+                closest = entity;
+            }
+        }
+        return closest;
     }
 
+
+    /// <returns> array of type T of all the found entities, or null if none were found </returns>
     public T[] getAllOfType<T>() where T : Entity //RETURNS NULL IF EMPTY
     {
         Object[] foundObjects = FindObjectsByType(typeof(T), FindObjectsSortMode.None); //find all of the type
@@ -41,6 +59,16 @@ public class Entity : MonoBehaviour
 
     protected void setScaleTo(float scaleFactor) //limited to proportional scaling only
     {
+        if (scaleFactor <= 0) { Debug.LogWarning("setScaleTo() scaleFactor cannot be <= 0 "); return; }
         transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
+        Debug.Log(scaleFactor);
+
     }
+
+    public float getSqrDistTo(Entity entity) { return (transform.localPosition - entity.transform.localPosition).sqrMagnitude; }
+    public int getID() { return id; }
+    public int getBuyMoney() { return buyMoney; }
+    public int getSellMoney() { return sellMoney; }
+    public Rarity GetRarity() { return rarity; }
+
 }
