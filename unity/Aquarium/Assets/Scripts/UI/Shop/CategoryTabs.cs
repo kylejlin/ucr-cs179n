@@ -10,11 +10,10 @@ public class CategoryTabs : MonoBehaviour
     Button ImmobileCreatureTab;
     Button AllTab;
     Button DecorationTab;
-    ShopManager shopManager;
+    ShopUI shopManager;
     void Start()
     {
-        // gameManager = GameObject.Find("GameManager").gameObject.GetComponent<GameManager>();
-        shopManager = GetComponentInParent<ShopManager>();
+        shopManager = GetComponentInParent<ShopUI>();
         MobileCreatureTab = GameObject.Find("MobileCreatureTab").GetComponent<Button>();
         ImmobileCreatureTab = GameObject.Find("ImmobileCreatureTab").GetComponent<Button>();
         DecorationTab = GameObject.Find("DecorationTab").GetComponent<Button>();

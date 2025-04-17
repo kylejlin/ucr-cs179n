@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 
-public class ShopManager : MonoBehaviour
+public class ShopUI : MonoBehaviour
 {
     private GameObject ShopGrid;
     private ShopItem ShopItem;
@@ -11,25 +11,30 @@ public class ShopManager : MonoBehaviour
     private Entity SelectedEntity;
     private SelectedItem SelectedItemPreview;
     private CategoryTabs categoryTabs;
+    private Button CloseButton;
+    private GameObject GameUI;
     public List<ShopItem> ShopItems = new List<ShopItem>();
+
     void Start()
     {
         gameManager = GameObject.Find("GameManager").gameObject.GetComponent<GameManager>();
+        GameUI = GameObject.Find("GameUI").gameObject;
         ShopGrid = gameObject.transform.Find("ShopGrid").gameObject;
         SelectedItemPreview = gameObject.transform.Find("SelectedItem").gameObject.GetComponent<SelectedItem>();
+        categoryTabs = gameObject.transform.Find("CategoryTabs").gameObject.GetComponent<CategoryTabs>();
+        CloseButton = gameObject.transform.Find("CloseButton").gameObject.GetComponent<Button>();
+
         ShopItem = Resources.Load<GameObject>("Shop/ShopItem").GetComponent<ShopItem>();
+
         SelectedEntity = gameManager.creatures[0];
         SelectedItemPreview.Setup(SelectedEntity);
-        categoryTabs = gameObject.transform.Find("CategoryTabs").gameObject.GetComponent<CategoryTabs>();
+
         PopulateShop();
-        categoryTabs.SetCategory(typeof(MobileCreature));
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
+        categoryTabs.SetCategory();
+        CloseButton.onClick.AddListener(() => CloseShop());
 
     }
+
     void PopulateShop()
     {
         foreach (Entity item in gameManager.creatures)
@@ -37,7 +42,6 @@ public class ShopManager : MonoBehaviour
             ShopItem shopButton = Instantiate(ShopItem.gameObject, ShopGrid.transform).GetComponent<ShopItem>();
             shopButton.Setup(item);
             ShopItems.Add(shopButton);
-            print(shopButton.getButton());
             shopButton.getButton().onClick.AddListener(() => select(item));
 
         }
@@ -45,8 +49,10 @@ public class ShopManager : MonoBehaviour
     public void CloseShop()
     {
         gameObject.SetActive(false);
+        GameUI.SetActive(true);
+
     }
-    public void select(Entity entity)
+    private void select(Entity entity)
     {
         SelectedEntity = entity;
         SelectedItemPreview.ChangeSelected(SelectedEntity);

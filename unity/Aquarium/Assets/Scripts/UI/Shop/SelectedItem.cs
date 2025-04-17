@@ -5,11 +5,11 @@ public class SelectedItem : Preview
 {
     Button buyButton;
     GameManager gameManager;
-    ShopManager shopManager;
+    ShopUI shopManager;
     void Start()
     {
         gameManager = GameObject.Find("GameManager").gameObject.GetComponent<GameManager>();
-        shopManager = GetComponentInParent<ShopManager>();
+        shopManager = GetComponentInParent<ShopUI>();
         buyButton = gameObject.transform.Find("BuyButton").gameObject.GetComponent<Button>();
         buyButton.onClick.AddListener(() => BuyItem());
     }

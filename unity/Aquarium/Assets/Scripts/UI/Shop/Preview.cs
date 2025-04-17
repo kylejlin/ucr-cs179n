@@ -26,6 +26,7 @@ public class Preview : MonoBehaviour
             Destroy(modelInstance);
         }
         rawImage = gameObject.GetComponent<RawImage>();
+        rawImage.SetNativeSize();
         this.modelPrefab = entity.gameObject;
         modelInstance = Instantiate(modelPrefab, new Vector3(0, 0, 0), Quaternion.identity, transform);
         modelInstance.layer = LayerMask.NameToLayer("ShopSelectedItem");
@@ -37,6 +38,7 @@ public class Preview : MonoBehaviour
     {
         this.entity = selectedEntity;
         rawImage = gameObject.AddComponent<RawImage>();
+        rawImage.SetNativeSize();
 
         this.modelPrefab = entity.gameObject;
         modelInstance = Instantiate(modelPrefab, new Vector3(0, 0, 0), Quaternion.identity, transform);
