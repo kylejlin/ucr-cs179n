@@ -22,6 +22,8 @@ public class Aquarium : MonoBehaviour
     public Entity addEntity(Entity newEntity, Vector3 position, Quaternion rotation) //returns a reference to the newly created object 
     {
         if (newEntity == null) { Debug.LogWarning("Null entity passed into addEntity"); return null; }
+        if (!isInBounds(position)) { return null; } //keep within aquarium bounds
+
         Entity e = Instantiate(newEntity.gameObject, position, rotation, gameObject.transform).GetComponent<Entity>();
         entities.Add(e);
         e.parentAquarium = this;
@@ -34,7 +36,7 @@ public class Aquarium : MonoBehaviour
         if (newEntity == null) { Debug.LogWarning("Null entity passed into addEntity"); return null; }
         Vector3 randomPosition = new Vector3(
             Random.Range(-dimensions.x / 2, dimensions.x / 2),
-            Random.Range(0, dimensions.y),
+            Random.Range(5, dimensions.y),
             Random.Range(-dimensions.z / 2, dimensions.z / 2)
         );
 
@@ -44,11 +46,8 @@ public class Aquarium : MonoBehaviour
             Random.Range(0, 360)
         );
 
-        Entity e = Instantiate(newEntity.gameObject, randomPosition, randomRotation, gameObject.transform).GetComponent<Entity>();
-        entities.Add(e);
-        e.parentAquarium = this;
+        return addEntity(newEntity, randomPosition, randomRotation);
         
-        return e;
     }
 
     public Entity removeEntity(Entity entity)
@@ -57,6 +56,13 @@ public class Aquarium : MonoBehaviour
         if(entities.Remove(entity)) { return entity; }
         else { Debug.LogWarning("Entity not found in entity list"); return null;}
         
+    }
+
+    public bool isInBounds(Vector3 position)
+    {
+        return ((position.x > -dimensions.x / 2) && (position.x < dimensions.x / 2)
+            && (position.y > -dimensions.y / 2) && (position.y < dimensions.y / 2)
+            && (position.z > -dimensions.z / 2) && (position.z < dimensions.z / 2));
     }
 
     public int calcCoin()

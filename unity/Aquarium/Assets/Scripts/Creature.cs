@@ -7,7 +7,6 @@ public class Creature : Entity
     protected float maxHealth = 5; //current health cap
     protected float growthRate = 0.1f; //how much it grows per minute
     protected float adultHealth = 20; //max healthpool it can grow to
-    protected float size = 0.1f; //current size
     protected int adultSize = 1; //max size it can grow to
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -24,50 +23,63 @@ public class Creature : Entity
     /// <summary> scales up size and health by the percentage passed in (wont exceed max size set) </summary>
     public void grow(float percentage)
     {
-        if (percentage<0) { Debug.LogWarning("grow() percentage negative"); return; }
-        if (size + adultSize*percentage > adultSize)
+        if (maxHealth + (adultHealth * percentage) > adultHealth)
         {
-            size = adultSize;
             maxHealth = adultHealth;
             setScaleTo(adultSize);
         }
+        else if (maxHealth + (adultHealth * percentage) <= 0)
+        {
+            die();
+            Debug.LogWarning("Shrunk to death");
+        }
         else
         {
-            size += percentage * adultSize;
             maxHealth += percentage * adultHealth;
-            setScaleTo(size);
+            setScaleTo(maxHealth / adultHealth * adultSize); //keep size and maxHealth proportional
 
         }
     }
 
-    public void duplicate()
+    /// <summary> make identical copy (for now, in a random position nearby. This is probably temporary). </summary>
+    public void duplicate() 
     {
         if (parentAquarium == null) { Debug.LogWarning("Could not find Aquarium parent"); return; }
 
         Vector3 randVec = new Vector3(Random.Range(-2, 2), 0, Random.Range(-2, 2));
         parentAquarium.addEntity(this, randVec + transform.localPosition, transform.localRotation); //spawn nearby in same aquarium
-        beingEaten(2, true); //lose some health 
+        beingEaten(2, true); //lose some health //this should be the same amount as the new creature spawned has, but for now is hard-coded
+    }
+
+    /// <summary> try to duplicate, but dont if there are already too many of T nearby. </summary>
+    public void duplicate<T>(float minSpace) where T : Entity
+    {
+        // 
+
     }
 
     /// <summary>
     /// health -= amount. scaleDown if it is like algea and should become smaller. dont scaleDown if it is like a trilobite and should stay the same size at low health
     /// </summary>
     /// <returns> amount of health gained (will be amount if this has that amount of health to give, or less if it was already low on health) </returns>
-    public float beingEaten(float amount, bool scaleDown)
+    public float beingEaten(float amount, bool scaleDown = false)
     {
         if (amount < 0) { Debug.LogWarning("beingEaten() amount negative"); return 0; }
 
-        if (health - amount < 0)
+        if (health - amount < 0) //if the creature does not have enough health to survive the eating
         {
             die();
             return health;
         }
-        health -= amount;
-        if (scaleDown)
+
+        if (!scaleDown) //if it does survive and should not shrink
         {
-            size = health / maxHealth;
-            setScaleTo(size);
-            maxHealth -= amount;
+            health -= amount;
+        }
+        else //if it does survive and should shrink
+        {
+            health -= amount;
+            grow(-amount/adultHealth); //will never shrink to death
         }
         return amount;
     }

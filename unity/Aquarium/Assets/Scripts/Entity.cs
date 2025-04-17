@@ -76,6 +76,7 @@ public class Entity : MonoBehaviour
     public int getID() { return id; }
     public int getBuyMoney() { return buyMoney; }
     public int getSellMoney() { return sellMoney; }
+    public float getScale() { return transform.localScale.x; }
     public Rarity GetRarity() { return rarity; }
 
 }
