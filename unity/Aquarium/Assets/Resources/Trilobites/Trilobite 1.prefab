@@ -219,7 +219,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entityName: Trilobite2
-  id: 0
+  id: 1
   buyMoney: 40
   sellMoney: 30
   hunger: 0

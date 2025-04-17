@@ -1,7 +1,8 @@
 using UnityEngine;
 
 public class MobileCreature : Creature
-{
+{   
+    
     public bool canSwim = false;
     public int consumeRate;
     public Rarity rarity;
@@ -9,13 +10,13 @@ public class MobileCreature : Creature
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
     void Update()
     {   
-        Vector3 vec = new Vector3(0,0,1); //move forward
+        Vector3 vec = new Vector3(0,0,2); //move forward
         move(vec);
     }
 
@@ -25,9 +26,4 @@ public class MobileCreature : Creature
         transform.Translate(velocity * Time.deltaTime);
     }
 
-    public void idleMovement(){
-        //if(collision.gameObject.CompareTag("myObject")){
-
-        //}
-    }
 }
