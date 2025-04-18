@@ -65,6 +65,11 @@ public class Aquarium : MonoBehaviour
             && (position.z > -dimensions.z / 2) && (position.z < dimensions.z / 2));
     }
 
+    public float volume()
+    {
+        return dimensions.x * dimensions.y * dimensions.z;
+    }
+
     public int calcCoin()
     {
         return 10; // todo: calculate the coins based on the number of creatures and decorations

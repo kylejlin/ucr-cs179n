@@ -8,7 +8,7 @@ public class MobileCreature : Creature
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        print(FindClosest<MobileCreature>(new Vector3(0,0,0).transform.localPosition.x);
+        print(FindClosest<MobileCreature>(new Vector3(0,0,0)).transform.localPosition.x);
     }
 
     // Update is called once per frame

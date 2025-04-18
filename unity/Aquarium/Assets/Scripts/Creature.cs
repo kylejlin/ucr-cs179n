@@ -8,6 +8,7 @@ public class Creature : Entity
     protected float growthRate = 0.1f; //how much it grows per minute
     protected float adultHealth = 20; //max healthpool it can grow to
     protected int adultSize = 1; //max size it can grow to
+    protected float spawnSize = 0.1f //size it starts as
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -47,14 +48,23 @@ public class Creature : Entity
         if (parentAquarium == null) { Debug.LogWarning("Could not find Aquarium parent"); return; }
 
         parentAquarium.addEntity(this, position, transform.localRotation); //spawn nearby in same aquarium
-        beingEaten(2, true); //lose some health //this should be the same amount as the new creature spawned has, but for now is hard-coded
+        beingEaten(2, false); //lose some health //this should be the same amount as the new creature spawned has, but for now is hard-coded
     }
 
     /// <summary> try to duplicate, but dont if there is a T too close to the attempted spawn location or too many of T in the aquarium as a whole. </summary>
     public void tryDuplicate<T>(float minSpace = 0, float maxDensityInTankPerUnitCubed = int.MaxValue) where T : Entity
     {
         Vector3 randVec = new Vector3(Random.Range(-5, 5), 0, Random.Range(-5, 5)); //for now range is hardcoded to 5. In the future it should be a creature parameter 
-
+        float closestTSqrDist = getSqrDistBw(FindClosest<T>(randVec).transform.localPosition, randVec); 
+        float tDensityPerUnitCubed = getAllOfType<T>().Length / parentAquarium.volume();
+        if ((closestTSqrDist < minSpace*minSpace) && (tDensityPerUnitCubed < maxDensityInTankPerUnitCubed))
+        {
+            duplicate(randVec);
+        }
+        else
+        {
+            beingEaten(2, false); //lose some health to slow duplicaye attempts
+        }
 
     }
 
