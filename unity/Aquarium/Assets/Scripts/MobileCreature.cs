@@ -27,17 +27,20 @@ public class MobileCreature : Creature
 
     public static float maxEatingDistance = 5;
 
+    private Rigidbody mobileCreatureRB;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        mobileCreatureRB = GetComponent<Rigidbody>();
         MobileCreature friend = FindClosest<MobileCreature>();
         if (friend == default(MobileCreature)) Debug.Log("None found");
         else Debug.Log("nearest trilo pos:" + friend.transform.localPosition.x);
     }
 
-    // Update is called once per frame
-    void Update()
+    // FixedUpdate is called at fixed time intervals
+    void FixedUpdate()
     {   
         energy -= Time.deltaTime * metabolismRate;
 
@@ -72,9 +75,10 @@ public class MobileCreature : Creature
 
     void UpdateIdle()
     {
-        Vector3 vec = new Vector3(0,0,2); //move forward
-        move(vec);  
-        
+        Vector3 vec = new Vector3(0,0,1); //move forward
+        move(vec);
+        Vector3 angVec = new Vector3(0, 10, 0); //rotate a little bit around axes
+        rotate(angVec);
     }
 
     void UpdateDying()
@@ -113,8 +117,17 @@ public class MobileCreature : Creature
     }
 
     //Takes in Vector3 velocity to move mobileCreature
-    public void move(Vector3 velocity)
+    private void move(Vector3 velocity)
     {
-        transform.Translate(velocity * Time.deltaTime);
+        //MovePosition(currentPosition + displacement)
+        mobileCreatureRB.MovePosition(mobileCreatureRB.position + mobileCreatureRB.rotation * velocity * speed * Time.fixedDeltaTime);
+    }
+
+    //Takes in Vector3 angularVelocity to rotate mobileCreature
+    private void rotate(Vector3 angularVelocity)
+    {
+        //angularVelocity tells how many degrees to rotate in each axis
+        Quaternion deltaRotation = Quaternion.Euler(angularVelocity * Time.fixedDeltaTime);
+        mobileCreatureRB.MoveRotation(mobileCreatureRB.rotation * deltaRotation);
     }
 }
