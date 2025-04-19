@@ -44,14 +44,14 @@ public class MobileCreature : Creature
     {   
         energy -= Time.deltaTime * metabolismRate;
 
-        if (energy <= huntingEnergyThreshold)
-        {
-            state = BehaviorState.Hunting;
-        }
-        else if (energy <= 0)
+        if (energy <= 0)
         {
             // The creature starved to death. 
             state = BehaviorState.Dying;
+        }
+        else if (energy <= huntingEnergyThreshold)
+        {
+            state = BehaviorState.Hunting;
         }
         else
         {
