@@ -43,7 +43,7 @@ public class GameManager : MonoBehaviour
         this.xpCap = levels[level - 1].xpCap;
 
         //testing
-        aquarium.addEntity(algeaPrefab);
+        aquarium.addEntity(algeaPrefab, true);
     }
 
     void Update()

@@ -32,7 +32,7 @@ public class Aquarium : MonoBehaviour
         return e;
     }
 
-    public Entity addEntity(Entity newEntity)
+    public Entity addEntity(Entity newEntity, bool onGround = false)
     {
         if (newEntity == null) { Debug.LogWarning("Null entity passed into addEntity"); return null; }
         Vector3 randomPosition = new Vector3(
@@ -41,13 +41,16 @@ public class Aquarium : MonoBehaviour
             Random.Range(-dimensions.z / 2, dimensions.z / 2)
         );
 
-        Quaternion randomRotation = Quaternion.Euler(
-            Random.Range(0, 360),
-            Random.Range(0, 360),
-            Random.Range(0, 360)
-        );
+        if(onGround) randomPosition.y = groundLevel;
 
-        return addEntity(newEntity, randomPosition, randomRotation);
+        // want all creatures to be upright I think?
+        // Quaternion randomRotation = Quaternion.Euler(
+        //     Random.Range(0, 360),
+        //     Random.Range(0, 360),
+        //     Random.Range(0, 360)
+        // );
+
+        return addEntity(newEntity, randomPosition, Quaternion.identity);
         
     }
 
@@ -55,14 +58,14 @@ public class Aquarium : MonoBehaviour
     {
         if(entity == null) { Debug.LogWarning("Null entity passed into removeEntity"); return null; }
         if(entities.Remove(entity)) { return entity; }
-        else { Debug.LogWarning("Entity not found in entity list"); return null;}
+        else { Debug.LogWarning("Entity not found in entity list"); return null; }
         
     }
 
     public bool isInBounds(Vector3 position)
     {
         return ((position.x > -dimensions.x / 2) && (position.x < dimensions.x / 2)
-            && (position.y > groundLevel) && (position.y < dimensions.y)
+            && (position.y >= groundLevel) && (position.y < dimensions.y)
             && (position.z > -dimensions.z / 2) && (position.z < dimensions.z / 2));
     }
 
