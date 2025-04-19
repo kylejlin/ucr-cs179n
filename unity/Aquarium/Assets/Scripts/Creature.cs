@@ -8,11 +8,11 @@ public class Creature : Entity
     protected float growthRate = 0.1f; //how much it grows per minute
     protected float adultHealth = 20; //max healthpool it can grow to
     protected int adultSize = 1; //max size it can grow to
-    protected float spawnSize = 0.1f //size it starts as
+    protected float spawnSize = 0.1f; //size it starts as
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        
     }
 
     // Update is called once per frame
@@ -52,18 +52,31 @@ public class Creature : Entity
     }
 
     /// <summary> try to duplicate, but dont if there is a T too close to the attempted spawn location or too many of T in the aquarium as a whole. </summary>
-    public void tryDuplicate<T>(float minSpace = 0, float maxDensityInTankPerUnitCubed = int.MaxValue) where T : Entity
+    public void tryDuplicate<T>(float minSpace = 0, float minUnitsCubedPerT = 0) where T : Entity
     {
-        Vector3 randVec = new Vector3(Random.Range(-5, 5), 0, Random.Range(-5, 5)); //for now range is hardcoded to 5. In the future it should be a creature parameter 
-        float closestTSqrDist = getSqrDistBw(FindClosest<T>(randVec).transform.localPosition, randVec); 
-        float tDensityPerUnitCubed = getAllOfType<T>().Length / parentAquarium.volume();
-        if ((closestTSqrDist < minSpace*minSpace) && (tDensityPerUnitCubed < maxDensityInTankPerUnitCubed))
+        Vector3 randVecNearby = new Vector3(Random.Range(-10, 10), 0, Random.Range(-10, 10)) + transform.localPosition; //for now range is hardcoded to 10. In the future it should be a creature parameter 
+        
+        T closestT = FindClosest<T>(randVecNearby); 
+        float closestTSqrDist =  Mathf.Infinity; 
+        if (closestT != default(T)) {closestTSqrDist = getSqrDistBw(FindClosest<T>(randVecNearby).transform.localPosition, randVecNearby); } 
+        
+        int numTInTank = getAllOfType<T>().Length;
+        float currUnitsCubedPerT = Mathf.Infinity;
+        if (numTInTank > 0 ) { currUnitsCubedPerT = parentAquarium.volume() / getAllOfType<T>().Length; }
+
+        Debug.Log("currPos "+ transform.localPosition);
+        Debug.Log("nrarbyPost "+ randVecNearby);
+        Debug.Log("closest "+ closestTSqrDist);
+        Debug.Log("curr units per T "+ currUnitsCubedPerT);
+        if ((closestTSqrDist > minSpace*minSpace) && (minUnitsCubedPerT < currUnitsCubedPerT))
         {
-            duplicate(randVec);
+            print("duplicating");
+            duplicate(randVecNearby);
         }
         else
         {
             beingEaten(2, false); //lose some health to slow duplicaye attempts
+            print("failed to duplucate");
         }
 
     }

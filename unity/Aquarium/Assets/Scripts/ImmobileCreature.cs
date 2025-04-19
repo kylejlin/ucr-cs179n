@@ -8,7 +8,8 @@ public class ImmobileCreature : Creature
     void Start()
     {
         growthRate = 0.5f;
-        setScaleTo(spawnScale);
+        setScaleTo(spawnSize);
+        name = "Algea "+ entityName;
     }
 
     // Update is called once per frame
@@ -19,7 +20,7 @@ public class ImmobileCreature : Creature
         {
             grow(growthRate);
             count = 0;
-            if ((getScale() == adultSize) && (health == adultHealth)) { tryDuplicate<ImmobileCreature>(5, 1000); print("boom"); }
+            if ((getScale() == adultSize) && (health == adultHealth)) { tryDuplicate<ImmobileCreature>(5, 20000); print("boom"); }
         }
         eat(1 * Time.deltaTime);
     }
