@@ -3,30 +3,37 @@ using UnityEngine;
 public class ImmobileCreature : Creature
 {
     [HideInInspector]
-    
+    protected float eatRate = 5f; //how much it eats (through photosynthesis or filter feeding or w/e) per minute
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    protected new void Start()
     {
+        base.Start();
+        name = "Algea "+ entityName;
+        growthRate = 0.1f; 
+        adultHealth = 20; 
+
+        spawnSize = 0.1f;
+        spawnRadius = 20;
+        minSpawnSpace = 5; 
+        minCMCubedPer = 10000;
+        initSize();
+
 
     }
 
     // Update is called once per frame
     void Update()
     {
-
-    }
-
-    public void beingEaten(int amount)
-    {
-        if (amount < 0) { Debug.LogWarning("beingEaten() amount negative"); return; }
-
-        health -= amount;
-        if (health <= 0)
+        count += Time.deltaTime;
+        if (count > 2) //sped up for demo
         {
-            Destroy(gameObject);
-            return;
+            grow(growthRate);
+            count = 0;
+            if ((getScale() == adultSize) && (health == adultHealth)) { tryDuplicate<ImmobileCreature>(minSpawnSpace, minCMCubedPer); }
         }
-        setScaleTo((float)health / maxHealth);
+        eat(eatRate/5 * Time.deltaTime);
     }
+
+
 
 }

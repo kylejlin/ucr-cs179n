@@ -31,10 +31,19 @@ public class MobileCreature : Creature
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    protected new void Start()
     {
+        base.Start(); //call Creature Start()
         mobileCreatureRB = GetComponent<Rigidbody>();
-        
+        name = "Trilobite "+ entityName;
+        growthRate = 0.1f; 
+        adultHealth = 20; 
+
+        spawnSize = 1f; //for demo, have them spawn fully grown
+        spawnRadius = 5;
+        minSpawnSpace = 1; 
+        minCMCubedPer = 2000;
+        initSize();
     }
 
     // FixedUpdate is called at fixed time intervals
