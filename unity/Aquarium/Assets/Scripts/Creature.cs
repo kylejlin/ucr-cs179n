@@ -4,11 +4,11 @@ public class Creature : Entity
 {
     //these are mostly randomly set so that things don't crash. Each creature should set it to the correct value in their child class
     public float hunger = 0; //current hunger?
-    public float health = 2; //current health
+    public float energy = 2; //current health
 
-    public float maxHealth = 5; //current health cap
+    public float maxEnergy = 5; //current health cap
     protected float growthRate = 0.1f; //how much it grows per minute
-    protected float adultHealth = 20; //max healthpool it can grow to
+    protected static float adultEnergy = 20; //max energypool it can grow to
     protected int adultSize = 1; //max size it can grow to
 
     protected float spawnSize = 0.1f; //size it starts as (since adult size is 1, its a percentage)
@@ -32,33 +32,33 @@ public class Creature : Entity
     protected void initSize()
     {
         setMaturity(spawnSize);
-        health = maxHealth;
+        energy = maxEnergy;
     }
 
-    /// <summary> scales up size and health by the percentage passed in (wont exceed max size set) </summary>
+    /// <summary> scales up size and energy by the percentage passed in (wont exceed max size set) </summary>
     public void grow(float percentage)
     {
-        if (maxHealth + (adultHealth * percentage) > adultHealth)
+        if (maxEnergy + (adultEnergy * percentage) > adultEnergy)
         {
             setMaturity(1);
         }
-        else if (maxHealth + (adultHealth * percentage) <= 0)
+        else if (maxEnergy + (adultEnergy * percentage) <= 0)
         {
             die();
             Debug.LogWarning("Shrunk to death");
         }
         else
         {
-            setMaturity(percentage + maxHealth/adultHealth);
+            setMaturity(percentage + maxEnergy/adultEnergy);
         }
     }
 /// <summary>
-/// set growth to this size, keeping size and health proportional (unlike grow, which ADDS the percentage to the current size). Percentage cant be negative
+/// set growth to this size, keeping size and energy proportional (unlike grow, which ADDS the percentage to the current size). Percentage cant be negative
 /// </summary>
     public void setMaturity(float percentage){
         if(percentage <= 0) {Debug.LogWarning("maturity cannot be negative"); }
         setScaleTo(adultSize * percentage); 
-        maxHealth = percentage * adultHealth;
+        maxEnergy = percentage * adultEnergy;
     }
 
     /// <summary> make identical copy (for now, in a random position nearby. This is probably temporary). </summary>
@@ -68,7 +68,7 @@ public class Creature : Entity
         if (!parentAquarium.isInBounds(position)) {return; } //keep w/in aquarium
 
         parentAquarium.addEntity(this, position, transform.localRotation); //spawn nearby in same aquarium
-        beingEaten(spawnSize*adultHealth, false); //lose the same amount as the new creature spawned has
+        beingEaten(spawnSize*adultEnergy, false); //lose the same amount as the new creature spawned has
     }
 
     /// <summary> try to duplicate, but dont if there is a T too close to the attempted spawn location or too many of T in the aquarium as a whole. </summary>
@@ -94,33 +94,33 @@ public class Creature : Entity
         }
         else
         {
-            beingEaten(spawnSize * adultHealth, false); //lose some health to slow duplicate attempts
+            beingEaten(spawnSize * adultEnergy, false); //lose some energy to slow duplicate attempts
         }
 
     }
 
     /// <summary>
-    /// health -= amount. scaleDown if it is like algea and should become smaller. dont scaleDown if it is like a trilobite and should stay the same size at low health
+    /// energy -= amount. scaleDown if it is like algea and should become smaller. dont scaleDown if it is like a trilobite and should stay the same size at low energy
     /// </summary>
-    /// <returns> amount of health gained (will be amount if this has that amount of health to give, or less if it was already low on health) </returns>
+    /// <returns> amount of energy gained (will be amount if this has that amount of energy to give, or less if it was already low on energy) </returns>
     public float beingEaten(float amount, bool scaleDown = false)
     {
         if (amount < 0) { Debug.LogWarning("beingEaten() amount negative"); return 0; }
 
-        if (health - amount <= 0) //if the creature does not have enough health to survive the eating
+        if (energy - amount <= 0) //if the creature does not have enough energy to survive the eating
         {
             die();
-            return health;
+            return energy;
         }
 
         if (!scaleDown) //if it does survive and should not shrink
         {
-            health -= amount;
+            energy -= amount;
         }
         else //if it does survive and should shrink
         {
-            health -= amount;
-            grow(-amount/adultHealth); //will never shrink to death
+            energy -= amount;
+            grow(-amount/adultEnergy); //will never shrink to death
         }
         return amount;
     }
@@ -128,11 +128,11 @@ public class Creature : Entity
     public void eat(float amount)
     {
         if (amount < 0) { Debug.LogWarning("eat() amount negative"); return; }
-        if(health + amount > maxHealth)
+        if(energy + amount > maxEnergy)
         {
-            health = maxHealth;
+            energy = maxEnergy;
         }
-        else health += amount;
+        else energy += amount;
     }
 
     protected void initDisplayMode(){

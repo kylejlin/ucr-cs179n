@@ -10,7 +10,7 @@ public class ImmobileCreature : Creature
         base.Start();
         name = "Algea "+ entityName;
         growthRate = 0.1f; 
-        adultHealth = 20; 
+        adultEnergy = 20; 
 
         spawnSize = 0.1f;
         spawnRadius = 20;
@@ -29,7 +29,7 @@ public class ImmobileCreature : Creature
         {
             grow(growthRate);
             count = 0;
-            if ((getScale() == adultSize) && (health == adultHealth)) { tryDuplicate<ImmobileCreature>(minSpawnSpace, minCMCubedPer); }
+            if ((getScale() == adultSize) && (energy == adultEnergy)) { tryDuplicate<ImmobileCreature>(minSpawnSpace, minCMCubedPer); }
         }
         eat(eatRate/5 * Time.deltaTime);
     }
