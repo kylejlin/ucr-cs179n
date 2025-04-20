@@ -8,6 +8,7 @@ public class Entity : MonoBehaviour
     private int buyMoney;
     private int sellMoney;
     private Rarity rarity;
+    public Aquarium parentAquarium = null;
 
 
     void Start()
@@ -65,6 +66,11 @@ public class Entity : MonoBehaviour
 
     }
 
+    public void die(){
+        if(parentAquarium != null) { parentAquarium.removeEntity(this);}
+        else { Debug.LogWarning("Could not find Aquarium parent"); }
+        Destroy(gameObject);
+    }
     public float getSqrDistTo(Entity entity) { return (transform.localPosition - entity.transform.localPosition).sqrMagnitude; }
     public int getID() { return id; }
     public int getBuyMoney() { return buyMoney; }
