@@ -50,6 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: Trilobite1
   id: 0
+  parentAquarium: {fileID: 0}
   hunger: 0
   health: 10
   maxHealth: 10
@@ -158,7 +159,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 0
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 2
 --- !u!1001 &8101776501261929440

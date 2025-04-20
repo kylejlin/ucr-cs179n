@@ -116,11 +116,13 @@ public class MobileCreature : Creature
         float k = speed * Time.deltaTime;
         displacement.Scale(new Vector3(k, k, k));
         transform.position += displacement;
+        rotateTowards(delta);
     }
 
     //Takes in Vector3 velocity to move mobileCreature
     private void move(Vector3 velocity)
-    {
+    {   
+        //using rigidbody.MovePosition() will make transitioning to the new position smoother if interpolation is enabled
         //MovePosition(currentPosition + displacement)
         mobileCreatureRB.MovePosition(mobileCreatureRB.position + mobileCreatureRB.rotation * velocity * speed * Time.fixedDeltaTime);
     }
@@ -131,5 +133,12 @@ public class MobileCreature : Creature
         //angularVelocity tells how many degrees to rotate in each axis
         Quaternion deltaRotation = Quaternion.Euler(angularVelocity * Time.fixedDeltaTime);
         mobileCreatureRB.MoveRotation(mobileCreatureRB.rotation * deltaRotation);
+    }
+
+    //Takes in Vector3 angularVelocity to rotate mobileCreature towards direction of vector
+    private void rotateTowards(Vector3 angularVelocity)
+    {   
+        //rotates creature with respect to front of creature (head points towards rotation)
+        mobileCreatureRB.MoveRotation(Quaternion.LookRotation(angularVelocity,Vector3.forward));
     }
 }
