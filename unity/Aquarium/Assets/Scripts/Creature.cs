@@ -2,23 +2,38 @@ using UnityEngine;
 
 public class Creature : Entity
 {
-    public float hunger = 0;
+    //these are mostly randomly set so that things don't crash. Each creature should set it to the correct value in their child class
+    public float hunger = 0; //current hunger?
     public float health = 2; //current health
-    protected float maxHealth = 5; //current health cap
+
+    public float maxHealth = 5; //current health cap
     protected float growthRate = 0.1f; //how much it grows per minute
     protected float adultHealth = 20; //max healthpool it can grow to
     protected int adultSize = 1; //max size it can grow to
-    protected float spawnSize = 0.1f; //size it starts as
+
+    protected float spawnSize = 0.1f; //size it starts as (since adult size is 1, its a percentage)
+    protected float spawnRadius = 5; //how far away it can spawn offspring
+    protected float minSpawnSpace = 1; //space needed for offspring to spawn (avoids crowding, needs to be smaller than spawnRadius)
+    protected float minCMCubedPer = 10000; //limits max population according to the size of the tank (each creature needs this amount of cm^3 of water)
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    protected new void Start()
     {
-        
+        base.Start();
+        initSize();
+
     }
 
     // Update is called once per frame
     void Update()
     {
 
+    }
+    
+    protected void initSize()
+    {
+        maxHealth = spawnSize * adultHealth;
+        health = maxHealth;
+        grow(0);
     }
 
     /// <summary> scales up size and health by the percentage passed in (wont exceed max size set) </summary>
@@ -48,34 +63,34 @@ public class Creature : Entity
         if (parentAquarium == null) { Debug.LogWarning("Could not find Aquarium parent"); return; }
 
         parentAquarium.addEntity(this, position, transform.localRotation); //spawn nearby in same aquarium
-        beingEaten(2, false); //lose some health //this should be the same amount as the new creature spawned has, but for now is hard-coded
+        beingEaten(spawnSize*adultHealth, false); //lose the same amount as the new creature spawned has
     }
 
     /// <summary> try to duplicate, but dont if there is a T too close to the attempted spawn location or too many of T in the aquarium as a whole. </summary>
-    public void tryDuplicate<T>(float minSpace = 0, float minUnitsCubedPerT = 0) where T : Entity
+    public void tryDuplicate<T>(float minSpace = 0, float minCMCubedPerT = 0) where T : Entity
     {
-        Vector3 randVecNearby = new Vector3(Random.Range(-10, 10), 0, Random.Range(-10, 10)) + transform.localPosition; //for now range is hardcoded to 10. In the future it should be a creature parameter 
+        Vector3 randVecNearby = new Vector3(Random.Range(-spawnRadius, spawnRadius), 0, Random.Range(-spawnRadius, spawnRadius)) + transform.localPosition; 
         
         T closestT = FindClosest<T>(randVecNearby); 
         float closestTSqrDist =  Mathf.Infinity; 
         if (closestT != default(T)) {closestTSqrDist = getSqrDistBw(FindClosest<T>(randVecNearby).transform.localPosition, randVecNearby); } 
         
         int numTInTank = getAllOfType<T>().Length;
-        float currUnitsCubedPerT = Mathf.Infinity;
-        if (numTInTank > 0 ) { currUnitsCubedPerT = parentAquarium.volume() / getAllOfType<T>().Length; }
+        float currCMCubedPerT = Mathf.Infinity;
+        if (numTInTank > 0 ) { currCMCubedPerT = parentAquarium.volume() / getAllOfType<T>().Length; }
 
-        Debug.Log("currPos "+ transform.localPosition);
-        Debug.Log("nrarbyPost "+ randVecNearby);
-        Debug.Log("closest "+ closestTSqrDist);
-        Debug.Log("curr units per T "+ currUnitsCubedPerT);
-        if ((closestTSqrDist > minSpace*minSpace) && (minUnitsCubedPerT < currUnitsCubedPerT))
+        //Debug.Log("currPos "+ transform.localPosition);
+        //Debug.Log("nrarbyPost "+ randVecNearby);
+        //Debug.Log("closest "+ closestTSqrDist);
+        //Debug.Log("curr units per T "+ currUnitsCubedPerT);
+        if ((closestTSqrDist > minSpace*minSpace) && (minCMCubedPerT < currCMCubedPerT))
         {
             print("duplicating");
             duplicate(randVecNearby);
         }
         else
         {
-            beingEaten(2, false); //lose some health to slow duplicaye attempts
+            beingEaten(spawnSize * adultHealth, false); //lose some health to slow duplicate attempts
             print("failed to duplucate");
         }
 
@@ -116,4 +131,5 @@ public class Creature : Entity
         }
         else health += amount;
     }
+
 }

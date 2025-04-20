@@ -12,9 +12,9 @@ public class Entity : MonoBehaviour
     protected double count = 0; //to count deltaTime 
 
 
-    void Start()
+    protected void Start()
     {
-        
+
     }
 
     // Update is called once per frame
