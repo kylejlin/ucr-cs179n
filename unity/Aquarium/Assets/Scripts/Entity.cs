@@ -9,9 +9,9 @@ public class Entity : MonoBehaviour
     private int sellMoney;
     private Rarity rarity;
     public Aquarium parentAquarium = null;
-
-
-    void Start()
+    protected double count = 0; //to count deltaTime 
+    public bool displayMode = false; //true if this gameobject is being displayed in UI and so should spawn as an adult and not Update() (frozen, don't interact) 
+    protected void Start()
     {
 
     }
@@ -22,7 +22,7 @@ public class Entity : MonoBehaviour
 
     }
 
-    /// <returns> entity of type T that is closest to the caller or null if there are none found </returns>
+    /// <returns> entity of type T that is closest to the caller (excludes self) or null if there are none found </returns>
     public T FindClosest<T>() where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
 
     {
@@ -33,11 +33,33 @@ public class Entity : MonoBehaviour
 
         foreach (T entity in foundEntities)
         {
-            float newDist = getSqrDistTo(entity);
-            if (newDist <= 0) continue; // dont count yourself
+            float newDist = getSqrDistToEntity(entity);
+            if(newDist <= 0) continue; // dont count yourself
+
+            if(closest == default(T)) closest = entity; 
+            else if ((newDist < getSqrDistToEntity(closest))) 
+            {
+                closest = entity;
+            }
+        }
+        return closest;
+    }
+
+    /// <returns> entity of type T that is closest to Position or null if there are none found </returns>
+    public T FindClosest<T>(Vector3 position) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
+
+    {
+        T[] foundEntities = getAllOfType<T>();
+        if (foundEntities == null) return default(T);
+
+        T closest = default(T);
+
+        foreach (T entity in foundEntities)
+        {
+            float newDist = getSqrDistBw(entity.transform.localPosition, position);
 
             if (closest == default(T)) closest = entity;
-            else if ((newDist < getSqrDistTo(closest)))
+            else if ((newDist < getSqrDistBw(closest.transform.localPosition, position)))
             {
                 closest = entity;
             }
@@ -62,7 +84,6 @@ public class Entity : MonoBehaviour
     {
         if (scaleFactor <= 0) { Debug.LogWarning("setScaleTo() scaleFactor cannot be <= 0 "); return; }
         transform.localScale = new Vector3(scaleFactor, scaleFactor, scaleFactor);
-        Debug.Log(scaleFactor);
 
     }
 
@@ -71,10 +92,13 @@ public class Entity : MonoBehaviour
         else { Debug.LogWarning("Could not find Aquarium parent"); }
         Destroy(gameObject);
     }
-    public float getSqrDistTo(Entity entity) { return (transform.localPosition - entity.transform.localPosition).sqrMagnitude; }
+    
+    public float getSqrDistToEntity(Entity entity) { return (transform.localPosition - entity.transform.localPosition).sqrMagnitude; }
+    public float getSqrDistBw(Vector3 vec1, Vector3 vec2) { return (vec1 - vec2).sqrMagnitude; }
     public int getID() { return id; }
     public int getBuyMoney() { return buyMoney; }
     public int getSellMoney() { return sellMoney; }
+    public float getScale() { return transform.localScale.x; }
     public Rarity GetRarity() { return rarity; }
 
 }

@@ -14,27 +14,29 @@ public class MobileCreature : Creature
     public int consumeRate;
     public float speed = 1;
 
-    public static float maxEnergy = 100;
-
-    public float energy = maxEnergy;
-
     public static float huntingEnergyThreshold = 50;
-
-
     public static float metabolismRate = 1;
+    public static float maxEatingDistance = 5;
 
     public BehaviorState state = BehaviorState.Idle;
-
-    public static float maxEatingDistance = 5;
 
     private Rigidbody mobileCreatureRB;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    protected new void Start()
     {
+        base.Start(); //call Creature Start()
         mobileCreatureRB = GetComponent<Rigidbody>();
-        
+        name = "Trilobite "+ entityName;
+        growthRate = 0.1f; 
+        adultEnergy = 20; 
+
+        spawnSize = 1f; //for demo, have them spawn fully grown
+        spawnRadius = 5;
+        minSpawnSpace = 1; 
+        minCMCubedPer = 2000;
+        initSize();
     }
 
     // FixedUpdate is called at fixed time intervals
@@ -107,7 +109,7 @@ public class MobileCreature : Creature
             // For now, I implemented eating as instantaneous.
             // We can always adjust this later if you want a more gradual shrinking.
             energy = maxEnergy;
-            closest.beingEaten(closest.maxHealth);
+            closest.beingEaten(closest.maxEnergy);
             return;
         }
 
