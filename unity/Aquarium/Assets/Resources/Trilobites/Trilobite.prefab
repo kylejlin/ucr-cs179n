@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 8370475931250518094}
   - component: {fileID: 6825346676113195874}
   - component: {fileID: 4710943548981468850}
+  - component: {fileID: 6303874632496072109}
   m_Layer: 0
   m_Name: Trilobite
   m_TagString: Untagged
@@ -27,14 +28,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6660640480602176354}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -15.6, y: 0, z: 48.8}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
+  m_LocalPosition: {x: -15.639864, y: 0, z: 47.159657}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8639579401613110283}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
 --- !u!114 &8370475931250518094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -49,11 +50,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: Trilobite1
   id: 0
+  parentAquarium: {fileID: 0}
   hunger: 0
   health: 10
+  maxHealth: 10
   canSwim: 1
   consumeRate: 8
   speed: 3
+  energy: 100
+  state: 0
 --- !u!65 &6825346676113195874
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -73,8 +78,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 2.2649288, y: 0.51496315, z: 3.4361496}
+  m_Center: {x: 0.03622341, y: 0.037851214, z: 0.13322449}
 --- !u!212 &4710943548981468850
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -130,6 +135,33 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!54 &6303874632496072109
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6660640480602176354}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 1
+  m_Constraints: 0
+  m_CollisionDetection: 2
 --- !u!1001 &8101776501261929440
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -152,7 +184,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
       propertyPath: m_LocalRotation.x
@@ -160,7 +192,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
       propertyPath: m_LocalRotation.y
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
       propertyPath: m_LocalRotation.z
@@ -172,7 +204,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
