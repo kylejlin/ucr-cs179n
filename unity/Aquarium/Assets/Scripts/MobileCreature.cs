@@ -34,9 +34,7 @@ public class MobileCreature : Creature
     void Start()
     {
         mobileCreatureRB = GetComponent<Rigidbody>();
-        MobileCreature friend = FindClosest<MobileCreature>();
-        if (friend == default(MobileCreature)) Debug.Log("None found");
-        else Debug.Log("nearest trilo pos:" + friend.transform.localPosition.x);
+        
     }
 
     // FixedUpdate is called at fixed time intervals
