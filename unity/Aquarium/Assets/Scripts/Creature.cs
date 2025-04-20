@@ -31,9 +31,8 @@ public class Creature : Entity
     
     protected void initSize()
     {
-        maxHealth = spawnSize * adultHealth;
+        setMaturity(spawnSize);
         health = maxHealth;
-        grow(0);
     }
 
     /// <summary> scales up size and health by the percentage passed in (wont exceed max size set) </summary>
@@ -41,8 +40,7 @@ public class Creature : Entity
     {
         if (maxHealth + (adultHealth * percentage) > adultHealth)
         {
-            maxHealth = adultHealth;
-            setScaleTo(adultSize);
+            setMaturity(1);
         }
         else if (maxHealth + (adultHealth * percentage) <= 0)
         {
@@ -51,16 +49,23 @@ public class Creature : Entity
         }
         else
         {
-            maxHealth += percentage * adultHealth;
-            setScaleTo(maxHealth / adultHealth * adultSize); //keep size and maxHealth proportional
-
+            setMaturity(percentage + maxHealth/adultHealth);
         }
+    }
+/// <summary>
+/// set growth to this size, keeping size and health proportional (unlike grow, which ADDS the percentage to the current size). Percentage cant be negative
+/// </summary>
+    public void setMaturity(float percentage){
+        if(percentage <= 0) {Debug.LogWarning("maturity cannot be negative"); }
+        setScaleTo(adultSize * percentage); 
+        maxHealth = percentage * adultHealth;
     }
 
     /// <summary> make identical copy (for now, in a random position nearby. This is probably temporary). </summary>
     public void duplicate(Vector3 position) 
     {
         if (parentAquarium == null) { Debug.LogWarning("Could not find Aquarium parent"); return; }
+        if (!parentAquarium.isInBounds(position)) {return; } //keep w/in aquarium
 
         parentAquarium.addEntity(this, position, transform.localRotation); //spawn nearby in same aquarium
         beingEaten(spawnSize*adultHealth, false); //lose the same amount as the new creature spawned has
@@ -85,13 +90,11 @@ public class Creature : Entity
         //Debug.Log("curr units per T "+ currUnitsCubedPerT);
         if ((closestTSqrDist > minSpace*minSpace) && (minCMCubedPerT < currCMCubedPerT))
         {
-            print("duplicating");
             duplicate(randVecNearby);
         }
         else
         {
             beingEaten(spawnSize * adultHealth, false); //lose some health to slow duplicate attempts
-            print("failed to duplucate");
         }
 
     }
@@ -104,7 +107,7 @@ public class Creature : Entity
     {
         if (amount < 0) { Debug.LogWarning("beingEaten() amount negative"); return 0; }
 
-        if (health - amount < 0) //if the creature does not have enough health to survive the eating
+        if (health - amount <= 0) //if the creature does not have enough health to survive the eating
         {
             die();
             return health;
@@ -130,6 +133,11 @@ public class Creature : Entity
             health = maxHealth;
         }
         else health += amount;
+    }
+
+    protected void initDisplayMode(){
+        setMaturity(1);
+        this.enabled = false; //turn off Update()
     }
 
 }

@@ -10,11 +10,10 @@ public class Entity : MonoBehaviour
     private Rarity rarity;
     public Aquarium parentAquarium = null;
     protected double count = 0; //to count deltaTime 
-
-
+    public bool displayMode = false; //true if this gameobject is being displayed in UI and so should spawn as an adult and not Update() (frozen, don't interact) 
     protected void Start()
     {
-
+        
     }
 
     // Update is called once per frame

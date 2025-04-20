@@ -9,6 +9,15 @@ public class MobileCreature : Creature
     protected new void Start()
     {
         base.Start(); //call Creature Start()
+        name = "Trilobite "+ entityName;
+        growthRate = 0.1f; 
+        adultHealth = 20; 
+
+        spawnSize = 1f; //for demo, have them spawn fully grown
+        spawnRadius = 5;
+        minSpawnSpace = 1; 
+        minCMCubedPer = 2000;
+        initSize();
     }
 
     // Update is called once per frame

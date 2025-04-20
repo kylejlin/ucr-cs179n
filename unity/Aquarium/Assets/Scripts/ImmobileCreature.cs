@@ -17,19 +17,21 @@ public class ImmobileCreature : Creature
         minSpawnSpace = 5; 
         minCMCubedPer = 10000;
         initSize();
+
+
     }
 
     // Update is called once per frame
     void Update()
     {
         count += Time.deltaTime;
-        if (count > 60)
+        if (count > 2) //sped up for demo
         {
             grow(growthRate);
             count = 0;
-            if ((getScale() == adultSize) && (health == adultHealth)) { tryDuplicate<ImmobileCreature>(minSpawnSpace, minCMCubedPer); print("boom"); }
+            if ((getScale() == adultSize) && (health == adultHealth)) { tryDuplicate<ImmobileCreature>(minSpawnSpace, minCMCubedPer); }
         }
-        eat(eatRate/60 * Time.deltaTime);
+        eat(eatRate/5 * Time.deltaTime);
     }
 
 

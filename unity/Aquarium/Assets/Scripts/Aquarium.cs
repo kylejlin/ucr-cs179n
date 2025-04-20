@@ -51,7 +51,6 @@ public class Aquarium : MonoBehaviour
         // );
 
         return addEntity(newEntity, randomPosition, Quaternion.identity);
-        
     }
 
     public Entity removeEntity(Entity entity)
