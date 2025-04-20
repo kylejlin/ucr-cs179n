@@ -84,6 +84,8 @@ public class MobileCreature : Creature
     void UpdateDying()
     {
         // TODO
+        Vector3 angVec = new Vector3(0, 0, 180); //rotate a little bit around axes
+        rotate(angVec);
     }
 
     void UpdateHunting()
