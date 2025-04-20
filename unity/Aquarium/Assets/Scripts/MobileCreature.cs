@@ -33,7 +33,8 @@ public class MobileCreature : Creature
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-
+        mobileCreatureRB = GetComponent<Rigidbody>();
+        
     }
 
     // FixedUpdate is called at fixed time intervals
