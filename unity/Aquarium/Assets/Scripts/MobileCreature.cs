@@ -11,12 +11,12 @@ public class MobileCreature : Creature
 {   
     
     public bool canSwim = false;
-    public int consumeRate;
+    public int consumeRate = 10;
     public float speed = 1;
 
-    public static float huntingEnergyThreshold = 50;
+    public static float huntingEnergyThreshold = 20;
     public static float metabolismRate = 1;
-    public static float maxEatingDistance = 5;
+    public static float maxEatingDistance = 7;
 
     public BehaviorState state = BehaviorState.Idle;
 
@@ -30,7 +30,9 @@ public class MobileCreature : Creature
         mobileCreatureRB = GetComponent<Rigidbody>();
         name = "Trilobite "+ entityName;
         growthRate = 0.1f; 
-        adultEnergy = 20; 
+        adultEnergy = 40; 
+        energy = 40;
+        maxEnergy = 40;
 
         spawnSize = 1f; //for demo, have them spawn fully grown
         spawnRadius = 5;
@@ -61,10 +63,12 @@ public class MobileCreature : Creature
 
         if (state == BehaviorState.Idle)
         {
+            speed = 1;
             UpdateIdle();
         }
         else if (state == BehaviorState.Hunting)
         {
+            speed = 3;
             UpdateHunting();
         }
         else if (state == BehaviorState.Dying)
@@ -77,8 +81,14 @@ public class MobileCreature : Creature
     {
         Vector3 vec = new Vector3(0,0,1); //move forward
         move(vec);
-        Vector3 angVec = new Vector3(0, 10, 0); //rotate a little bit around axes
-        rotate(angVec);
+        if(transform.localRotation.eulerAngles.x > 45){ //if creature pointed downwards, rotate upwards
+            // Vector3 angVec = new Vector3(30, 0, 0); 
+            // rotate(angVec);
+        }else{
+            Vector3 angVec = new Vector3(0, 10, 0); //rotate a little bit around axes
+            rotate(angVec);
+        }
+        
     }
 
     void UpdateDying()
@@ -106,10 +116,8 @@ public class MobileCreature : Creature
 
         if (distance <= maxEatingDistance)
         {
-            // For now, I implemented eating as instantaneous.
-            // We can always adjust this later if you want a more gradual shrinking.
-            energy = maxEnergy;
-            closest.beingEaten(closest.maxEnergy);
+            //Eat based on consumeRate 
+            eat(closest.beingEaten(consumeRate));
             return;
         }
 
