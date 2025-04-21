@@ -13,10 +13,7 @@ public class SelectedItem : Preview
         buyButton = gameObject.transform.Find("BuyButton").gameObject.GetComponent<Button>();
         buyButton.onClick.AddListener(() => BuyItem());
     }
-    void Update()
-    {
 
-    }
     void BuyItem()
     {
         if (gameManager.CanBuy(this.getEntity().getBuyMoney()))
