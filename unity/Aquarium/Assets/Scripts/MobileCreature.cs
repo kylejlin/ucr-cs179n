@@ -158,6 +158,5 @@ public class MobileCreature : Creature
         setMaturity(1);
         this.enabled = false; //turn off Update()
         shopMode = true;
-        print("trilobite");
     }
 }

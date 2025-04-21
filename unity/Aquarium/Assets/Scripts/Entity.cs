@@ -103,6 +103,6 @@ public class Entity : MonoBehaviour
     public int getSellMoney() { return sellMoney; }
     public float getScale() { return transform.localScale.x; }
     public Rarity GetRarity() { return rarity; }
-    public virtual void initShopMode() { this.enabled = false; shopMode = true;         print("entity");} //get overridden by child classes
+    public virtual void initShopMode() { this.enabled = false; shopMode = true; } //get overridden by child classes
 
 }

@@ -32,7 +32,7 @@ public class Aquarium : MonoBehaviour
         return e;
     }
 
-    public Entity addEntity(Entity newEntity, bool onGround = false)
+    public Entity addEntity(Entity newEntity, bool onGround = true) //temporary. we need a system so the shop knows what to spawn on the ground or not. (bool in entity?)
     {
         if (newEntity == null) { Debug.LogWarning("Null entity passed into addEntity"); return null; }
         Vector3 randomPosition = new Vector3(
