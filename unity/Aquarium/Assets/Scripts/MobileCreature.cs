@@ -131,6 +131,7 @@ public class MobileCreature : Creature
     //Takes in Vector3 velocity to move mobileCreature
     private void move(Vector3 velocity)
     {   
+        if(shopMode) {Debug.LogWarning("Can't move in shop mode"); return; }
         //using rigidbody.MovePosition() will make transitioning to the new position smoother if interpolation is enabled
         //MovePosition(currentPosition + displacement)
         mobileCreatureRB.MovePosition(mobileCreatureRB.position + mobileCreatureRB.rotation * velocity * speed * Time.fixedDeltaTime);
@@ -139,6 +140,7 @@ public class MobileCreature : Creature
     //Takes in Vector3 angularVelocity to rotate mobileCreature
     private void rotate(Vector3 angularVelocity)
     {
+        if(shopMode) {Debug.LogWarning("Can't rotate in shop mode"); return; }
         //angularVelocity tells how many degrees to rotate in each axis
         Quaternion deltaRotation = Quaternion.Euler(angularVelocity * Time.fixedDeltaTime);
         mobileCreatureRB.MoveRotation(mobileCreatureRB.rotation * deltaRotation);
@@ -147,15 +149,14 @@ public class MobileCreature : Creature
     //Takes in Vector3 angularVelocity to rotate mobileCreature towards direction of vector
     private void rotateTowards(Vector3 angularVelocity)
     {   
+        if(shopMode) {Debug.LogWarning("Can't rotate in shop mode"); return; }
         //rotates creature with respect to front of creature (head points towards rotation)
         mobileCreatureRB.MoveRotation(Quaternion.LookRotation(angularVelocity,Vector3.forward));
     }
 
-    public new void initDisplayMode(){
+    public override void initShopMode() { //overrides the function in Entity
         setMaturity(1);
         this.enabled = false; //turn off Update()
-        displayMode = true;
-        mobileCreatureRB.isKinematic = false;
-        print("success");
+        shopMode = true;
     }
 }
