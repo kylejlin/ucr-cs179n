@@ -61,7 +61,6 @@ public class ShopUI : MonoBehaviour
         {
             foreach (ShopItem item in ShopItems)
             {
-                Debug.Log("ShopItem item in ShopItems");
 
                 if (gameManager.isCollected(item.getEntity()))
                 {
@@ -96,7 +95,6 @@ public class ShopUI : MonoBehaviour
 
     private IEnumerator ShowToastCoroutine(string message, float duration)
     {
-        Debug.Log("ShowToastCoroutine");
         toast.GetComponentInChildren<TextMeshProUGUI>().text = message;
         toast.SetActive(true);
         yield return new WaitForSeconds(duration);
