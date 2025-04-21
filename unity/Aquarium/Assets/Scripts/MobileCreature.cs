@@ -142,4 +142,12 @@ public class MobileCreature : Creature
         //rotates creature with respect to front of creature (head points towards rotation)
         mobileCreatureRB.MoveRotation(Quaternion.LookRotation(angularVelocity,Vector3.forward));
     }
+
+    public new void initDisplayMode(){
+        setMaturity(1);
+        this.enabled = false; //turn off Update()
+        displayMode = true;
+        mobileCreatureRB.isKinematic = false;
+        print("success");
+    }
 }

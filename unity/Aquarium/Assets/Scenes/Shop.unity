@@ -2423,6 +2423,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aquarium: {fileID: 595684618}
+  algeaPrefab: {fileID: 2454679809097315881, guid: a4a9b95bf765049f4b0e42146b729767, type: 3}
   creatures: []
   decorations: []
   level: 1
@@ -5199,7 +5200,7 @@ Transform:
   m_GameObject: {fileID: 2115515212}
   serializedVersion: 2
   m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 8.22, z: -0.64}
+  m_LocalPosition: {x: 0, y: 96.9, z: -0.64}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

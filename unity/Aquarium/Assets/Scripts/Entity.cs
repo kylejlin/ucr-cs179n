@@ -103,5 +103,6 @@ public class Entity : MonoBehaviour
     public int getSellMoney() { return sellMoney; }
     public float getScale() { return transform.localScale.x; }
     public Rarity GetRarity() { return rarity; }
+    public void initDisplayMode() { this.enabled = false; displayMode = true;         print("entity");}
 
 }

@@ -82,7 +82,7 @@ public class Creature : Entity
         
         int numTInTank = getAllOfType<T>().Length;
         float currCMCubedPerT = Mathf.Infinity;
-        if (numTInTank > 0 ) { currCMCubedPerT = parentAquarium.volume() / getAllOfType<T>().Length; }
+        if ((numTInTank > 0 )) { currCMCubedPerT = parentAquarium.volume() / numTInTank; }
 
         //Debug.Log("currPos "+ transform.localPosition);
         //Debug.Log("nrarbyPost "+ randVecNearby);
@@ -135,9 +135,10 @@ public class Creature : Entity
         else energy += amount;
     }
 
-    protected void initDisplayMode(){
+    public new void initDisplayMode(){
         setMaturity(1);
         this.enabled = false; //turn off Update()
+        print("creature");
     }
 
 }
