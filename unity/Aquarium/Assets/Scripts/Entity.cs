@@ -37,10 +37,10 @@ public class Entity : MonoBehaviour
         foreach (T entity in foundEntities)
         {
             float newDist = getSqrDistToEntity(entity);
-            if(newDist <= 0) continue; // dont count yourself
+            if (newDist <= 0) continue; // dont count yourself
 
-            if(closest == default(T)) closest = entity; 
-            else if ((newDist < getSqrDistToEntity(closest))) 
+            if (closest == default(T)) closest = entity;
+            else if ((newDist < getSqrDistToEntity(closest)))
             {
                 closest = entity;
             }
@@ -90,12 +90,13 @@ public class Entity : MonoBehaviour
 
     }
 
-    public void die(){
-        if(parentAquarium != null) { parentAquarium.removeEntity(this);}
+    public void die()
+    {
+        if (parentAquarium != null) { parentAquarium.removeEntity(this); }
         else { Debug.LogWarning("Could not find Aquarium parent"); }
         Destroy(gameObject);
     }
-    
+
     public float getSqrDistToEntity(Entity entity) { return (transform.localPosition - entity.transform.localPosition).sqrMagnitude; }
     public float getSqrDistBw(Vector3 vec1, Vector3 vec2) { return (vec1 - vec2).sqrMagnitude; }
     public int getID() { return id; }
@@ -103,6 +104,6 @@ public class Entity : MonoBehaviour
     public int getSellMoney() { return sellMoney; }
     public float getScale() { return transform.localScale.x; }
     public Rarity GetRarity() { return rarity; }
-    public void initDisplayMode() { this.enabled = false; displayMode = true;         print("entity");}
+    public void initDisplayMode() { this.enabled = false; displayMode = true; }
 
 }

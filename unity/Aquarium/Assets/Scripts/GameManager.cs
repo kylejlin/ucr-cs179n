@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
-using Unity.VisualScripting; //list and dictionary definition
+using Unity.VisualScripting;
+using System.Collections.ObjectModel; //list and dictionary definition
 
 public enum Rarity
 {
@@ -17,6 +18,9 @@ public class GameManager : MonoBehaviour
     public ImmobileCreature algeaPrefab;
     public List<Entity> creatures = new List<Entity>();
     public List<Entity> decorations = new List<Entity>();
+
+
+    private static Dictionary<Entity, bool> collection = new();
 
     int money = 20; // todo: 
     public int level = 1; // todo:
@@ -68,6 +72,7 @@ public class GameManager : MonoBehaviour
 
     public void addEntity(Entity entity, Aquarium aquarium)
     {
+        collection[entity] = true;
         aquarium.addEntity(entity);
     }
     public void breedTrilobites() //todo: later
@@ -109,8 +114,13 @@ public class GameManager : MonoBehaviour
             {
                 entity.id = i;
                 entities.Add(entity);
+                collection[entity] = false;
             }
         }
         return entities;
+    }
+    public bool isCollected(Entity entity)
+    {
+        return collection[entity];
     }
 }

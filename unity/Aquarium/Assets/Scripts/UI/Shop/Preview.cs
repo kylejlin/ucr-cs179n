@@ -74,5 +74,11 @@ public class Preview : MonoBehaviour
             SetLayerRecursively(child, newLayer);
         }
     }
-
+    public void setCollected(bool collected = true)
+    {
+        if (collected)
+        { rawImage.color = new Color(255, 255, 255, 1); }
+        else
+        { rawImage.color = new Color(0, 0, 0, 0); }
+    }
 }
