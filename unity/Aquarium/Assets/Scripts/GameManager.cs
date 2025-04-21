@@ -18,7 +18,7 @@ public class GameManager : MonoBehaviour
     public List<Entity> creatures = new List<Entity>();
     public List<Entity> decorations = new List<Entity>();
 
-    public int money = 1000; // todo: 
+    int money = 20; // todo: 
     public int level = 1; // todo:
     public int xpCap = 0;
     public int xp = 0;
@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         List<GameObject> creaturesPrefabs = new List<GameObject>();
-        creaturesPrefabs.AddRange(Resources.LoadAll<GameObject>("Agaes"));
+        creaturesPrefabs.AddRange(Resources.LoadAll<GameObject>("Algaes"));
         creaturesPrefabs.AddRange(Resources.LoadAll<GameObject>("Trilobites"));
 
         creatures = InitIDs(creaturesPrefabs);
@@ -85,6 +85,18 @@ public class GameManager : MonoBehaviour
     public float getHappiness()
     {
         return aquarium.getHappiness();
+    }
+    public int getMoney()
+    {
+        return money;
+    }
+    public bool CanBuy(int price)
+    {
+        return money >= price;
+    }
+    public void buy(int price)
+    {
+        money -= price;
     }
     private List<Entity> InitIDs(List<GameObject> objects) // this will assign an id for each elements in the list 
     {

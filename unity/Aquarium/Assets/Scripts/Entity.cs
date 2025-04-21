@@ -5,8 +5,11 @@ public class Entity : MonoBehaviour
     public string entityName = "NoName";
     [HideInInspector]
     public int id; //id of the entity
+    [SerializeField]
     private int buyMoney;
+    [SerializeField]
     private int sellMoney;
+    [SerializeField]
     private Rarity rarity;
     public Aquarium parentAquarium = null;
     protected double count = 0; //to count deltaTime 
