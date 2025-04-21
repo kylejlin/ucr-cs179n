@@ -7,6 +7,7 @@ public class ImmobileCreature : Creature
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     protected new void Start()
     {
+        
         base.Start();
         name = "Algea "+ entityName;
         growthRate = 0.1f; 
@@ -34,6 +35,10 @@ public class ImmobileCreature : Creature
         eat(eatRate/5 * Time.deltaTime);
     }
 
-
+    public override void initShopMode() {
+        setMaturity(1);
+        this.enabled = false; //turn off Update()
+        shopMode = true;
+    }
 
 }
