@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class GameUI : MonoBehaviour
 {
     // private bool isOpen = false;
-    private GameObject MenuItems;
+    private GameObject MenuButton;
     // private GameObject MenuButton;
     private Button ShopButton;
     // private Button GalleryButton;
@@ -19,9 +19,9 @@ public class GameUI : MonoBehaviour
         ShopUI = GameObject.Find("ShopUI").gameObject;
         ShopUI.SetActive(false);
         menu = gameObject.transform.Find("Menu").gameObject;
-        MenuItems = menu.transform.Find("MenuItems").gameObject;
-        ShopButton = MenuItems.transform.Find("ShopButton").gameObject.GetComponent<Button>();
-        // GalleryButton = MenuItems.transform.Find("GalleryButton").gameObject.GetComponent<Button>();
+        MenuButton = menu.transform.Find("MenuButton").gameObject;
+        ShopButton = MenuButton.transform.Find("ShopButton").gameObject.GetComponent<Button>();
+        // GalleryButton = MenuButton.transform.Find("GalleryButton").gameObject.GetComponent<Button>();
 
         ShopButton.onClick.AddListener(() => OpenShop());
 
