@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
 {
     public Aquarium aquarium; // this will have to be changed: it should be spawned, not referenced, but this is convenient for the MVP
     // we can have a list of all the creatures but maybe also three lists, I just feel like maybe it is easier to change from three list to one if we really need to, so I started with three lists
+    public ImmobileCreature algeaPrefab;
     public List<Entity> creatures = new List<Entity>();
     public List<Entity> decorations = new List<Entity>();
 
@@ -40,6 +41,9 @@ public class GameManager : MonoBehaviour
         levels.Add(new LevelData(200, new List<int>() { 1 }, new List<int>() { 1 }, new List<int>() { 1 }));
 
         this.xpCap = levels[level - 1].xpCap;
+
+        //testing
+        aquarium.addEntity(algeaPrefab, true);
     }
 
     void Update()
