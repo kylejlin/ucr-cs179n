@@ -135,10 +135,5 @@ public class Creature : Entity
         else energy += amount;
     }
 
-    public new void initDisplayMode(){
-        setMaturity(1);
-        this.enabled = false; //turn off Update()
-        print("creature");
-    }
 
 }

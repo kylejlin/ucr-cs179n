@@ -43,7 +43,7 @@ public class Preview : MonoBehaviour
 
         this.modelPrefab = entity.gameObject;
         modelInstance = Instantiate(modelPrefab, new Vector3(0, 0, 0), Quaternion.identity, transform);
-        if(modelInstance.TryGetComponent<Entity>(out Entity entityInstance)) {entityInstance.initDisplayMode(); } //display mode turns off update() and sets creature to adult size
+        if(modelInstance.TryGetComponent<Entity>(out Entity entityInstance)) {entityInstance.initShopMode(); } //display mode turns off update() and sets creature to adult size
         modelInstance.layer = LayerMask.NameToLayer("ShopSelectedItem");
         SetLayerRecursively(modelInstance.transform, LayerMask.NameToLayer("ShopSelectedItem"));
         modelCamera = new GameObject(entity.name + "Camera");

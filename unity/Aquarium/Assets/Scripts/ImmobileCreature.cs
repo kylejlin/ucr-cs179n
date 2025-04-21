@@ -34,10 +34,10 @@ public class ImmobileCreature : Creature
         eat(eatRate/5 * Time.deltaTime);
     }
 
-    public new void initDisplayMode(){
+    public override void initShopMode() {
         setMaturity(1);
         this.enabled = false; //turn off Update()
-        displayMode = true;
+        shopMode = true;
         print("algeAA");
     }
 
