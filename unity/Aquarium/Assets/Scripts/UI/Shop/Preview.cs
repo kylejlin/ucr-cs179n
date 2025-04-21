@@ -29,42 +29,38 @@ public class Preview : MonoBehaviour
         rawImage.SetNativeSize();
         this.modelPrefab = entity.gameObject;
         modelInstance = Instantiate(modelPrefab, new Vector3(0, 0, 0), Quaternion.identity, transform);
-        if(modelInstance.TryGetComponent<Entity>(out Entity entityInstance)) {entityInstance.initDisplayMode(); } //display mode turns off update() and sets creature to adult size
+        if (modelInstance.TryGetComponent<Entity>(out Entity entityInstance)) { entityInstance.initDisplayMode(); } //display mode turns off update() and sets creature to adult size
         modelInstance.layer = LayerMask.NameToLayer("ShopSelectedItem");
         SetLayerRecursively(modelInstance.transform, LayerMask.NameToLayer("ShopSelectedItem"));
+        Rigidbody rb = modelInstance.GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            Destroy(rb);
+        }
 
     }
 
     public void Setup(Entity selectedEntity)
     {
-        this.entity = selectedEntity;
         rawImage = gameObject.AddComponent<RawImage>();
         rawImage.SetNativeSize();
 
-        this.modelPrefab = entity.gameObject;
-        modelInstance = Instantiate(modelPrefab, new Vector3(0, 0, 0), Quaternion.identity, transform);
-        if(modelInstance.TryGetComponent<Entity>(out Entity entityInstance)) {entityInstance.initDisplayMode(); } //display mode turns off update() and sets creature to adult size
-        modelInstance.layer = LayerMask.NameToLayer("ShopSelectedItem");
-        SetLayerRecursively(modelInstance.transform, LayerMask.NameToLayer("ShopSelectedItem"));
-        modelCamera = new GameObject(entity.name + "Camera");
+        modelCamera = new GameObject(selectedEntity.name + "Camera");
         modelCamera.transform.SetParent(transform);
-
         Camera cam = modelCamera.AddComponent<Camera>();
-
-
-        // Set position and rotation (optional)
         modelCamera.transform.position = new Vector3(0, 3.6f, -5f);
         modelCamera.transform.rotation = Quaternion.Euler(50, 0, 0);
-
-        // Customize the camera (optional)
         cam.clearFlags = CameraClearFlags.SolidColor;
         cam.backgroundColor = new Color(0, 0, 0, 0);
         cam.orthographic = false;
         cam.cullingMask = LayerMask.GetMask("ShopSelectedItem");
-
         RenderTexture rt = new RenderTexture(512, 512, 16);
         cam.targetTexture = rt;
         rawImage.texture = rt;
+
+
+        ChangeSelected(selectedEntity);
+
     }
     public Entity getEntity()
     {
