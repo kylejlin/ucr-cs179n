@@ -54,13 +54,12 @@ MonoBehaviour:
   sellMoney: 8
   rarity: 0
   parentAquarium: {fileID: 0}
+  shopMode: 0
   hunger: 0
-  health: 10
-  maxHealth: 10
-  canSwim: 1
+  energy: 100
+  maxEnergy: 5
   consumeRate: 8
   speed: 3
-  energy: 100
   state: 0
 --- !u!65 &6825346676113195874
 BoxCollider:
@@ -81,8 +80,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.2649288, y: 0.51496315, z: 3.4361496}
-  m_Center: {x: 0.03622341, y: 0.037851214, z: 0.13322449}
+  m_Size: {x: 2.2649288, y: 0.4149632, z: 3.4361496}
+  m_Center: {x: 0.03622341, y: 0.23785122, z: 0.13322449}
 --- !u!212 &4710943548981468850
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -179,7 +178,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.2
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
       propertyPath: m_LocalPosition.z
