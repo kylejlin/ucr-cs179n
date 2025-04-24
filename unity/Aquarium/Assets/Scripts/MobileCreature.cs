@@ -28,6 +28,8 @@ public class MobileCreature : Creature
     {
         base.Start(); //call Creature Start()
         mobileCreatureRB = GetComponent<Rigidbody>();
+        if(shopMode && mobileCreatureRB) Destroy(mobileCreatureRB); //this is called after initShopMode so I have to do this here
+        print("is shop mode: "+shopMode);
         name = "Trilobite "+ entityName;
         growthRate = 0.1f; 
         adultEnergy = 40; 
@@ -153,4 +155,15 @@ public class MobileCreature : Creature
         //rotates creature with respect to front of creature (head points towards rotation)
         mobileCreatureRB.MoveRotation(Quaternion.LookRotation(angularVelocity,Vector3.forward));
     }
+
+    public override void initShopMode(bool asAdult = true, bool changeMaturity = true) {
+        if(changeMaturity && asAdult) setMaturity(1);
+        else if(changeMaturity && !asAdult) setMaturity(spawnSize);
+        this.enabled = false; //turn off Update()
+        shopMode = true;
+        print("shop mode :3");
+
+    }
+
+
 }
