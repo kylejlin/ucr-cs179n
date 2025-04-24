@@ -23,8 +23,9 @@ public class PlacementPreview : MonoBehaviour
         cam = c;
         this.enabled = true;
 
-        spawnedEntity = Instantiate(e, defaultPos, Quaternion.identity, cam.transform); //using cam.transform because transform gets an error for some reason
+        spawnedEntity = Instantiate(e.gameObject, defaultPos, Quaternion.identity, cam.transform).GetComponent<Entity>(); //using cam.transform because transform gets an error for some reason
         spawnedEntity.initShopMode(false, true);
+        print("preview spawned");
 
 
     }
@@ -49,3 +50,8 @@ player clicks, rays call aquarium addEntity, deletes
 should collide with everything, but has to know what positions are valid (not on the walls, has enough space on the ground)
 
 */
+
+//object is created / INstaniated
+//Awake is called
+//functions are called on it (ex. initShopMode)
+//THEN start is called but only if it is enabled

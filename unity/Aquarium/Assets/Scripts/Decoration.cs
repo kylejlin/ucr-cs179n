@@ -4,9 +4,9 @@ public class Decoration : Entity
 {
     public int moneyBonus;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    protected new void Start()
+    protected new void Awake()
     {
-        base.Start();
+        base.Awake();
     }
 
     // Update is called once per frame

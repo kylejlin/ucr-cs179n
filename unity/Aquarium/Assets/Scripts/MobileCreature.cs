@@ -24,12 +24,11 @@ public class MobileCreature : Creature
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    protected new void Start()
+    protected new void Awake()
     {
-        base.Start(); //call Creature Start()
+        base.Awake(); //call Creature Start()
         mobileCreatureRB = GetComponent<Rigidbody>();
-        if(shopMode && mobileCreatureRB) Destroy(mobileCreatureRB); //this is called after initShopMode so I have to do this here
-        print("is shop mode: "+shopMode);
+
         name = "Trilobite "+ entityName;
         growthRate = 0.1f; 
         adultEnergy = 40; 
@@ -159,9 +158,9 @@ public class MobileCreature : Creature
     public override void initShopMode(bool asAdult = true, bool changeMaturity = true) {
         if(changeMaturity && asAdult) setMaturity(1);
         else if(changeMaturity && !asAdult) setMaturity(spawnSize);
-        this.enabled = false; //turn off Update()
+        if(mobileCreatureRB) Destroy(mobileCreatureRB); //this is the only way to turn off the RB for whatever reason
+        this.enabled = false; //turn off Update() and Start()
         shopMode = true;
-        print("shop mode :3");
 
     }
 

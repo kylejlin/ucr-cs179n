@@ -16,9 +16,9 @@ public class Creature : Entity
     protected float minSpawnSpace = 1; //space needed for offspring to spawn (avoids crowding, needs to be smaller than spawnRadius)
     protected float minCMCubedPer = 10000; //limits max population according to the size of the tank (each creature needs this amount of cm^3 of water)
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    protected new void Start()
+    protected new void Awake()
     {
-        base.Start();
+        base.Awake();
         initSize();
 
     }

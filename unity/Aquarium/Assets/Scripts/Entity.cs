@@ -16,9 +16,8 @@ public class Entity : MonoBehaviour
     public Aquarium parentAquarium = null;
     protected double count = 0; //to count deltaTime 
     public bool shopMode = false; //true if this gameobject is being displayed in UI and so should spawn as an adult and not Update() (frozen, don't interact) 
-    public virtual void Start()
+    public virtual void Awake()
     {
-
     }
 
     // Update is called once per frame
@@ -105,7 +104,6 @@ public class Entity : MonoBehaviour
     public int getSellMoney() { return sellMoney; }
     public float getScale() { return transform.localScale.x; }
     public Rarity GetRarity() { return rarity; }
-    public virtual void initShopMode(bool asAdult = true, bool changeMaturity = true) { this.enabled = false; shopMode = true; } //get overridden by child classes
-    // public virtual void disableShopMode() {this.enabled = true; shopMode = false;} //would have to add back RB for mobileCreature
+    public virtual void initShopMode(bool asAdult = true, bool changeMaturity = true) { this.enabled = false; shopMode = true; } //get overridden by child classes. Also this is permenant, reenabling an object would be difficult and might break things in Awake()
 
 }
