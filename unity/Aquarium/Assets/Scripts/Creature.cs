@@ -34,6 +34,13 @@ public class Creature : Entity
         setMaturity(spawnSize);
         energy = maxEnergy;
     }
+    public override void initShopMode(bool asAdult = true, bool changeMaturity = true) {
+        if(changeMaturity && asAdult) setMaturity(1);
+        else if(changeMaturity && !asAdult) setMaturity(spawnSize);
+        this.enabled = false; //turn off Update()
+        shopMode = true;
+    }
+
 
     /// <summary> scales up size and energy by the percentage passed in (wont exceed max size set) </summary>
     public void grow(float percentage)
@@ -134,6 +141,8 @@ public class Creature : Entity
         }
         else energy += amount;
     }
+
+
 
 
 }

@@ -10,6 +10,7 @@ public enum BehaviorState
 public class MobileCreature : Creature
 {   
     
+    public bool canSwim = false;
     public int consumeRate = 10;
     public float speed = 1;
 
@@ -151,11 +152,5 @@ public class MobileCreature : Creature
         if(shopMode) {Debug.LogWarning("Can't rotate in shop mode"); return; }
         //rotates creature with respect to front of creature (head points towards rotation)
         mobileCreatureRB.MoveRotation(Quaternion.LookRotation(angularVelocity,Vector3.forward));
-    }
-
-    public override void initShopMode() { //overrides the function in Entity
-        setMaturity(1);
-        this.enabled = false; //turn off Update()
-        shopMode = true;
     }
 }
