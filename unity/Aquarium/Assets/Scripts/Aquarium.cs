@@ -4,6 +4,7 @@ using System.Collections.Generic; //list and dictionary definition
 
 public class Aquarium : MonoBehaviour
 {
+    private int id;
     public List<Entity> entities = new List<Entity>(); // all creatures (and objects?) within the tank
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public Vector3 dimensions = new Vector3(50, 40, 50); // hard coded to fit basic aquarium, should be changable later (arbitrary water level of 40 cm)
@@ -18,12 +19,15 @@ public class Aquarium : MonoBehaviour
     {
 
     }
-
+    public void setID(int id)
+    {
+        this.id = id;
+    }
 
     public Entity addEntity(Entity newEntity, Vector3 position, Quaternion rotation) //returns a reference to the newly created object 
     {
         if (newEntity == null) { Debug.LogWarning("Null entity passed into addEntity"); return null; }
-        if (!isInBounds(position)) { Debug.Log("not within bounds "+position); return null; } //keep within aquarium bounds
+        if (!isInBounds(position)) { Debug.Log("not within bounds " + position); return null; } //keep within aquarium bounds
 
         Entity e = Instantiate(newEntity.gameObject, position, rotation, gameObject.transform).GetComponent<Entity>();
         entities.Add(e);
@@ -41,7 +45,7 @@ public class Aquarium : MonoBehaviour
             Random.Range(-dimensions.z / 2, dimensions.z / 2)
         );
 
-        if(onGround) randomPosition.y = groundLevel;
+        if (onGround) randomPosition.y = groundLevel;
 
         // want all creatures to be upright I think?
         // Quaternion randomRotation = Quaternion.Euler(
@@ -55,10 +59,10 @@ public class Aquarium : MonoBehaviour
 
     public Entity removeEntity(Entity entity)
     {
-        if(entity == null) { Debug.LogWarning("Null entity passed into removeEntity"); return null; }
-        if(entities.Remove(entity)) { return entity; }
+        if (entity == null) { Debug.LogWarning("Null entity passed into removeEntity"); return null; }
+        if (entities.Remove(entity)) { return entity; }
         else { Debug.LogWarning("Entity not found in entity list"); return null; }
-        
+
     }
 
     public bool isInBounds(Vector3 position)

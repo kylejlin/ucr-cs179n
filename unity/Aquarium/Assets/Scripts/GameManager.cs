@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using Unity.VisualScripting;
-using System.Collections.ObjectModel; //list and dictionary definition
+using System.Collections.ObjectModel;
 
 public enum Rarity
 {
@@ -13,7 +13,8 @@ public enum Rarity
 
 public class GameManager : MonoBehaviour
 {
-    public Aquarium aquarium; // this will have to be changed: it should be spawned, not referenced, but this is convenient for the MVP
+    private CameraController cameraController;
+    public GameObject aquariumPrefab; // this will have to be changed: it should be spawned, not referenced, but this is convenient for the MVP
     // we can have a list of all the creatures but maybe also three lists, I just feel like maybe it is easier to change from three list to one if we really need to, so I started with three lists
     // public ImmobileCreature algeaPrefab;
     public List<Entity> creatures = new List<Entity>();
@@ -26,6 +27,8 @@ public class GameManager : MonoBehaviour
     public int level = 1; // todo:
     public int xpCap = 0;
     public int xp = 0;
+    public List<Aquarium> tanks = new List<Aquarium>();
+    public int selectedTank;
     public List<LevelData> levels = new List<LevelData>(); // this will be used to unlock new creatures and decorations
 
     void Awake()
@@ -33,6 +36,7 @@ public class GameManager : MonoBehaviour
         List<GameObject> creaturesPrefabs = new List<GameObject>();
         creaturesPrefabs.AddRange(Resources.LoadAll<GameObject>("Algaes"));
         creaturesPrefabs.AddRange(Resources.LoadAll<GameObject>("Trilobites"));
+        cameraController = GameObject.Find("Main Camera").GetComponent<CameraController>();
 
         creatures = InitIDs(creaturesPrefabs);
 
@@ -46,7 +50,11 @@ public class GameManager : MonoBehaviour
 
         this.xpCap = levels[level - 1].xpCap;
 
-        //testing
+        aquariumPrefab = Resources.Load<GameObject>("Aquarium/Aquarium");
+        GameObject aquariumObject = Instantiate(aquariumPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        tanks.Add(aquariumObject.GetComponent<Aquarium>());
+        selectTank(0);
+        print(cameraController);
         // aquarium.addEntity(algeaPrefab, true);
     }
 
@@ -66,7 +74,7 @@ public class GameManager : MonoBehaviour
     }
     public void getCoin()
     {
-        money += aquarium.calcCoin();
+        money += tanks[selectedTank].calcCoin();
         this.levelUp(1); // todo: fix this to caluelate an xp
     }
 
@@ -75,21 +83,26 @@ public class GameManager : MonoBehaviour
         collection[entity] = true;
         aquarium.addEntity(entity);
     }
+    public void addEntity(Entity entity)
+    {
+        collection[entity] = true;
+        tanks[selectedTank].addEntity(entity);
+    }
     public void breedTrilobites() //todo: later
     {
         return;
     }
     public int getHunger()
     {
-        return aquarium.getHunger();
+        return tanks[selectedTank].getHunger();
     }
     public int getAlgaesHealth()
     {
-        return aquarium.getAlgaesHealth();
+        return tanks[selectedTank].getAlgaesHealth();
     }
     public float getHappiness()
     {
-        return aquarium.getHappiness();
+        return tanks[selectedTank].getHappiness();
     }
     public int getMoney()
     {
@@ -122,5 +135,58 @@ public class GameManager : MonoBehaviour
     public bool isCollected(Entity entity)
     {
         return collection[entity];
+    }
+    public void addTank()
+    {
+        GameObject aquariumObject = Instantiate(aquariumPrefab, new Vector3(0, 0, 0), Quaternion.identity);
+        Aquarium aquarium = aquariumObject.GetComponent<Aquarium>();
+        aquarium.setID(tanks.Count);
+        aquariumObject.transform.position = new Vector3(tanks.Count * (aquarium.dimensions[0] + 10), 0, 0); // move the aquarium to the right
+        tanks.Add(aquarium);
+    }
+    public void selectTank(int index)
+    {
+        if (index >= 0 && index < tanks.Count)
+        {
+            selectedTank = index;
+            cameraController.setTarget(tanks[selectedTank].transform);
+        }
+        else
+        {
+            Debug.LogError("Invalid tank index: " + index);
+        }
+    }
+    public void nextTank()
+    {
+        selectedTank = (selectedTank + 1) % tanks.Count;
+        cameraController.setTarget(tanks[selectedTank].transform);
+    }
+    public void PrevTank()
+    {
+        selectedTank = (selectedTank - 1 + tanks.Count) % tanks.Count;
+        cameraController.setTarget(tanks[selectedTank].transform);
+    }
+    public Aquarium getTank()
+    {
+        if (selectedTank >= 0 && selectedTank < tanks.Count)
+        {
+            return tanks[selectedTank];
+        }
+        else
+        {
+            Debug.LogError("Invalid tank index: " + selectedTank);
+            return null;
+        }
+    }
+    public void SelectTank(int index)
+    {
+        if (index >= 0 && index < tanks.Count)
+        {
+            selectedTank = index;
+        }
+        else
+        {
+            Debug.LogError("Invalid tank index: " + index);
+        }
     }
 }
