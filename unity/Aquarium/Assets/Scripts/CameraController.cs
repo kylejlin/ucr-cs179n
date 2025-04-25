@@ -67,27 +67,11 @@ public class CameraController : MonoBehaviour
         StartCoroutine(SmoothMoveAndRotate());
     }
 
-    private IEnumerator SmoothMove()
-    {
-        Vector3 targetPosition = new Vector3(target.position.x, target.position.y + 100, target.position.z - 10);
-
-        // Smoothly move to the target position
-        while (Vector3.Distance(transform.position, targetPosition) > 1f)
-        {
-            transform.position = Vector3.Lerp(transform.position, targetPosition, movementSpeed * Time.deltaTime);
-            yield return null;
-        }
-        // Ensure we set the final position
-        transform.position = targetPosition;
-
-        // Smoothly rotate to the target rotation
-
-    }
     private IEnumerator SmoothMoveAndRotate()
     {
         isMoving = true; // Start moving
 
-        Vector3 targetPosition = new Vector3(target.position.x, target.position.y + 100, target.position.z - 10);
+        Vector3 targetPosition = new Vector3(target.position.x, target.position.y + 150, target.position.z );
         Quaternion targetRotation = Quaternion.Euler(90, 0, 0);
 
         // Smoothly move to the target position
