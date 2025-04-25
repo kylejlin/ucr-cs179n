@@ -8,9 +8,8 @@ public enum BehaviorState
 }
 
 public class MobileCreature : Creature
-{
-
-    public bool canSwim = false;
+{   
+    
     public int consumeRate = 10;
     public float speed = 1;
 
