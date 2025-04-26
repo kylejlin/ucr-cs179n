@@ -13,7 +13,7 @@ public class PlacementPreview : MonoBehaviour
     private Vector3 defaultPos = new Vector3(0,0,0);
 
     void Start(){
-        this.enabled = false; //dont call update until init() is run
+        // this.enabled = false; //dont call update until init() is run
     }
 
     public void init(Entity e, Aquarium a, Camera c){
@@ -21,7 +21,7 @@ public class PlacementPreview : MonoBehaviour
         entity = e;
         aquarium = a;
         cam = c;
-        this.enabled = true;
+        // this.enabled = true;
 
         spawnedEntity = Instantiate(e.gameObject, defaultPos, Quaternion.identity, cam.transform).GetComponent<Entity>(); //using cam.transform because transform gets an error for some reason
         spawnedEntity.initShopMode(false, true);
@@ -55,3 +55,4 @@ should collide with everything, but has to know what positions are valid (not on
 //Awake is called
 //functions are called on it (ex. initShopMode)
 //THEN start is called but only if it is enabled
+//then update is called
