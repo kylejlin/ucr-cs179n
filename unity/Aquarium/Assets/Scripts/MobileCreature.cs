@@ -10,6 +10,7 @@ public enum BehaviorState
 public class MobileCreature : Creature
 {   
     
+    public bool canSwim = false;
     public int consumeRate = 10;
     public float speed = 1;
 
@@ -23,10 +24,11 @@ public class MobileCreature : Creature
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    protected new void Start()
+    protected new void Awake()
     {
-        base.Start(); //call Creature Start()
+        base.Awake(); //call Creature Start()
         mobileCreatureRB = GetComponent<Rigidbody>();
+
         name = "Trilobite "+ entityName;
         growthRate = 0.1f; 
         adultEnergy = 40; 
@@ -153,9 +155,6 @@ public class MobileCreature : Creature
         mobileCreatureRB.MoveRotation(Quaternion.LookRotation(angularVelocity,Vector3.forward));
     }
 
-    public override void initShopMode() { //overrides the function in Entity
-        setMaturity(1);
-        this.enabled = false; //turn off Update()
-        shopMode = true;
-    }
+
+
 }
