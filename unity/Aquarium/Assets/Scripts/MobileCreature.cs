@@ -23,13 +23,14 @@ public class MobileCreature : Creature
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    protected new void Start()
+    protected new void Awake()
     {
-        base.Start(); //call Creature Start()
+        base.Awake(); //call Creature Start()
         mobileCreatureRB = GetComponent<Rigidbody>();
-        name = "Trilobite " + entityName;
-        growthRate = 0.1f;
-        adultEnergy = 40;
+
+        name = "Trilobite "+ entityName;
+        growthRate = 0.1f; 
+        adultEnergy = 40; 
         energy = 40;
         maxEnergy = 40;
 
@@ -162,4 +163,5 @@ public class MobileCreature : Creature
         this.enabled = false; //turn off Update()
         shopMode = true;
     }
+
 }
