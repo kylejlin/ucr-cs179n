@@ -13,7 +13,10 @@ public class DragNDropPreview : MonoBehaviour
     private Vector3 defaultPos = new Vector3(0,0,0);
     private BoxCollider myBC;
     private BoxCollider entityBC;
+    private GameObject XImage;
+
     private bool isColliding;
+    private bool canSpawn;
 
 
     public void init(Entity e, Aquarium a, Camera c){ //this is called first
@@ -25,6 +28,8 @@ public class DragNDropPreview : MonoBehaviour
 
         myBC = GetComponent<BoxCollider>();
         entityBC = entity.GetComponent<BoxCollider>();
+        XImage = GameObject.Find("X Image");
+        setCanSpawn(false);
         if(myBC && entityBC)
         {
             myBC.size = entityBC.size;
@@ -50,10 +55,15 @@ public class DragNDropPreview : MonoBehaviour
         if (Physics.Raycast(ray, out hit))
         {
             transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(hit.normal) * Quaternion.Euler(90f, 0f, 0f));
-            
+            XImage.transform.rotation = Quaternion.Euler(90f, 0f, 0f); //image always should point up
+            if (isColliding || hit.collider.CompareTag("DontAllowSpawn")) 
+            { 
+                setCanSpawn(false);
+            }
+            else setCanSpawn(true);
+
         }
         else transform.position = defaultPos;
-        print(isColliding);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -63,6 +73,11 @@ public class DragNDropPreview : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         isColliding = false;
+    }
+    private void setCanSpawn(bool enable)
+    {
+        if (XImage) XImage.GetComponent<Renderer>().enabled = !enable; //hide the X
+        canSpawn = enable;
     }
 }
 
