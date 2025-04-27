@@ -2424,7 +2424,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aquarium: {fileID: 595684618}
-  algeaPrefab: {fileID: 2454679809097315881, guid: a4a9b95bf765049f4b0e42146b729767, type: 3}
   creatures: []
   decorations: []
   level: 1
