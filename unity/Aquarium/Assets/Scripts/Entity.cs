@@ -97,6 +97,22 @@ public class Entity : MonoBehaviour
         Destroy(gameObject);
     }
     
+    public void SetLayerRecursively(Transform obj, int newLayer)
+    {
+        obj.gameObject.layer = newLayer;
+        foreach (Transform child in obj)
+        {
+            SetLayerRecursively(child, newLayer);
+        }
+    }
+    
+    public virtual void initShopMode(bool asAdult = true, bool changeMaturity = true) { 
+        this.enabled = false; 
+        shopMode = true;
+        if (GetComponent<BoxCollider>()) Destroy(GetComponent<BoxCollider>()); //also dont mess w collisions and raycasting etc
+        if (GetComponent<Rigidbody>()) Destroy(GetComponent<Rigidbody>());
+    } //get overridden by child classes. Also this is permenant, reenabling an object would be difficult and might break things in Awake()
+    
     public float getSqrDistToEntity(Entity entity) { return (transform.localPosition - entity.transform.localPosition).sqrMagnitude; }
     public float getSqrDistBw(Vector3 vec1, Vector3 vec2) { return (vec1 - vec2).sqrMagnitude; }
     public int getID() { return id; }
@@ -104,11 +120,5 @@ public class Entity : MonoBehaviour
     public int getSellMoney() { return sellMoney; }
     public float getScale() { return transform.localScale.x; }
     public Rarity GetRarity() { return rarity; }
-    public virtual void initShopMode(bool asAdult = true, bool changeMaturity = true) { 
-        this.enabled = false; 
-        shopMode = true;
-        if (GetComponent<BoxCollider>()) Destroy(GetComponent<BoxCollider>()); //also dont mess w collisions and raycasting etc
-        if (GetComponent<Rigidbody>()) Destroy(GetComponent<Rigidbody>());
-    } //get overridden by child classes. Also this is permenant, reenabling an object would be difficult and might break things in Awake()
-
+    
 }
