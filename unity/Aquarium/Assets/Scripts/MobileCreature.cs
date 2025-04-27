@@ -155,18 +155,6 @@ public class MobileCreature : Creature
         mobileCreatureRB.MoveRotation(Quaternion.LookRotation(angularVelocity,Vector3.forward));
     }
 
-    //completely disable creature and dont let it interact with "real" creatures (for shop display, drag n drop preview etc)
-    public override void initShopMode(bool asAdult = true, bool changeMaturity = true) {
-        if(changeMaturity && asAdult) setMaturity(1);
-        else if(changeMaturity && !asAdult) setMaturity(spawnSize);
-        if (mobileCreatureRB) Destroy(mobileCreatureRB); //this is the only way to turn off the RB for whatever reason
-        BoxCollider BC = GetComponent<BoxCollider>();
-        if (BC) { BC.enabled = false; Destroy(BC); }
-        
-        this.enabled = false; //turn off Update() and Start()
-        shopMode = true;
-
-    }
 
 
 }

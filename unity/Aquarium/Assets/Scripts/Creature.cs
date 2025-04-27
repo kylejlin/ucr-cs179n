@@ -34,15 +34,6 @@ public class Creature : Entity
         setMaturity(spawnSize);
         energy = maxEnergy;
     }
-    public override void initShopMode(bool asAdult = true, bool changeMaturity = true) {
-        if(changeMaturity && asAdult) setMaturity(1);
-        else if(changeMaturity && !asAdult) setMaturity(spawnSize);
-        this.enabled = false; //turn off Update()
-        shopMode = true;
-        if (GetComponent<BoxCollider>()) Destroy(GetComponent<BoxCollider>()); //also dont mess w collisions and raycasting etc
-        if (GetComponent<Rigidbody>()) Destroy(GetComponent<Rigidbody>()); 
-
-    }
 
 
     /// <summary> scales up size and energy by the percentage passed in (wont exceed max size set) </summary>
@@ -146,6 +137,19 @@ public class Creature : Entity
     }
 
 
+    //completely disable creature and dont let it interact with "real" creatures (for shop display, drag n drop preview etc)
+    public override void initShopMode(bool asAdult = true, bool changeMaturity = true)
+    {
+        if (changeMaturity && asAdult) setMaturity(1);
+        else if (changeMaturity && !asAdult) setMaturity(spawnSize);
+        BoxCollider BC = GetComponent<BoxCollider>(); Rigidbody RB = GetComponent<Rigidbody>();
+        if (BC) { BC.enabled = false; Destroy(BC); }
+        if (RB) { Destroy(RB); } //this is the only way to turn off the RB for whatever reason
 
+        this.enabled = false; //turn off Update() and Start()
+        shopMode = true;
+
+    }
 
 }
+

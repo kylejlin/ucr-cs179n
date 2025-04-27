@@ -4,7 +4,7 @@ using System.Collections;
 public class DragNDropPreview : MonoBehaviour
 {
     // public Camera camera;
-    private Entity entity;
+    private Entity entity; //prefab
     private Entity spawnedEntity;
     private Aquarium aquarium;
     private Camera cam;
@@ -29,6 +29,11 @@ public class DragNDropPreview : MonoBehaviour
         myBC = GetComponent<BoxCollider>();
         entityBC = entity.GetComponent<BoxCollider>();
         XImage = GameObject.Find("X Image");
+
+        if (!e || !a || !c) Debug.LogWarning("DragNDropPreview missing references (entity, aquarium, or camera)");
+        if (!myBC || !entityBC || !XImage) Debug.LogWarning("DragNDrog or entity missing components");
+
+
         setCanSpawn(false);
         if(myBC && entityBC)
         {
@@ -54,6 +59,7 @@ public class DragNDropPreview : MonoBehaviour
         ray = cam.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit))
         {
+            //move to mouse position & rotate
             transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(hit.normal) * Quaternion.Euler(90f, 0f, 0f));
             XImage.transform.rotation = Quaternion.Euler(90f, 0f, 0f); //image always should point up
             if (isColliding || hit.collider.CompareTag("DontAllowSpawn")) 
@@ -61,6 +67,13 @@ public class DragNDropPreview : MonoBehaviour
                 setCanSpawn(false);
             }
             else setCanSpawn(true);
+
+            //spawn guy and dissappear if they click
+            if (Input.GetMouseButtonDown(0) && canSpawn)
+            {
+                aquarium.addEntity(entity, transform.position, transform.rotation);
+                Destroy(gameObject);
+            }
 
         }
         else transform.position = defaultPos;
@@ -77,6 +90,7 @@ public class DragNDropPreview : MonoBehaviour
     private void setCanSpawn(bool enable)
     {
         if (XImage) XImage.GetComponent<Renderer>().enabled = !enable; //hide the X
+        else Debug.LogWarning("Sprite Renderer for invalid placement indication not found");
         canSpawn = enable;
     }
 }
