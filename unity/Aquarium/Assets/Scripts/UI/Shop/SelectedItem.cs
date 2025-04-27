@@ -25,7 +25,6 @@ public class SelectedItem : Preview
         else
         {
             shopManager.ShowToast("Not enough coins", 1);
-            Debug.Log("Not enough coins");
         }
     }
 
