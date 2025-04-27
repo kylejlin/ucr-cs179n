@@ -158,7 +158,8 @@ public class MobileCreature : Creature
     public override void initShopMode(bool asAdult = true, bool changeMaturity = true) {
         if(changeMaturity && asAdult) setMaturity(1);
         else if(changeMaturity && !asAdult) setMaturity(spawnSize);
-        if(mobileCreatureRB) Destroy(mobileCreatureRB); //this is the only way to turn off the RB for whatever reason
+        if (mobileCreatureRB) Destroy(mobileCreatureRB); //this is the only way to turn off the RB for whatever reason
+        if (GetComponent<BoxCollider>()) Destroy(GetComponent<BoxCollider>()); //also dont mess w collisions and raycasting etc
         this.enabled = false; //turn off Update() and Start()
         shopMode = true;
 

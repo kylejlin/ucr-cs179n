@@ -19,7 +19,6 @@ public class PlacementPreviewSpawner : MonoBehaviour
 
     void startPreview(Entity entity, Aquarium aquarium)
     {
-        Instantiate(PPRay, new Vector3(0,0,0), Quaternion.identity, transform);
-        PPRay.init(entity, aquarium, GetComponent<Camera>());
+        Instantiate(PPRay, new Vector3(0,0,0), Quaternion.identity, transform).init(entity, aquarium, GetComponent<Camera>());
     }
 }

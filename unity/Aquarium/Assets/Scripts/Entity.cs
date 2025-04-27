@@ -104,6 +104,11 @@ public class Entity : MonoBehaviour
     public int getSellMoney() { return sellMoney; }
     public float getScale() { return transform.localScale.x; }
     public Rarity GetRarity() { return rarity; }
-    public virtual void initShopMode(bool asAdult = true, bool changeMaturity = true) { this.enabled = false; shopMode = true; } //get overridden by child classes. Also this is permenant, reenabling an object would be difficult and might break things in Awake()
+    public virtual void initShopMode(bool asAdult = true, bool changeMaturity = true) { 
+        this.enabled = false; 
+        shopMode = true;
+        if (GetComponent<BoxCollider>()) Destroy(GetComponent<BoxCollider>()); //also dont mess w collisions and raycasting etc
+        if (GetComponent<Rigidbody>()) Destroy(GetComponent<Rigidbody>());
+    } //get overridden by child classes. Also this is permenant, reenabling an object would be difficult and might break things in Awake()
 
 }

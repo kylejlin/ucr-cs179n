@@ -39,6 +39,9 @@ public class Creature : Entity
         else if(changeMaturity && !asAdult) setMaturity(spawnSize);
         this.enabled = false; //turn off Update()
         shopMode = true;
+        if (GetComponent<BoxCollider>()) Destroy(GetComponent<BoxCollider>()); //also dont mess w collisions and raycasting etc
+        if (GetComponent<Rigidbody>()) Destroy(GetComponent<Rigidbody>()); 
+
     }
 
 
