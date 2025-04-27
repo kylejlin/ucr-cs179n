@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class PlacementPreviewSpawner : MonoBehaviour
+public class DragNDropPreviewSpawner : MonoBehaviour
 {
     public DragNDropPreview PPRay; //prefab
     private DragNDropPreview currentPPRay; //curently spawned preview
@@ -18,7 +18,7 @@ public class PlacementPreviewSpawner : MonoBehaviour
         
     }
 
-    void startPreview(Entity entity, Aquarium aquarium)
+    public void startPreview(Entity entity, Aquarium aquarium)
     {
         if (currentPPRay) Debug.LogWarning("Multiple DragNDrop previews present (there should only be one at any time)");
         currentPPRay = Instantiate(PPRay, new Vector3(0,0,0), Quaternion.identity, transform);

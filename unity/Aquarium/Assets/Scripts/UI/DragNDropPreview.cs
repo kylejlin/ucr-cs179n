@@ -35,14 +35,14 @@ public class DragNDropPreview : MonoBehaviour
 
 
         setCanSpawn(false);
-        if(myBC && entityBC)
-        {
-            myBC.size = entityBC.size;
-            myBC.center  = entityBC.center;
-        }
-
         spawnedEntity = Instantiate(e.gameObject, new Vector3(0, 0, 0), Quaternion.identity, transform).GetComponent<Entity>(); //using cam.transform because transform gets an error for some reason
         spawnedEntity.initShopMode(false, true);
+
+        if(myBC && entityBC)
+        {
+            myBC.size = Vector3.Scale(entityBC.size, spawnedEntity.transform.localScale);
+            myBC.center  = Vector3.Scale(entityBC.center, spawnedEntity.transform.localScale);
+        }
 
 
     }
