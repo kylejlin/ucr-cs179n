@@ -50,13 +50,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: Trilobite1
   id: 0
+  buyMoney: 0
+  sellMoney: 0
+  rarity: 0
+  parentAquarium: {fileID: 0}
+  shopMode: 0
   hunger: 0
-  health: 10
-  maxHealth: 10
-  canSwim: 1
+  energy: 100
+  maxEnergy: 5
   consumeRate: 8
   speed: 3
-  energy: 100
   state: 0
 --- !u!65 &6825346676113195874
 BoxCollider:
@@ -77,8 +80,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.2649288, y: 0.51496315, z: 3.4361496}
-  m_Center: {x: 0.03622341, y: 0.037851214, z: 0.13322449}
+  m_Size: {x: 2.2649288, y: 0.4049632, z: 3.4361496}
+  m_Center: {x: 0, y: 0.13785121, z: -0.0332245}
 --- !u!212 &4710943548981468850
 SpriteRenderer:
   m_ObjectHideFlags: 0

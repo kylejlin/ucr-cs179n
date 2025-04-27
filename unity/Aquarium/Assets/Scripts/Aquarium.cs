@@ -7,7 +7,7 @@ public class Aquarium : MonoBehaviour
     public List<Entity> entities = new List<Entity>(); // all creatures (and objects?) within the tank
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public Vector3 dimensions = new Vector3(50, 40, 50); // hard coded to fit basic aquarium, should be changable later (arbitrary water level of 40 cm)
-    public float groundLevel = 5; //position of bottom plane of aquarium (temporary until we have a better ground)
+    public float groundLevel = 6; //position of bottom plane of aquarium (temporary until we have a better ground)
     void Start()
     {
 
