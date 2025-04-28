@@ -27,22 +27,22 @@ public class MobileCreature : Creature
     {
         base.Start(); //call Creature Start()
         mobileCreatureRB = GetComponent<Rigidbody>();
-        name = "Trilobite "+ entityName;
-        growthRate = 0.1f; 
-        adultEnergy = 40; 
+        name = "Trilobite " + entityName;
+        growthRate = 0.1f;
+        adultEnergy = 40;
         energy = 40;
         maxEnergy = 40;
 
         spawnSize = 1f; //for demo, have them spawn fully grown
         spawnRadius = 5;
-        minSpawnSpace = 1; 
+        minSpawnSpace = 1;
         minCMCubedPer = 2000;
         initSize();
     }
 
     // FixedUpdate is called at fixed time intervals
     void FixedUpdate()
-    {   
+    {
         energy -= Time.deltaTime * metabolismRate;
 
         if (energy <= 0)
@@ -78,16 +78,19 @@ public class MobileCreature : Creature
 
     void UpdateIdle()
     {
-        Vector3 vec = new Vector3(0,0,1); //move forward
+        Vector3 vec = new Vector3(0, 0, 1); //move forward
         move(vec);
-        if(transform.localRotation.eulerAngles.x > 45){ //if creature pointed downwards, rotate upwards
+        if (transform.localRotation.eulerAngles.x > 45)
+        { //if creature pointed downwards, rotate upwards
             // Vector3 angVec = new Vector3(30, 0, 0); 
             // rotate(angVec);
-        }else{
+        }
+        else
+        {
             Vector3 angVec = new Vector3(0, 10, 0); //rotate a little bit around axes
             rotate(angVec);
         }
-        
+
     }
 
     void UpdateDying()
@@ -129,8 +132,8 @@ public class MobileCreature : Creature
 
     //Takes in Vector3 velocity to move mobileCreature
     private void move(Vector3 velocity)
-    {   
-        if(shopMode) {Debug.LogWarning("Can't move in shop mode"); return; }
+    {
+        if (shopMode) { Debug.LogWarning("Can't move in shop mode"); return; }
         //using rigidbody.MovePosition() will make transitioning to the new position smoother if interpolation is enabled
         //MovePosition(currentPosition + displacement)
         mobileCreatureRB.MovePosition(mobileCreatureRB.position + mobileCreatureRB.rotation * velocity * speed * Time.fixedDeltaTime);
@@ -139,7 +142,7 @@ public class MobileCreature : Creature
     //Takes in Vector3 angularVelocity to rotate mobileCreature
     private void rotate(Vector3 angularVelocity)
     {
-        if(shopMode) {Debug.LogWarning("Can't rotate in shop mode"); return; }
+        if (shopMode) { Debug.LogWarning("Can't rotate in shop mode"); return; }
         //angularVelocity tells how many degrees to rotate in each axis
         Quaternion deltaRotation = Quaternion.Euler(angularVelocity * Time.fixedDeltaTime);
         mobileCreatureRB.MoveRotation(mobileCreatureRB.rotation * deltaRotation);
@@ -147,13 +150,14 @@ public class MobileCreature : Creature
 
     //Takes in Vector3 angularVelocity to rotate mobileCreature towards direction of vector
     private void rotateTowards(Vector3 angularVelocity)
-    {   
-        if(shopMode) {Debug.LogWarning("Can't rotate in shop mode"); return; }
+    {
+        if (shopMode) { Debug.LogWarning("Can't rotate in shop mode"); return; }
         //rotates creature with respect to front of creature (head points towards rotation)
-        mobileCreatureRB.MoveRotation(Quaternion.LookRotation(angularVelocity,Vector3.forward));
+        mobileCreatureRB.MoveRotation(Quaternion.LookRotation(angularVelocity, Vector3.forward));
     }
 
-    public override void initShopMode() { //overrides the function in Entity
+    public override void initShopMode()
+    { //overrides the function in Entity
         setMaturity(1);
         this.enabled = false; //turn off Update()
         shopMode = true;
