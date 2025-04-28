@@ -70,6 +70,7 @@ public class MobileCreature : Creature
         {
             speed = 3;
             UpdateHunting();
+            //tryDuplicate<ImmobileCreature>(minSpawnSpace, minCMCubedPer);
         }
         else if (state == BehaviorState.Dying)
         {
@@ -85,7 +86,7 @@ public class MobileCreature : Creature
             // Vector3 angVec = new Vector3(30, 0, 0); 
             // rotate(angVec);
         }else{
-            Vector3 angVec = new Vector3(0, 10, 0); //rotate a little bit around axes
+            Vector3 angVec = new Vector3(0, 0, 0); //rotate a little bit around axes
             rotate(angVec);
         }
         
@@ -158,5 +159,10 @@ public class MobileCreature : Creature
         setMaturity(1);
         this.enabled = false; //turn off Update()
         shopMode = true;
+    }
+
+    public void breed()
+    {
+
     }
 }
