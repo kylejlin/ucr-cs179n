@@ -67,6 +67,7 @@ public class DragNDropPreview : MonoBehaviour
                 setCanSpawn(false);
             }
             else setCanSpawn(true);
+                // print(hit.collider.CompareTag("DontAllowSpawn"));
 
             //spawn guy and dissappear if they click
             if (Input.GetMouseButtonDown(0) && canSpawn)

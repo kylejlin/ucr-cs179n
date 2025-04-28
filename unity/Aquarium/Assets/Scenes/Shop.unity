@@ -4281,8 +4281,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 272fc030e51b05f468a18e67558899ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aquarium: {fileID: 0}
-  mainCamera: {fileID: 0}
+  aquariumPrefab: {fileID: 0}
+  mainCamera: {fileID: 2115515215}
   creatures: []
   decorations: []
   level: 1
@@ -8930,6 +8930,7 @@ GameObject:
   - component: {fileID: 2115515214}
   - component: {fileID: 2115515213}
   - component: {fileID: 2115515217}
+  - component: {fileID: 2115515218}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -9073,6 +9074,21 @@ MonoBehaviour:
   maxFov: 60
   zoomSmoothTime: 0.3
   movementSpeed: 5
+--- !u!114 &2115515218
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2115515212}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1a7c51ebd2018b84283458ac721aa48b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PPRay: {fileID: 3079981393779636353, guid: eb5ccae1ba8719d4781e7617a141aa54, type: 3}
+  testE: {fileID: 0}
+  testA: {fileID: 0}
 --- !u!1 &2141187192
 GameObject:
   m_ObjectHideFlags: 0

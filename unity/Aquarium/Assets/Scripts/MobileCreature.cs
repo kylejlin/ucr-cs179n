@@ -157,10 +157,4 @@ public class MobileCreature : Creature
         mobileCreatureRB.MoveRotation(Quaternion.LookRotation(angularVelocity, Vector3.forward));
     }
 
-    public override void initShopMode()
-    { //overrides the function in Entity
-        setMaturity(1);
-        this.enabled = false; //turn off Update()
-        shopMode = true;
-    }
 }

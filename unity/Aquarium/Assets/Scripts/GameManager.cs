@@ -57,8 +57,8 @@ public class GameManager : MonoBehaviour
         selectTank(0);
         print(cameraController);
 
-        if (GameObject.Find("Main Camera")) mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
-        else Debug.Log("Could not find main camera");
+        // if (GameObject.Find("Main Camera")) mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
+        // else Debug.Log("Could not find main camera");
     }
 
     void Update()
@@ -81,17 +81,18 @@ public class GameManager : MonoBehaviour
         this.levelUp(1); // todo: fix this to caluelate an xp
     }
 
-    public void addEntity(Entity entity, Aquarium aquarium, bool playerDragNDrop = true)
-    {
-        collection[entity] = true;
-        if (!playerDragNDrop) {aquarium.addEntity(entity); return; }
-        if (mainCamera && mainCamera.GetComponent<DragNDropPreviewSpawner>()) mainCamera.GetComponent<DragNDropPreviewSpawner>().startPreview(entity, aquarium);
+    // public void addEntity(Entity entity, Aquarium aquarium, bool playerDragNDrop = true)
+    // {
+    //     collection[entity] = true;
+    //     if (!playerDragNDrop) {aquarium.addEntity(entity); return; }
+    //     if (mainCamera && mainCamera.GetComponent<DragNDropPreviewSpawner>()) mainCamera.GetComponent<DragNDropPreviewSpawner>().startPreview(entity, aquarium);
 
-    }
-    public void addEntity(Entity entity)
+    // }
+    public void addEntity(Entity entity, bool playerDragNDrop = true)
     {
         collection[entity] = true;
-        tanks[selectedTank].addEntity(entity);
+        if (!playerDragNDrop) {tanks[selectedTank].addEntity(entity); return; }
+        if (mainCamera && mainCamera.GetComponent<DragNDropPreviewSpawner>()) mainCamera.GetComponent<DragNDropPreviewSpawner>().startPreview(entity, tanks[selectedTank]);
     }
     public void breedTrilobites() //todo: later
     {
