@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
 {
     private CameraController cameraController;
     public GameObject aquariumPrefab; // this will have to be changed: it should be spawned, not referenced, but this is convenient for the MVP
+    public Camera mainCamera;
     // we can have a list of all the creatures but maybe also three lists, I just feel like maybe it is easier to change from three list to one if we really need to, so I started with three lists
     // public ImmobileCreature algeaPrefab;
     public List<Entity> creatures = new List<Entity>();
@@ -55,7 +56,9 @@ public class GameManager : MonoBehaviour
         tanks.Add(aquariumObject.GetComponent<Aquarium>());
         selectTank(0);
         print(cameraController);
-        // aquarium.addEntity(algeaPrefab, true);
+
+        if (GameObject.Find("Main Camera")) mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
+        else Debug.Log("Could not find main camera");
     }
 
     void Update()
@@ -78,10 +81,12 @@ public class GameManager : MonoBehaviour
         this.levelUp(1); // todo: fix this to caluelate an xp
     }
 
-    public void addEntity(Entity entity, Aquarium aquarium)
+    public void addEntity(Entity entity, Aquarium aquarium, bool playerDragNDrop = true)
     {
         collection[entity] = true;
-        aquarium.addEntity(entity);
+        if (!playerDragNDrop) {aquarium.addEntity(entity); return; }
+        if (mainCamera && mainCamera.GetComponent<DragNDropPreviewSpawner>()) mainCamera.GetComponent<DragNDropPreviewSpawner>().startPreview(entity, aquarium);
+
     }
     public void addEntity(Entity entity)
     {

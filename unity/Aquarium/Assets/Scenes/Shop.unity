@@ -4281,7 +4281,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 272fc030e51b05f468a18e67558899ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  aquariumPrefab: {fileID: 0}
+  aquarium: {fileID: 595684618}
+  mainCamera: {fileID: 0}
   creatures: []
   decorations: []
   level: 1
