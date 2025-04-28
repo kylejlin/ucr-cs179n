@@ -2,43 +2,36 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using System.Linq;
-using System;
 using TMPro;
 
-public class ShopUI : MonoBehaviour
+public class ShopUI : BaseUI
 {
     private GameObject ShopGrid;
     private ShopItem ShopItem;
-    private GameManager gameManager;
     private Entity SelectedEntity;
-    private SelectedItem SelectedItemPreview;
+    private Preview SelectedItemPreview;
     private CategoryTabs categoryTabs;
-    private Button CloseButton;
-    private GameObject GameUI;
+
     public List<ShopItem> ShopItems = new List<ShopItem>();
-    private GameObject toast;
-    void Start()
+    public bool galleryMode = false;
+    protected new void Start()
     {
-        gameManager = GameObject.Find("GameManager").gameObject.GetComponent<GameManager>();
-        GameUI = transform.parent.Find("GameUI").gameObject;
+        base.Start();
         ShopGrid = gameObject.transform.Find("ShopGrid").gameObject;
-        toast = gameObject.transform.Find("Toast").gameObject;
-        SelectedItemPreview = gameObject.transform.Find("SelectedItem").gameObject.GetComponent<SelectedItem>();
+        SelectedItemPreview = gameObject.transform.Find("SelectedItem").gameObject.GetComponent<Preview>();
         categoryTabs = gameObject.transform.Find("CategoryTabs").gameObject.GetComponent<CategoryTabs>();
-        CloseButton = gameObject.transform.Find("CloseButton").gameObject.GetComponent<Button>();
 
         ShopItem = Resources.Load<GameObject>("Shop/ShopItem").GetComponent<ShopItem>();
 
-        toast.SetActive(false);
 
         SelectedEntity = gameManager.creatures[0];
         SelectedItemPreview.Setup(SelectedEntity);
+        if (galleryMode)
+            SelectedItemPreview.setCollected(gameManager.isCollected(SelectedEntity));
 
         PopulateShop();
         categoryTabs.SetCategory();
-        CloseButton.onClick.AddListener(() => CloseShop());
-
+        OnEnable();
     }
 
     void PopulateShop()
@@ -52,30 +45,33 @@ public class ShopUI : MonoBehaviour
 
         }
     }
-    public void CloseShop()
+    void OnEnable()
     {
-        gameObject.SetActive(false);
-        GameUI.SetActive(true);
+        if (galleryMode)
+        {
+            foreach (ShopItem item in ShopItems)
+            {
 
+                if (gameManager.isCollected(item.getEntity()))
+                {
+                    item.setCollected(true);
+                }
+                else
+                {
+                    item.setCollected(false);
+                }
+            }
+        }
     }
+
     private void select(Entity entity)
     {
         SelectedEntity = entity;
         SelectedItemPreview.ChangeSelected(SelectedEntity);
+        if (galleryMode)
+            SelectedItemPreview.setCollected(gameManager.isCollected(SelectedEntity));
 
     }
 
-    public void ShowToast(string message, float duration = 2f)
-    {
-        StartCoroutine(ShowToastCoroutine(message, duration));
-    }
 
-    private IEnumerator ShowToastCoroutine(string message, float duration)
-    {
-        Debug.Log("ShowToastCoroutine");
-        toast.GetComponentInChildren<TextMeshProUGUI>().text = message;
-        toast.SetActive(true);
-        yield return new WaitForSeconds(duration);
-        toast.SetActive(false);
-    }
 }

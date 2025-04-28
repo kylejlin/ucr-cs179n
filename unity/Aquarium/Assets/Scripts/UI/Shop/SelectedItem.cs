@@ -19,13 +19,12 @@ public class SelectedItem : Preview
         if (gameManager.CanBuy(this.getEntity().getBuyMoney()))
         {
             gameManager.buy(this.getEntity().getBuyMoney());
-            gameManager.addEntity(this.getEntity(), gameManager.aquarium);
+            gameManager.addEntity(this.getEntity());
             shopManager.CloseShop();
         }
         else
         {
             shopManager.ShowToast("Not enough coins", 1);
-            Debug.Log("Not enough coins");
         }
     }
 

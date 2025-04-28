@@ -9,7 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 493546922659241747}
-  - component: {fileID: 7091766148192011493}
   - component: {fileID: 2325726681504843972}
   - component: {fileID: 1004895821287141659}
   - component: {fileID: 2454679809097315881}
@@ -36,14 +35,6 @@ Transform:
   - {fileID: 4231636623300683762}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!33 &7091766148192011493
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7900513276540884955}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!23 &2325726681504843972
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -104,12 +95,12 @@ BoxCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 10, y: 15, z: 10}
+  m_Center: {x: 0, y: 8, z: 0}
 --- !u!114 &2454679809097315881
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -124,9 +115,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: algae1
   id: 0
+  buyMoney: 0
+  sellMoney: 0
+  rarity: 0
   parentAquarium: {fileID: 0}
+  shopMode: 0
   hunger: 0
-  health: 0
+  energy: 2
+  maxEnergy: 5
 --- !u!1001 &4409994267383267353
 PrefabInstance:
   m_ObjectHideFlags: 0
