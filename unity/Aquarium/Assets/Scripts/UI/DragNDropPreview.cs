@@ -14,6 +14,7 @@ public class DragNDropPreview : MonoBehaviour
     private BoxCollider myBC;
     private BoxCollider entityBC;
     private GameObject XImage;
+    private Renderer Xrenderer;
 
     private bool isColliding;
     private bool canSpawn;
@@ -29,6 +30,7 @@ public class DragNDropPreview : MonoBehaviour
         myBC = GetComponent<BoxCollider>();
         entityBC = entity.GetComponent<BoxCollider>();
         XImage = GameObject.Find("X Image");
+        Xrenderer = XImage.GetComponent<Renderer>();
 
         if (!e || !a || !c) Debug.LogWarning("DragNDropPreview missing references (entity, aquarium, or camera)");
         if (!myBC || !entityBC || !XImage) Debug.LogWarning("DragNDrog or entity missing components");
@@ -56,18 +58,19 @@ public class DragNDropPreview : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+
         ray = cam.ScreenPointToRay(Input.mousePosition);
         if (Physics.Raycast(ray, out hit))
         {
             //move to mouse position & rotate
             transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(hit.normal) * Quaternion.Euler(90f, 0f, 0f));
             XImage.transform.rotation = Quaternion.Euler(90f, 0f, 0f); //image always should point up
-            if (isColliding || hit.collider.CompareTag("DontAllowSpawn")) 
+            if (isColliding || !aquarium.isInBounds(hit.point)) 
             { 
                 setCanSpawn(false);
             }
             else setCanSpawn(true);
-                // print(hit.collider.CompareTag("DontAllowSpawn"));
+
 
             //spawn guy and dissappear if they click
             if (Input.GetMouseButtonDown(0) && canSpawn)
@@ -77,7 +80,7 @@ public class DragNDropPreview : MonoBehaviour
             }
 
         }
-        else transform.position = defaultPos;
+        else transform.localPosition = defaultPos;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -88,9 +91,14 @@ public class DragNDropPreview : MonoBehaviour
     {
         isColliding = false;
     }
+    private void OnTriggerStay(Collider other)
+    {
+        isColliding = true;
+
+    }
     private void setCanSpawn(bool enable)
     {
-        if (XImage) XImage.GetComponent<Renderer>().enabled = !enable; //hide the X
+        if (Xrenderer) Xrenderer.enabled = !enable; //shows when enable is false
         else Debug.LogWarning("Sprite Renderer for invalid placement indication not found");
         canSpawn = enable;
     }
