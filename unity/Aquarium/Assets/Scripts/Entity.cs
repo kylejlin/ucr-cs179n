@@ -26,8 +26,9 @@ public class Entity : MonoBehaviour
 
     }
 
+    /// <param name="global"> if true search entire scene, if false search only the same aquarium</param>
     /// <returns> entity of type T that is closest to the caller (excludes self) or null if there are none found </returns>
-    public T FindClosest<T>() where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
+    public T FindClosest<T>(bool global = false) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
 
     {
         T[] foundEntities = getAllOfType<T>();
@@ -49,8 +50,9 @@ public class Entity : MonoBehaviour
         return closest;
     }
 
-    /// <returns> entity of type T that is closest to Position or null if there are none found </returns>
-    public T FindClosest<T>(Vector3 position) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
+    /// <param name="global"> if true search entire scene, if false search only the same aquarium</param>
+    /// <returns> entity of type T that is closest to Position (does not exclude self) or null if there are none found </returns>
+    public T FindClosest<T>(Vector3 position, bool global = false) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
 
     {
         T[] foundEntities = getAllOfType<T>();
@@ -72,8 +74,9 @@ public class Entity : MonoBehaviour
     }
 
 
+    /// <param name="global"> if true search entire scene, if false search only the same aquarium</param>
     /// <returns> array of type T of all the found entities, or null if none were found </returns>
-    public T[] getAllOfType<T>() where T : Entity //RETURNS NULL IF EMPTY
+    public T[] getAllOfType<T>(bool global = false) where T : Entity //RETURNS NULL IF EMPTY
     {
         Object[] foundObjects = FindObjectsByType(typeof(T), FindObjectsSortMode.None); //find all of the type
         if (foundObjects.Length == 0) return null;
@@ -91,6 +94,9 @@ public class Entity : MonoBehaviour
 
     }
 
+/// <summary>
+/// destroy the gameobject and let the aquarium know
+/// </summary>
     public void die()
     {
         if (parentAquarium != null) { parentAquarium.removeEntity(this); }
@@ -107,6 +113,11 @@ public class Entity : MonoBehaviour
         }
     }
     
+    /// <summary>
+    /// make it fake and noninteractive and invisible to other creatures. For display purposes like in shop or dragndrop or UI etc
+    /// </summary>
+    /// <param name="asAdult"> set self to be an adult or a baby as they would naturally spawn</param>
+    /// <param name="changeMaturity"> should this set the maturity. if false, isadult doesnt matter</param>
     public virtual void initShopMode(bool asAdult = true, bool changeMaturity = true) { 
         this.enabled = false; 
         shopMode = true;
