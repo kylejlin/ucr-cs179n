@@ -5,10 +5,10 @@ public class ImmobileCreature : Creature
     [HideInInspector]
     protected float eatRate = 5f; //how much it eats (through photosynthesis or filter feeding or w/e) per minute
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    protected new void Start()
+    protected new void Awake()
     {
         
-        base.Start();
+        base.Awake();
         name = "Algea "+ entityName;
         growthRate = 0.1f; 
         adultEnergy = 20; 
@@ -35,10 +35,6 @@ public class ImmobileCreature : Creature
         eat(eatRate/5 * Time.deltaTime);
     }
 
-    public override void initShopMode() {
-        setMaturity(1);
-        this.enabled = false; //turn off Update()
-        shopMode = true;
-    }
+
 
 }

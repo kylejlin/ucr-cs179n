@@ -1,17 +1,21 @@
 using UnityEngine;
 
-public class Decoration : Entity
+public class collisionTest : MonoBehaviour
 {
-    public int moneyBonus;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    protected new void Awake()
+    void Start()
     {
-        base.Awake();
+        
     }
 
     // Update is called once per frame
     void Update()
     {
         
+    }
+
+    private void onTriggerStay(Collider other)
+    {
+        print(other);
     }
 }

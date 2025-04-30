@@ -16,9 +16,8 @@ public class Entity : MonoBehaviour
     public Aquarium parentAquarium = null;
     protected double count = 0; //to count deltaTime 
     public bool shopMode = false; //true if this gameobject is being displayed in UI and so should spawn as an adult and not Update() (frozen, don't interact) 
-    protected void Start()
+    public virtual void Awake()
     {
-
     }
 
     // Update is called once per frame
@@ -98,6 +97,22 @@ public class Entity : MonoBehaviour
         else { Debug.LogWarning("Could not find Aquarium parent"); }
         Destroy(gameObject);
     }
+    
+    public void SetLayerRecursively(Transform obj, int newLayer)
+    {
+        obj.gameObject.layer = newLayer;
+        foreach (Transform child in obj)
+        {
+            SetLayerRecursively(child, newLayer);
+        }
+    }
+    
+    public virtual void initShopMode(bool asAdult = true, bool changeMaturity = true) { 
+        this.enabled = false; 
+        shopMode = true;
+        if (GetComponent<BoxCollider>()) Destroy(GetComponent<BoxCollider>()); //also dont mess w collisions and raycasting etc
+        if (GetComponent<Rigidbody>()) Destroy(GetComponent<Rigidbody>());
+    } //get overridden by child classes. Also this is permenant, reenabling an object would be difficult and might break things in Awake()
 
     public float getSqrDistToEntity(Entity entity) { return (transform.localPosition - entity.transform.localPosition).sqrMagnitude; }
     public float getSqrDistBw(Vector3 vec1, Vector3 vec2) { return (vec1 - vec2).sqrMagnitude; }
@@ -106,6 +121,5 @@ public class Entity : MonoBehaviour
     public int getSellMoney() { return sellMoney; }
     public float getScale() { return transform.localScale.x; }
     public Rarity GetRarity() { return rarity; }
-    public virtual void initShopMode() { this.enabled = false; shopMode = true; } //get overridden by child classes
-
+    
 }
