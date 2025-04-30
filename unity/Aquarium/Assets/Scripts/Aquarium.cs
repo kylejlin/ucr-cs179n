@@ -65,11 +65,14 @@ public class Aquarium : MonoBehaviour
 
     }
 
-    public bool isInBounds(Vector3 position)
+    public bool isInBounds(Vector3 position, bool local = false)
     {
-        return ((position.x > -dimensions.x / 2) && (position.x < dimensions.x / 2)
-            && (position.y >= groundLevel) && (position.y < dimensions.y)
-            && (position.z > -dimensions.z / 2) && (position.z < dimensions.z / 2));
+        Vector3 localPos = position;
+        if(!local) localPos = transform.InverseTransformPoint(position);
+        
+        return ((localPos.x > -dimensions.x / 2) && (localPos.x < dimensions.x / 2)
+            && (localPos.y >= groundLevel) && (localPos.y < dimensions.y)
+            && (localPos.z > -dimensions.z / 2) && (localPos.z < dimensions.z / 2));
     }
 
     public float volume()

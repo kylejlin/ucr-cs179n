@@ -93,6 +93,7 @@ public class GameManager : MonoBehaviour
         collection[entity] = true;
         if (!playerDragNDrop) {tanks[selectedTank].addEntity(entity); return; }
         if (mainCamera && mainCamera.GetComponent<DragNDropPreviewSpawner>()) mainCamera.GetComponent<DragNDropPreviewSpawner>().startPreview(entity, tanks[selectedTank]);
+        else Debug.LogWarning("Could not find mainCamera or DragNDrop script");
     }
     public void breedTrilobites() //todo: later
     {

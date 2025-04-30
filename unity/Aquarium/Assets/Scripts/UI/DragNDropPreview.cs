@@ -68,6 +68,7 @@ public class DragNDropPreview : MonoBehaviour
             if (isColliding || !aquarium.isInBounds(hit.point)) 
             { 
                 setCanSpawn(false);
+                print(aquarium + "is colliding: " + isColliding + " in bounds: " + aquarium.isInBounds(hit.point));
             }
             else setCanSpawn(true);
 
@@ -91,11 +92,11 @@ public class DragNDropPreview : MonoBehaviour
     {
         isColliding = false;
     }
-    private void OnTriggerStay(Collider other)
-    {
-        isColliding = true;
+    // private void OnTriggerStay(Collider other)
+    // {
+    //     isColliding = true;
 
-    }
+    // }
     private void setCanSpawn(bool enable)
     {
         if (Xrenderer) Xrenderer.enabled = !enable; //shows when enable is false
