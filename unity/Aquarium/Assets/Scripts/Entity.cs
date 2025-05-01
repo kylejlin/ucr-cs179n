@@ -20,6 +20,9 @@ public class Entity : MonoBehaviour
     {
     }
 
+    public void Start(){
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -31,7 +34,7 @@ public class Entity : MonoBehaviour
     public T FindClosest<T>(bool global = false) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
 
     {
-        T[] foundEntities = getAllOfType<T>();
+        T[] foundEntities = getAllOfType<T>(global);
         if (foundEntities == null) return default(T);
 
         T closest = default(T);
@@ -55,7 +58,7 @@ public class Entity : MonoBehaviour
     public T FindClosest<T>(Vector3 position, bool global = false) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
 
     {
-        T[] foundEntities = getAllOfType<T>();
+        T[] foundEntities = getAllOfType<T>(global);
         if (foundEntities == null) return default(T);
 
         T closest = default(T);
@@ -78,13 +81,18 @@ public class Entity : MonoBehaviour
     /// <returns> array of type T of all the found entities, or null if none were found </returns>
     public T[] getAllOfType<T>(bool global = false) where T : Entity //RETURNS NULL IF EMPTY
     {
-        Object[] foundObjects = FindObjectsByType(typeof(T), FindObjectsSortMode.None); //find all of the type
-        if (foundObjects.Length == 0) return null;
+        if(global){ //replace w getcompinchildren no casting needed
+            Object[] foundObjects = FindObjectsByType(typeof(T), FindObjectsSortMode.None); //find all of the type
+            if (foundObjects.Length == 0) return null;
 
 
-        T[] foundEntities = new T[foundObjects.Length]; //cast to T
-        for (int i = 0; i < foundObjects.Length; i++) foundEntities[i] = (T)foundObjects[i];
-        return foundEntities;
+            T[] foundEntities = new T[foundObjects.Length]; //cast to T
+            for (int i = 0; i < foundObjects.Length; i++) foundEntities[i] = (T)foundObjects[i];
+            return foundEntities;}
+        else {
+            T[] foundComponents = parentAquarium.GetComponentsInChildren<T>();
+            return foundComponents;
+        }
     }
 
     protected void setScaleTo(float scaleFactor) //limited to proportional scaling only
