@@ -40,6 +40,10 @@ public class MobileCreature : Creature
         initSize();
     }
 
+    void Start(){
+        print(getCurrStats());
+    }
+
     // FixedUpdate is called at fixed time intervals
     void FixedUpdate()
     {
@@ -154,6 +158,14 @@ public class MobileCreature : Creature
         if (shopMode) { Debug.LogWarning("Can't rotate in shop mode"); return; }
         //rotates creature with respect to front of creature (head points towards rotation)
         mobileCreatureRB.MoveRotation(Quaternion.LookRotation(angularVelocity, Vector3.forward));
+    }
+
+    public override string getCurrStats(){
+        return( "Name: "+entityName
+        +"\nEnergy: "+energy/maxEnergy*100+"%"
+        +"\nMaturity: "+getMaturity() / adultSize*100+"%"
+        + "\nMetabolism: "+metabolismRate+" energy/s"
+        +"\nSpace Requirement: "+minCMCubedPer+" cubic cm");
     }
 
 }

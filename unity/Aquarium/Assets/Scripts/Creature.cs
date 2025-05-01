@@ -3,7 +3,7 @@ using UnityEngine;
 public class Creature : Entity
 {
     //these are mostly randomly set so that things don't crash. Each creature should set it to the correct value in their child class
-    public float hunger = 0; //current hunger?
+    // public float hunger = 0; //current hunger?
     public float energy = 2; //current health
 
     public float maxEnergy = 5; //current health cap
@@ -60,6 +60,9 @@ public class Creature : Entity
         if(percentage <= 0) {Debug.LogWarning("maturity cannot be negative"); }
         setScaleTo(adultSize * percentage); 
         maxEnergy = percentage * adultEnergy;
+    }
+    public float getMaturity(){
+        return transform.localScale.x;
     }
 
     /// <summary> make identical copy (for now, in a random position nearby. This is probably temporary). </summary>

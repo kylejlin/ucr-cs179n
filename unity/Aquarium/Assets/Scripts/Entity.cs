@@ -18,11 +18,8 @@ public class Entity : MonoBehaviour
     public bool shopMode = false; //true if this gameobject is being displayed in UI and so should spawn as an adult and not Update() (frozen, don't interact) 
     public virtual void Awake()
     {
-    }
-
-    public void Start(){
+        SetLayerRecursively(transform, 15); //set to Entity layer for raycast masking
         name = entityName + " " + id;
-
     }
 
     // Update is called once per frame
@@ -134,6 +131,10 @@ public class Entity : MonoBehaviour
         if (GetComponent<BoxCollider>()) Destroy(GetComponent<BoxCollider>()); //also dont mess w collisions and raycasting etc
         if (GetComponent<Rigidbody>()) Destroy(GetComponent<Rigidbody>());
     } //get overridden by child classes. Also this is permenant, reenabling an object would be difficult and might break things in Awake()
+
+    public virtual string getCurrStats(){
+        return "Name: "+entityName;
+    }
 
     public float getSqrDistToEntity(Entity entity) { return (transform.localPosition - entity.transform.localPosition).sqrMagnitude; }
     public float getSqrDistBw(Vector3 vec1, Vector3 vec2) { return (vec1 - vec2).sqrMagnitude; }

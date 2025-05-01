@@ -85,14 +85,14 @@ public class GameManager : MonoBehaviour
     // {
     //     collection[entity] = true;
     //     if (!playerDragNDrop) {aquarium.addEntity(entity); return; }
-    //     if (mainCamera && mainCamera.GetComponent<DragNDropPreviewSpawner>()) mainCamera.GetComponent<DragNDropPreviewSpawner>().startPreview(entity, aquarium);
+    //     if (mainCamera && mainCamera.GetComponent<MouseUIManager>()) mainCamera.GetComponent<MouseUIManager>().startPreview(entity, aquarium);
 
     // }
     public void addEntity(Entity entity, bool playerDragNDrop = true)
     {
         collection[entity] = true;
         if (!playerDragNDrop) {tanks[selectedTank].addEntity(entity); return; }
-        if (mainCamera && mainCamera.GetComponent<DragNDropPreviewSpawner>()) mainCamera.GetComponent<DragNDropPreviewSpawner>().startPreview(entity, tanks[selectedTank]);
+        if (mainCamera && mainCamera.GetComponent<MouseUIManager>()) mainCamera.GetComponent<MouseUIManager>().startPreview(entity, tanks[selectedTank]);
         else Debug.LogWarning("Could not find mainCamera or DragNDrop script");
     }
     public void breedTrilobites() //todo: later
