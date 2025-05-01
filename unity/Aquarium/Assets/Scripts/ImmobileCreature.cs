@@ -9,7 +9,6 @@ public class ImmobileCreature : Creature
     {
         
         base.Awake();
-        name = "Algea "+ entityName;
         growthRate = 0.1f; 
         adultEnergy = 20; 
 

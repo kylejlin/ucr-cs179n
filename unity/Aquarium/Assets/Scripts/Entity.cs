@@ -21,6 +21,8 @@ public class Entity : MonoBehaviour
     }
 
     public void Start(){
+        name = entityName + " " + id;
+
     }
 
     // Update is called once per frame
