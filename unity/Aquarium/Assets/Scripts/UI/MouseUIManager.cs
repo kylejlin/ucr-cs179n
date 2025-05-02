@@ -5,6 +5,7 @@ public class MouseUIManager : MonoBehaviour
     public DragNDropPreview PPRay; //prefab
     public StatsPopup statsPopup; //prefab
     private DragNDropPreview currentPPRay; //curently spawned preview
+    private StatsPopup currentStatsPopup; //currently spawned stats popup
 
     private int entityLayerMask = 1 << 15; //mask so mouse ray can only hit entities
    
@@ -17,6 +18,9 @@ public class MouseUIManager : MonoBehaviour
        cam = GetComponent<Camera>();
        if(!PPRay) Debug.LogWarning("No DragNDropPreview set");
        if(!cam) Debug.LogWarning("No camera found");
+
+        currentStatsPopup = Instantiate(statsPopup, new Vector3(0,0,0), Quaternion.identity, transform);
+        currentStatsPopup.setText("i love trilobites YAYPPPPPPPPPPPPPPPPYAPPYPYPAPPYPYAAPPYPA");
     }
 
     /// <summary>

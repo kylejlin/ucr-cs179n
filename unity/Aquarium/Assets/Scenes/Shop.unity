@@ -9087,6 +9087,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   PPRay: {fileID: 3079981393779636353, guid: eb5ccae1ba8719d4781e7617a141aa54, type: 3}
+  statsPopup: {fileID: 3240292336520763591, guid: 3decda092cd84384cbb0af8a089c0e81, type: 3}
 --- !u!1 &2141187192
 GameObject:
   m_ObjectHideFlags: 0
