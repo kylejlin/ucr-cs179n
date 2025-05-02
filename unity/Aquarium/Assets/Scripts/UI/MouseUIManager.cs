@@ -3,6 +3,7 @@ using UnityEngine;
 public class MouseUIManager : MonoBehaviour
 {
     public DragNDropPreview PPRay; //prefab
+    public StatsPopup statsPopup; //prefab
     private DragNDropPreview currentPPRay; //curently spawned preview
 
     private int entityLayerMask = 1 << 15; //mask so mouse ray can only hit entities
