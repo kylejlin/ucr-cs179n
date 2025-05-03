@@ -20,7 +20,7 @@ public class MouseUIManager : MonoBehaviour
        if(!cam) Debug.LogWarning("No camera found");
 
         currentStatsPopup = Instantiate(statsPopup, new Vector3(0,0,0), Quaternion.identity, transform);
-        currentStatsPopup.setText("i love trilobites YAYPPPPPPPPPPPPPPPPYAPPYPYPAPPYPYAAPPYPA");
+        currentStatsPopup.closePopup();
     }
 
     /// <summary>
@@ -33,15 +33,27 @@ public class MouseUIManager : MonoBehaviour
         currentPPRay.init(entity, aquarium, cam);
     }
 
+    public void startPopup(Entity entity){
+        currentStatsPopup.startPopup(entity);
+    }
+    public void closePopup(){
+        currentStatsPopup.closePopup();
+    }
+
     void Update(){
-        if (Input.GetMouseButtonDown(0)){ //if player clicks check for entity at that spot
+        if (Input.GetMouseButtonDown(0)){ //if player left clicks check for entity at that spot
             ray = cam.ScreenPointToRay(Input.mousePosition); //ray from player POV
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, entityLayerMask)) //if it hits an entity
             {
                 selectedEntity = hit.collider.GetComponent<Entity>();
-                if(selectedEntity) print(selectedEntity.getCurrStats());
+                if(selectedEntity) startPopup(selectedEntity); //double check to make sure the object has the entity script
+                else closePopup();
             }
+            else closePopup();
+
         }
+
+        if(Input.GetMouseButtonDown(1)) closePopup(); //if player right clicks exit out of the selections
         
     }
 

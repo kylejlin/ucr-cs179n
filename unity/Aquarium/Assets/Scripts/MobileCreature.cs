@@ -41,7 +41,6 @@ public class MobileCreature : Creature
     }
 
     void Start(){
-        print(getCurrStats());
     }
 
     // FixedUpdate is called at fixed time intervals

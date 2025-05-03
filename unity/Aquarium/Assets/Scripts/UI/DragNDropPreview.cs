@@ -10,7 +10,7 @@ public class DragNDropPreview : MonoBehaviour
     private Camera cam;
     private RaycastHit hit; 
     private Ray ray;
-    private Vector3 defaultPos = new Vector3(0,0,0);
+    private Vector3 defaultPos = new Vector3(0,0,-20);
     private BoxCollider myBC;
     private BoxCollider entityBC;
     private GameObject XImage;
@@ -38,6 +38,7 @@ public class DragNDropPreview : MonoBehaviour
 
         setCanSpawn(false);
         spawnedEntity = Instantiate(e.gameObject, new Vector3(0, 0, 0), Quaternion.identity, transform).GetComponent<Entity>(); //spawn the fake entity to preview the placement
+        spawnedEntity.transform.localPosition = new Vector3(0,0,0);
         spawnedEntity.initShopMode(false, true); //it is in shop mode so it does not interfere w living real creatures
 
         if(myBC && entityBC) //it will not have a collider anymore bc shop mode. but we need a collider (in trigger mode so things can pass thru) to detect collisions and invalid spawining places. so make a new one the same size and location
