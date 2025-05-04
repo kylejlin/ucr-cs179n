@@ -60,7 +60,7 @@ public class DragNDropPreview : MonoBehaviour
             //move to mouse position & rotate
             transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(hit.normal) * Quaternion.Euler(90f, 0f, 0f)); //creature is oriented onto the surface
             XImage.transform.rotation = Quaternion.Euler(90f, 0f, 0f); //image of X always should point up
-            if (isColliding || !aquarium.isInBounds(hit.point)) //detect invalid placement
+            if (isColliding || !aquarium.isInBounds(hit.point) || hit.collider.GetComponent<Creature>()) //detect invalid placement (collisions, out of aquarium, or on top of a creature)
             { 
                 setCanSpawn(false);
             }
@@ -89,7 +89,6 @@ public class DragNDropPreview : MonoBehaviour
     private void setCanSpawn(bool enable)
     {
         if (Xrenderer) Xrenderer.enabled = !enable; //X shows when enable is false
-        else Debug.LogWarning("Sprite Renderer for invalid placement indication not found");
         canSpawn = enable;
     }
 }
