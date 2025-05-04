@@ -9,6 +9,8 @@ public class MouseUIManager : MonoBehaviour
 
     private int entityLayerMask = 1 << 15; //mask so mouse ray can only hit entities
    
+    private GameObject gameUI; 
+    //checking the state of this to determine whether or not the shop is open. This is kinda bad imo, if we continue work on this we should move this whole class under some bigger UI manager w the shop
     private Camera cam;
     private Ray ray; //ray from the mouse
     private RaycastHit hit; 
@@ -16,6 +18,8 @@ public class MouseUIManager : MonoBehaviour
     void Start()
     {
        cam = GetComponent<Camera>();
+       gameUI = GameObject.Find("/UI/GameUI"); 
+       if(!gameUI) Debug.LogWarning("Could not find game UI");
        if(!PPRay) Debug.LogWarning("No DragNDropPreview set");
        if(!cam) Debug.LogWarning("No camera found");
 
@@ -31,6 +35,7 @@ public class MouseUIManager : MonoBehaviour
         if (currentPPRay) Debug.LogWarning("Multiple DragNDrop previews present (there should only be one at any time)");
         currentPPRay = Instantiate(PPRay, new Vector3(0,0,0), Quaternion.identity, transform);
         currentPPRay.init(entity, aquarium, cam);
+        closePopup(); // I think it would be weird if both were happening at the same time
     }
 
     public void startPopup(Entity entity){
@@ -41,7 +46,7 @@ public class MouseUIManager : MonoBehaviour
     }
 
     void Update(){
-        if (Input.GetMouseButtonDown(0)){ //if player left clicks check for entity at that spot
+        if (Input.GetMouseButtonDown(0) && (!currentPPRay) && (gameUI) && (gameUI.activeInHierarchy)){ //if player left clicks & there is not a dragndrop & the shop is not open
             ray = cam.ScreenPointToRay(Input.mousePosition); //ray from player POV
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, entityLayerMask)) //if it hits an entity
             {
