@@ -10,6 +10,7 @@ public class CameraController : MonoBehaviour
     public float maxFov = 60f; // Maximum field of view
     public float zoomSmoothTime = 0.3f; // Time to smooth the zooming effect
     public float movementSpeed = 5f; // Speed of camera movement
+    public float distance = 150f; // Distance from the target
     private bool isMoving = false; // Flag to check if the camera is already moving
 
     private Camera cam;
@@ -23,38 +24,33 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
-        // Rotate the camera based on WASD keys
-        if (Input.GetKey(KeyCode.W))
+        if (Input.GetMouseButton(0))
         {
-            RotateCamera(Vector3.right); // Rotate up
-        }
-        if (Input.GetKey(KeyCode.S))
-        {
-            RotateCamera(Vector3.left); // Rotate down
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            RotateCamera(Vector3.up); // Rotate left
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            RotateCamera(Vector3.down); // Rotate right
+            float mouseX = Input.GetAxis("Mouse X");
+            float mouseY = Input.GetAxis("Mouse Y");
+
+            if (target.rotation.eulerAngles.y > -90 && target.rotation.eulerAngles.y < 90)
+            {
+                mouseY = -mouseY;
+            }
+            Debug.Log(transform.rotation.eulerAngles.x);
+            transform.RotateAround(target.position, Vector3.up, mouseX * rotationSpeed * Time.deltaTime);
+            transform.RotateAround(target.position, transform.right, mouseY * rotationSpeed * Time.deltaTime);
+
+
+
+
+
         }
 
         if (Input.GetKey(KeyCode.UpArrow))
-        {
-            targetFov -= zoomSpeed; // Zoom in
-        }
+            targetFov -= zoomSpeed;
         if (Input.GetKey(KeyCode.DownArrow))
-        {
-            targetFov += zoomSpeed; // Zoom out
-        }
+            targetFov += zoomSpeed;
 
         targetFov = Mathf.Clamp(targetFov, minFov, maxFov);
-
         cam.fieldOfView = Mathf.SmoothDamp(cam.fieldOfView, targetFov, ref currentFovVelocity, zoomSmoothTime);
 
-        transform.LookAt(target);
     }
 
     void RotateCamera(Vector3 direction)
@@ -71,7 +67,7 @@ public class CameraController : MonoBehaviour
     {
         isMoving = true; // Start moving
 
-        Vector3 targetPosition = new Vector3(target.position.x, target.position.y + 150, target.position.z );
+        Vector3 targetPosition = new Vector3(target.position.x, target.position.y + distance, target.position.z);
         Quaternion targetRotation = Quaternion.Euler(90, 0, 0);
 
         // Smoothly move to the target position
