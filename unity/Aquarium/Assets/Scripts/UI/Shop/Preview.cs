@@ -94,7 +94,7 @@ public class Preview : MonoBehaviour
 
         Bounds bounds = CalculateBounds(targetObject);
 
-        float objectSize = Mathf.Max(bounds.size.x, bounds.size.y, bounds.size.z);
+        float objectSize = Mathf.Max(bounds.size.x + 10, bounds.size.y + 10, bounds.size.z + 10);
         float distance = CalculateRequiredDistance(camera, bounds, objectSize);
 
         Vector3 direction = camera.transform.rotation * Vector3.forward;

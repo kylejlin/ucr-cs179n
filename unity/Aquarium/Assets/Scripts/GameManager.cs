@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour
         List<GameObject> creaturesPrefabs = new List<GameObject>();
         creaturesPrefabs.AddRange(Resources.LoadAll<GameObject>("Algaes"));
         creaturesPrefabs.AddRange(Resources.LoadAll<GameObject>("Trilobites"));
+        creaturesPrefabs.AddRange(Resources.LoadAll<GameObject>("Decorations"));
         cameraController = GameObject.Find("Main Camera").GetComponent<CameraController>();
 
         creatures = InitIDs(creaturesPrefabs);
@@ -91,7 +92,7 @@ public class GameManager : MonoBehaviour
     public void addEntity(Entity entity, bool playerDragNDrop = true)
     {
         collection[entity] = true;
-        if (!playerDragNDrop) {tanks[selectedTank].addEntity(entity); return; }
+        if (!playerDragNDrop) { tanks[selectedTank].addEntity(entity); return; }
         if (mainCamera && mainCamera.GetComponent<MouseUIManager>()) mainCamera.GetComponent<MouseUIManager>().startPreview(entity, tanks[selectedTank]);
         else Debug.LogWarning("Could not find mainCamera or DragNDrop script");
     }
