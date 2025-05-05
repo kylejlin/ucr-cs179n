@@ -9068,12 +9068,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 131c7e2321eae45fb9d05abc475277cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rotationSpeed: 50
+  rotationSpeed: 5
   zoomSpeed: 5
   minFov: 10
   maxFov: 60
-  zoomSmoothTime: 0.3
+  zoomSmoothTime: 1
   movementSpeed: 5
+  distance: 150
 --- !u!114 &2115515218
 MonoBehaviour:
   m_ObjectHideFlags: 0
