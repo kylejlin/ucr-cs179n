@@ -24,23 +24,27 @@ public class CameraController : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButton(0))
+        float horizontal = 0f;
+        float vertical = 0f;
+
+        if (Input.GetKey(KeyCode.A))
+            horizontal = -1f;
+        else if (Input.GetKey(KeyCode.D))
+            horizontal = 1f;
+
+        if (Input.GetKey(KeyCode.W))
+            vertical = 1f;
+        else if (Input.GetKey(KeyCode.S))
+            vertical = -1f;
+
+        if (horizontal != 0 || vertical != 0)
         {
-            float mouseX = Input.GetAxis("Mouse X");
-            float mouseY = Input.GetAxis("Mouse Y");
-
-            if (target.rotation.eulerAngles.y > -90 && target.rotation.eulerAngles.y < 90)
+            transform.RotateAround(target.position, Vector3.up, horizontal * rotationSpeed * Time.deltaTime);
+            transform.RotateAround(target.position, transform.right, vertical * rotationSpeed * Time.deltaTime);
+            if (transform.up.y < 0)
             {
-                mouseY = -mouseY;
+                transform.RotateAround(target.position, transform.right, -vertical * rotationSpeed * Time.deltaTime);
             }
-            Debug.Log(transform.rotation.eulerAngles.x);
-            transform.RotateAround(target.position, Vector3.up, mouseX * rotationSpeed * Time.deltaTime);
-            transform.RotateAround(target.position, transform.right, mouseY * rotationSpeed * Time.deltaTime);
-
-
-
-
-
         }
 
         if (Input.GetKey(KeyCode.UpArrow))
