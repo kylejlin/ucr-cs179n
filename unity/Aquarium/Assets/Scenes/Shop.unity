@@ -9069,10 +9069,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 5
-  zoomSpeed: 5
+  zoomSpeed: 0.1
   minFov: 10
   maxFov: 60
-  zoomSmoothTime: 1
+  zoomSmoothTime: 0.1
   movementSpeed: 5
   distance: 150
 --- !u!114 &2115515218
