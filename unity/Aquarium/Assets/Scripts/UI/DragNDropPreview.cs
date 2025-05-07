@@ -14,12 +14,13 @@ public class DragNDropPreview : MonoBehaviour
     private BoxCollider myBC;
     private BoxCollider entityBC;
     private GameObject XImage;
+    private Renderer Xrenderer;
 
     private bool isColliding;
     private bool canSpawn;
 
 
-    public void init(Entity e, Aquarium a, Camera c){ //this is called first
+    public void init(Entity e, Aquarium a, Camera c){ //this is called first to set everything up
 
         entity = e;
         aquarium = a;
@@ -29,16 +30,17 @@ public class DragNDropPreview : MonoBehaviour
         myBC = GetComponent<BoxCollider>();
         entityBC = entity.GetComponent<BoxCollider>();
         XImage = GameObject.Find("X Image");
+        Xrenderer = XImage.GetComponent<Renderer>(); //set up all the variables
 
         if (!e || !a || !c) Debug.LogWarning("DragNDropPreview missing references (entity, aquarium, or camera)");
         if (!myBC || !entityBC || !XImage) Debug.LogWarning("DragNDrog or entity missing components");
 
 
         setCanSpawn(false);
-        spawnedEntity = Instantiate(e.gameObject, new Vector3(0, 0, 0), Quaternion.identity, transform).GetComponent<Entity>(); //using cam.transform because transform gets an error for some reason
-        spawnedEntity.initShopMode(false, true);
+        spawnedEntity = Instantiate(e.gameObject, new Vector3(0, 0, 0), Quaternion.identity, transform).GetComponent<Entity>(); //spawn the fake entity to preview the placement
+        spawnedEntity.initShopMode(false, true); //it is in shop mode so it does not interfere w living real creatures
 
-        if(myBC && entityBC)
+        if(myBC && entityBC) //it will not have a collider anymore bc shop mode. but we need a collider (in trigger mode so things can pass thru) to detect collisions and invalid spawining places. so make a new one the same size and location
         {
             myBC.size = Vector3.Scale(entityBC.size, spawnedEntity.transform.localScale);
             myBC.center  = Vector3.Scale(entityBC.center, spawnedEntity.transform.localScale);
@@ -47,29 +49,24 @@ public class DragNDropPreview : MonoBehaviour
 
     }
 
-
-    void Start(){
-
-    }
-
-
     // Update is called once per frame
     void Update()
     {
-        ray = cam.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out hit))
+
+        ray = cam.ScreenPointToRay(Input.mousePosition); //ray from player POV
+        if (Physics.Raycast(ray, out hit)) //if it hits anything
         {
             //move to mouse position & rotate
-            transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(hit.normal) * Quaternion.Euler(90f, 0f, 0f));
-            XImage.transform.rotation = Quaternion.Euler(90f, 0f, 0f); //image always should point up
-            if (isColliding || hit.collider.CompareTag("DontAllowSpawn")) 
+            transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(hit.normal) * Quaternion.Euler(90f, 0f, 0f)); //creature is oriented onto the surface
+            XImage.transform.rotation = Quaternion.Euler(90f, 0f, 0f); //image of X always should point up
+            if (isColliding || !aquarium.isInBounds(hit.point)) //detect invalid placement
             { 
                 setCanSpawn(false);
             }
             else setCanSpawn(true);
-                // print(hit.collider.CompareTag("DontAllowSpawn"));
 
-            //spawn guy and dissappear if they click
+
+            //spawn entity and dissappear if player click
             if (Input.GetMouseButtonDown(0) && canSpawn)
             {
                 aquarium.addEntity(entity, transform.position, transform.rotation);
@@ -77,7 +74,7 @@ public class DragNDropPreview : MonoBehaviour
             }
 
         }
-        else transform.position = defaultPos;
+        else transform.localPosition = defaultPos; //else hide the preview behind the camera
     }
 
     private void OnTriggerEnter(Collider other)
@@ -90,7 +87,7 @@ public class DragNDropPreview : MonoBehaviour
     }
     private void setCanSpawn(bool enable)
     {
-        if (XImage) XImage.GetComponent<Renderer>().enabled = !enable; //hide the X
+        if (Xrenderer) Xrenderer.enabled = !enable; //X shows when enable is false
         else Debug.LogWarning("Sprite Renderer for invalid placement indication not found");
         canSpawn = enable;
     }

@@ -28,7 +28,6 @@ public class MobileCreature : Creature
     {
         base.Awake(); //call Creature Start()
         mobileCreatureRB = GetComponent<Rigidbody>();
-        name = "Trilobite " + entityName;
         growthRate = 0.1f;
         adultEnergy = 40;
         energy = 40;
