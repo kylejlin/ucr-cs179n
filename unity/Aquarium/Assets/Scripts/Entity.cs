@@ -13,16 +13,17 @@ public class Entity : MonoBehaviour
     private Rarity rarity;
     protected bool bottomDweller = true; //should it spawn on the bottom of the tank. True for all decorations. For creatures, its true if it is immobile or only walks along the bottom, else false.
 
-    public Aquarium parentAquarium = null;
     protected double count = 0; //to count deltaTime 
     public bool shopMode = false; //true if this gameobject is being displayed in UI and so should spawn as an adult and not Update() (frozen, don't interact) 
+
+    public Aquarium parentAquarium = null;
+    private Outline outline;
     public virtual void Awake()
     {
-    }
-
-    public void Start(){
+        SetLayerRecursively(transform, 15); //set to Entity layer for raycast masking
         name = entityName + " " + id;
-
+        outline = gameObject.AddComponent<Outline>(); //outline script that allows the creature or decor to be outlined when player clicks on them
+        if(!outline) setOutline(false); //store bought entities (from prefabs) wont have the outline script, but home grown duplicated creatures will already will
     }
 
     // Update is called once per frame
@@ -135,6 +136,10 @@ public class Entity : MonoBehaviour
         if (GetComponent<Rigidbody>()) Destroy(GetComponent<Rigidbody>());
     } //get overridden by child classes. Also this is permenant, reenabling an object would be difficult and might break things in Awake()
 
+    public virtual string getCurrStats(){
+        return "Name: "+entityName;
+    }
+
     public float getSqrDistToEntity(Entity entity) { return (transform.localPosition - entity.transform.localPosition).sqrMagnitude; }
     public float getSqrDistBw(Vector3 vec1, Vector3 vec2) { return (vec1 - vec2).sqrMagnitude; }
     public int getID() { return id; }
@@ -142,5 +147,8 @@ public class Entity : MonoBehaviour
     public int getSellMoney() { return sellMoney; }
     public float getScale() { return transform.localScale.x; }
     public Rarity GetRarity() { return rarity; }
+    public void setOutline(bool enable){
+        outline.enabled = enable;
+    }
     
 }

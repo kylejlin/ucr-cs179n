@@ -10,7 +10,7 @@ public class DragNDropPreview : MonoBehaviour
     private Camera cam;
     private RaycastHit hit; 
     private Ray ray;
-    private Vector3 defaultPos = new Vector3(0,0,0);
+    private Vector3 defaultPos = new Vector3(0,0,-20);
     private BoxCollider myBC;
     private BoxCollider entityBC;
     private GameObject XImage;
@@ -38,6 +38,7 @@ public class DragNDropPreview : MonoBehaviour
 
         setCanSpawn(false);
         spawnedEntity = Instantiate(e.gameObject, new Vector3(0, 0, 0), Quaternion.identity, transform).GetComponent<Entity>(); //spawn the fake entity to preview the placement
+        spawnedEntity.transform.localPosition = new Vector3(0,0,0);
         spawnedEntity.initShopMode(false, true); //it is in shop mode so it does not interfere w living real creatures
 
         if(myBC && entityBC) //it will not have a collider anymore bc shop mode. but we need a collider (in trigger mode so things can pass thru) to detect collisions and invalid spawining places. so make a new one the same size and location
@@ -59,7 +60,7 @@ public class DragNDropPreview : MonoBehaviour
             //move to mouse position & rotate
             transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(hit.normal) * Quaternion.Euler(90f, 0f, 0f)); //creature is oriented onto the surface
             XImage.transform.rotation = Quaternion.Euler(90f, 0f, 0f); //image of X always should point up
-            if (isColliding || !aquarium.isInBounds(hit.point)) //detect invalid placement
+            if (isColliding || !aquarium.isInBounds(hit.point) || hit.collider.GetComponent<Creature>()) //detect invalid placement (collisions, out of aquarium, or on top of a creature)
             { 
                 setCanSpawn(false);
             }
@@ -88,7 +89,6 @@ public class DragNDropPreview : MonoBehaviour
     private void setCanSpawn(bool enable)
     {
         if (Xrenderer) Xrenderer.enabled = !enable; //X shows when enable is false
-        else Debug.LogWarning("Sprite Renderer for invalid placement indication not found");
         canSpawn = enable;
     }
 }
