@@ -22,8 +22,9 @@ public class Entity : MonoBehaviour
     {
         SetLayerRecursively(transform, 15); //set to Entity layer for raycast masking
         name = entityName + " " + id;
-        outline = gameObject.AddComponent<Outline>(); //outline script that allows the creature or decor to be outlined when player clicks on them
-        if(!outline) setOutline(false); //store bought entities (from prefabs) wont have the outline script, but home grown duplicated creatures will already will
+        outline = gameObject.GetComponent<Outline>();
+        if(!outline) outline = gameObject.AddComponent<Outline>(); //outline script that allows the creature or decor to be outlined when player clicks on them
+        setOutline(false); 
     }
 
     // Update is called once per frame
@@ -150,5 +151,6 @@ public class Entity : MonoBehaviour
     public void setOutline(bool enable){
         outline.enabled = enable;
     }
+    public bool isOutlined(){ return outline.enabled; }
     
 }

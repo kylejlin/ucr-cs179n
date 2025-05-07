@@ -71,8 +71,13 @@ public class Creature : Entity
         if (parentAquarium == null) { Debug.LogWarning("Could not find Aquarium parent"); return; }
         if (!parentAquarium.isInBounds(position)) {return; } //keep w/in aquarium
 
+        bool isOutlinedRN = isOutlined();
+        setOutline(false); //have to do this else the outline materials will get duplicated onto the child and I cant find a better way to stop this
+        
         parentAquarium.addEntity(this, position, transform.localRotation); //spawn nearby in same aquarium
         beingEaten(spawnSize*adultEnergy, false); //lose the same amount as the new creature spawned has
+
+        setOutline(isOutlinedRN);
     }
 
     /// <summary> try to duplicate, but dont if there is a T too close to the attempted spawn location or too many of T in the aquarium as a whole. </summary>
