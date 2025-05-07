@@ -22,7 +22,8 @@ public class Entity : MonoBehaviour
     {
         SetLayerRecursively(transform, 15); //set to Entity layer for raycast masking
         name = entityName + " " + id;
-        outline = gameObject.AddComponent<Outline>(); //outline script that allows the creature or decor to be outlined when player clicks on them
+        outline = gameObject.GetComponent<Outline>();
+        if(!outline) outline = gameObject.AddComponent<Outline>(); //outline script that allows the creature or decor to be outlined when player clicks on them
         setOutline(false); 
     }
 
@@ -150,5 +151,6 @@ public class Entity : MonoBehaviour
     public void setOutline(bool enable){
         outline.enabled = enable;
     }
+    public bool isOutlined(){ return outline.enabled; }
     
 }
