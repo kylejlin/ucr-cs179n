@@ -126,15 +126,41 @@ public class Entity : MonoBehaviour
     }
     
     /// <summary>
+    /// disable all colliders of this gameobject or its children. //doesnt get inactive colliders. Im not sure if it should??
+    /// </summary>
+    public void disableAllColliders() {
+        Collider[] allColliders = GetComponentsInChildren<Collider>(); 
+        foreach(Collider c in allColliders){ //go through all children colliders and disable them. They wont cause collisions or do anything
+            c.enabled = false;
+        }
+    }
+    /// <summary>
+    /// get the axis aligned BB of all the colliders on this gameobject or its children. //doesnt get inactive colliders. Im not sure if it should??
+    /// </summary>
+    /// <returns> Bounds struct of AABB. will return a Bounds with center 0,0,0 and size 0,0,0 if there are no colliders, because structs cant be null</returns>
+    public Bounds getAllCollidersBoundingBox(){
+        Collider[] allColliders = GetComponentsInChildren<Collider>(); 
+        if(allColliders.Length==0) { Debug.LogWarning("No colliders"); return new Bounds(new Vector3(0,0,0), new Vector3(0,0,0));}
+        Bounds colliderBounds = allColliders[0].bounds;
+
+        foreach(Collider c in allColliders){ //go through all children colliders and expand the bounds to hold them all
+            colliderBounds.Encapsulate(c.bounds.min);
+            colliderBounds.Encapsulate(c.bounds.max);
+        }
+
+        return colliderBounds;
+
+    }
+    /// <summary>
     /// make it fake and noninteractive and invisible to other creatures. For display purposes like in shop or dragndrop or UI etc
     /// </summary>
     /// <param name="asAdult"> set self to be an adult or a baby as they would naturally spawn</param>
     /// <param name="changeMaturity"> should this set the maturity. if false, isadult doesnt matter</param>
     public virtual void initShopMode(bool asAdult = true, bool changeMaturity = true) { 
-        this.enabled = false; 
+        this.enabled = false;  //no update()
         shopMode = true;
-        if (GetComponent<BoxCollider>()) Destroy(GetComponent<BoxCollider>()); //also dont mess w collisions and raycasting etc
-        if (GetComponent<Rigidbody>()) Destroy(GetComponent<Rigidbody>());
+        disableAllColliders(); //dont mess w collisions or raycasts etc
+        if (GetComponent<Rigidbody>()) Destroy(GetComponent<Rigidbody>()); //no physics please
     } //get overridden by child classes. Also this is permenant, reenabling an object would be difficult and might break things in Awake()
 
     public virtual string getCurrStats(){

@@ -12,7 +12,6 @@ public class DragNDropPreview : MonoBehaviour
     private Ray ray;
     private Vector3 defaultPos = new Vector3(0,0,-20);
     private BoxCollider myBC;
-    private BoxCollider entityBC;
     private GameObject XImage;
     private Renderer Xrenderer;
 
@@ -22,32 +21,54 @@ public class DragNDropPreview : MonoBehaviour
 
     public void init(Entity e, Aquarium a, Camera c){ //this is called first to set everything up
 
+        //set up all the variables
+
         entity = e;
         aquarium = a;
         cam = c;
         transform.position = defaultPos;
 
         myBC = GetComponent<BoxCollider>();
-        entityBC = entity.GetComponent<BoxCollider>();
+        Bounds entityColliderBounds = entity.getAllCollidersBoundingBox(); //cant nullify struct so a size 0 bounds means DNI
         XImage = GameObject.Find("X Image");
-        Xrenderer = XImage.GetComponent<Renderer>(); //set up all the variables
+        Xrenderer = XImage.GetComponent<Renderer>(); 
 
         if (!e || !a || !c) Debug.LogWarning("DragNDropPreview missing references (entity, aquarium, or camera)");
-        if (!myBC || !entityBC || !XImage) Debug.LogWarning("DragNDrog or entity missing components");
-
+        if (!myBC || (entityColliderBounds.size == new Vector3(0,0,0)) || !XImage) Debug.LogWarning("DragNDrog or entity missing components");
+        print(entityColliderBounds);
 
         setCanSpawn(false);
         spawnedEntity = Instantiate(e.gameObject, new Vector3(0, 0, 0), Quaternion.identity, transform).GetComponent<Entity>(); //spawn the fake entity to preview the placement
         spawnedEntity.transform.localPosition = new Vector3(0,0,0);
         spawnedEntity.initShopMode(false, true); //it is in shop mode so it does not interfere w living real creatures
 
-        if(myBC && entityBC) //it will not have a collider anymore bc shop mode. but we need a collider (in trigger mode so things can pass thru) to detect collisions and invalid spawining places. so make a new one the same size and location
+        if(myBC && (entityColliderBounds.size != new Vector3(0,0,0))) // we need a collider (in trigger mode so things can pass thru) to detect collisions and invalid spawining places.
         {
-            myBC.size = Vector3.Scale(entityBC.size, spawnedEntity.transform.localScale);
-            myBC.center  = Vector3.Scale(entityBC.center, spawnedEntity.transform.localScale);
+            myBC.size = entityColliderBounds.size; 
+            myBC.center = entityColliderBounds.center - transform.position; //bounds coords are in worldspace and myBC is in local space, so have to fix it
         }
 
+        //need:
+        //cant just delete BC because it may have more Cs
+        //need ray to go thru the prview (set layer to smth else, use ray mask?)
+        //need to detect when preview is colliding w other things (make all Cs triggers in initShopmode?) (cant just disable them) (maybe I can? for the raycast?)
+        //in entity: disableAllColliders, get boundingboxofcolliders, make Cs triggers
+        //fast(er) solution: get boundingboxofcolliders in entity. use that for preview BC
 
+        //need: preview to know when its colliding
+        //ray to not hit entities BC
+
+        //plan:
+        //init entity
+        //get its C BB
+        //its RB will be deleted bc shopmode
+        //make BC 
+        //disableAllColliders (can i do that in shopmode?) V
+        //cast ray: wont hit this object because its is in IgnoreRaycast layer
+        //wont hit preview bc disabled
+
+        
+        
     }
 
     // Update is called once per frame
@@ -71,11 +92,18 @@ public class DragNDropPreview : MonoBehaviour
             if (Input.GetMouseButtonDown(0) && canSpawn)
             {
                 aquarium.addEntity(entity, transform.position, transform.rotation);
-                Destroy(gameObject);
+                endDragNDrop();
             }
 
         }
         else transform.localPosition = defaultPos; //else hide the preview behind the camera
+
+        if (Input.GetMouseButtonDown(1)) endDragNDrop(); //exit without placing if they right click, although they will still have spent the money.. umm
+
+    }
+
+    public void endDragNDrop(){
+        Destroy(gameObject);
     }
 
     private void OnTriggerEnter(Collider other)

@@ -150,8 +150,10 @@ public class Creature : Entity
     {
         if (changeMaturity && asAdult) setMaturity(1);
         else if (changeMaturity && !asAdult) setMaturity(spawnSize);
-        BoxCollider BC = GetComponent<BoxCollider>(); Rigidbody RB = GetComponent<Rigidbody>();
-        if (BC) { BC.enabled = false; Destroy(BC); }
+        disableAllColliders();
+        // BoxCollider BC = GetComponent<BoxCollider>(); //not necessary any more since they are all disabled for the same effect
+        // if (BC) { BC.enabled = false; Destroy(BC); }
+        Rigidbody RB = GetComponent<Rigidbody>();
         if (RB) { Destroy(RB); } //this is the only way to turn off the RB for whatever reason
 
         this.enabled = false; //turn off Update() and Start()
