@@ -135,18 +135,26 @@ public class Entity : MonoBehaviour
         }
     }
     /// <summary>
-    /// get the axis aligned BB of all the colliders on this gameobject or its children. //doesnt get inactive colliders. Im not sure if it should??
+    /// ONLY WORKS IF GAMEOBJECT AND COLLIDERS ARE ENABLED AND ACTIVE. get the axis aligned BB of all the colliders on this gameobject or its children. //doesnt get inactive colliders. Im not sure if it should??
     /// </summary>
     /// <returns> Bounds struct of AABB. will return a Bounds with center 0,0,0 and size 0,0,0 if there are no colliders, because structs cant be null</returns>
     public Bounds getAllCollidersBoundingBox(){
+        if(!gameObject.activeInHierarchy) { Debug.LogWarning("Object Inactive. No bounds"); return new Bounds(new Vector3(0,0,0), new Vector3(0,0,0));}
         Collider[] allColliders = GetComponentsInChildren<Collider>(); 
         if(allColliders.Length==0) { Debug.LogWarning("No colliders"); return new Bounds(new Vector3(0,0,0), new Vector3(0,0,0));}
         Bounds colliderBounds = allColliders[0].bounds;
+
+        print(allColliders.Length);
+        print(allColliders[0]);
+        print(allColliders[0].bounds);
+        print(colliderBounds);
 
         foreach(Collider c in allColliders){ //go through all children colliders and expand the bounds to hold them all
             colliderBounds.Encapsulate(c.bounds.min);
             colliderBounds.Encapsulate(c.bounds.max);
         }
+
+        print(colliderBounds);
 
         return colliderBounds;
 
@@ -169,14 +177,12 @@ public class Entity : MonoBehaviour
 
     public float getSqrDistToEntity(Entity entity) { return (transform.localPosition - entity.transform.localPosition).sqrMagnitude; }
     public float getSqrDistBw(Vector3 vec1, Vector3 vec2) { return (vec1 - vec2).sqrMagnitude; }
+    public void setOutline(bool enable){ outline.enabled = enable; }
     public int getID() { return id; }
     public int getBuyMoney() { return buyMoney; }
     public int getSellMoney() { return sellMoney; }
     public float getScale() { return transform.localScale.x; }
     public Rarity GetRarity() { return rarity; }
-    public void setOutline(bool enable){
-        outline.enabled = enable;
-    }
     public bool isOutlined(){ return outline.enabled; }
     
 }

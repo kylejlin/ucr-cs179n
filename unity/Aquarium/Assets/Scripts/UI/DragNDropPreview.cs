@@ -27,22 +27,20 @@ public class DragNDropPreview : MonoBehaviour
         aquarium = a;
         cam = c;
         transform.position = defaultPos;
-
         myBC = GetComponent<BoxCollider>();
-        Bounds entityColliderBounds = entity.getAllCollidersBoundingBox(); //cant nullify struct so a size 0 bounds means DNI
         XImage = GameObject.Find("X Image");
         Xrenderer = XImage.GetComponent<Renderer>(); 
-
         if (!e || !a || !c) Debug.LogWarning("DragNDropPreview missing references (entity, aquarium, or camera)");
-        if (!myBC || (entityColliderBounds.size == new Vector3(0,0,0)) || !XImage) Debug.LogWarning("DragNDrog or entity missing components");
-        print(entityColliderBounds);
+
 
         setCanSpawn(false);
         spawnedEntity = Instantiate(e.gameObject, new Vector3(0, 0, 0), Quaternion.identity, transform).GetComponent<Entity>(); //spawn the fake entity to preview the placement
+        Bounds entityColliderBounds = spawnedEntity.getAllCollidersBoundingBox(); //get its AABB for collision checks. cant nullify struct so a size 0 bounds means DNI. also doesnt work on inactive / prefab / disabled things
         spawnedEntity.transform.localPosition = new Vector3(0,0,0);
         spawnedEntity.initShopMode(false, true); //it is in shop mode so it does not interfere w living real creatures
+        if (!myBC || (entityColliderBounds.size == new Vector3(0,0,0)) || !XImage) Debug.LogWarning("DragNDrog or entity missing components");
 
-        if(myBC && (entityColliderBounds.size != new Vector3(0,0,0))) // we need a collider (in trigger mode so things can pass thru) to detect collisions and invalid spawining places.
+        if(myBC && (entityColliderBounds.size != new Vector3(0,0,0))) // we need a collider (in trigger mode so things can pass thru) to detect collisions and invalid spawining places. make it the same shape/size as the entities AABB
         {
             myBC.size = entityColliderBounds.size; 
             myBC.center = entityColliderBounds.center - transform.position; //bounds coords are in worldspace and myBC is in local space, so have to fix it
