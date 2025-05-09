@@ -20,7 +20,8 @@ public class Entity : MonoBehaviour
     {
     }
 
-    public void Start(){
+    public void Start()
+    {
         name = entityName + " " + id;
 
     }
@@ -83,15 +84,18 @@ public class Entity : MonoBehaviour
     /// <returns> array of type T of all the found entities, or null if none were found </returns>
     public T[] getAllOfType<T>(bool global = false) where T : Entity //RETURNS NULL IF EMPTY
     {
-        if(global){ //replace w getcompinchildren no casting needed
+        if (global)
+        { //replace w getcompinchildren no casting needed
             Object[] foundObjects = FindObjectsByType(typeof(T), FindObjectsSortMode.None); //find all of the type
             if (foundObjects.Length == 0) return null;
 
 
             T[] foundEntities = new T[foundObjects.Length]; //cast to T
             for (int i = 0; i < foundObjects.Length; i++) foundEntities[i] = (T)foundObjects[i];
-            return foundEntities;}
-        else {
+            return foundEntities;
+        }
+        else
+        {
             T[] foundComponents = parentAquarium.GetComponentsInChildren<T>();
             return foundComponents;
         }
@@ -104,16 +108,16 @@ public class Entity : MonoBehaviour
 
     }
 
-/// <summary>
-/// destroy the gameobject and let the aquarium know
-/// </summary>
+    /// <summary>
+    /// destroy the gameobject and let the aquarium know
+    /// </summary>
     public void die()
     {
         if (parentAquarium != null) { parentAquarium.removeEntity(this); }
         else { Debug.LogWarning("Could not find Aquarium parent"); }
         Destroy(gameObject);
     }
-    
+
     public void SetLayerRecursively(Transform obj, int newLayer)
     {
         obj.gameObject.layer = newLayer;
@@ -122,14 +126,15 @@ public class Entity : MonoBehaviour
             SetLayerRecursively(child, newLayer);
         }
     }
-    
+
     /// <summary>
     /// make it fake and noninteractive and invisible to other creatures. For display purposes like in shop or dragndrop or UI etc
     /// </summary>
     /// <param name="asAdult"> set self to be an adult or a baby as they would naturally spawn</param>
     /// <param name="changeMaturity"> should this set the maturity. if false, isadult doesnt matter</param>
-    public virtual void initShopMode(bool asAdult = true, bool changeMaturity = true) { 
-        this.enabled = false; 
+    public virtual void initShopMode(bool asAdult = true, bool changeMaturity = true)
+    {
+        this.enabled = false;
         shopMode = true;
         if (GetComponent<BoxCollider>()) Destroy(GetComponent<BoxCollider>()); //also dont mess w collisions and raycasting etc
         if (GetComponent<Rigidbody>()) Destroy(GetComponent<Rigidbody>());
@@ -142,5 +147,5 @@ public class Entity : MonoBehaviour
     public int getSellMoney() { return sellMoney; }
     public float getScale() { return transform.localScale.x; }
     public Rarity GetRarity() { return rarity; }
-    
+
 }
