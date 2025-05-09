@@ -150,7 +150,7 @@ public class Aquarium : MonoBehaviour
             int voxelY = (voxelIndex / xSize) % ySize;
             int voxelZ = voxelIndex / (xSize * ySize);
 
-            // Check the 6 neighbors of the current voxel.
+            // Check the 6 orthogonal neighbors of the current voxel.
             for (int dx = -1; dx <= 1; dx += 2)
             {
                 for (int dy = -1; dy <= 1; dy += 2)
