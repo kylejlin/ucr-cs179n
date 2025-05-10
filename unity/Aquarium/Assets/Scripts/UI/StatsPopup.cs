@@ -43,6 +43,7 @@ public class StatsPopup : MonoBehaviour
         if(entity) {
             setText(entity.getCurrStats());
             entity.setOutline(true);
+             print(entity.getAllCollidersBoundingBox());
         }
     }
 

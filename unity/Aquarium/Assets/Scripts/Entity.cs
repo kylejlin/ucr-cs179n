@@ -144,17 +144,16 @@ public class Entity : MonoBehaviour
         if(allColliders.Length==0) { Debug.LogWarning("No colliders"); return new Bounds(new Vector3(0,0,0), new Vector3(0,0,0));}
         Bounds colliderBounds = allColliders[0].bounds;
 
-        print(allColliders.Length);
-        print(allColliders[0]);
-        print(allColliders[0].bounds);
-        print(colliderBounds);
+        // print(allColliders.Length);
+        // print(allColliders[0]);
+        // print(allColliders[0].bounds);
+        // print(colliderBounds);
 
         foreach(Collider c in allColliders){ //go through all children colliders and expand the bounds to hold them all
             colliderBounds.Encapsulate(c.bounds.min);
             colliderBounds.Encapsulate(c.bounds.max);
         }
 
-        print(colliderBounds);
 
         return colliderBounds;
 

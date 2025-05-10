@@ -35,15 +35,16 @@ public class DragNDropPreview : MonoBehaviour
 
         setCanSpawn(false);
         spawnedEntity = Instantiate(e.gameObject, new Vector3(0, 0, 0), Quaternion.identity, transform).GetComponent<Entity>(); //spawn the fake entity to preview the placement
-        Bounds entityColliderBounds = spawnedEntity.getAllCollidersBoundingBox(); //get its AABB for collision checks. cant nullify struct so a size 0 bounds means DNI. also doesnt work on inactive / prefab / disabled things
         spawnedEntity.transform.localPosition = new Vector3(0,0,0);
+        Bounds entityColliderBounds = spawnedEntity.getAllCollidersBoundingBox(); //get its AABB for collision checks. cant nullify struct so a size 0 bounds means DNI. also doesnt work on inactive / prefab / disabled things
+            print("In dragndrop:"+entityColliderBounds);
         spawnedEntity.initShopMode(false, true); //it is in shop mode so it does not interfere w living real creatures
         if (!myBC || (entityColliderBounds.size == new Vector3(0,0,0)) || !XImage) Debug.LogWarning("DragNDrog or entity missing components");
 
         if(myBC && (entityColliderBounds.size != new Vector3(0,0,0))) // we need a collider (in trigger mode so things can pass thru) to detect collisions and invalid spawining places. make it the same shape/size as the entities AABB
         {
-            myBC.size = entityColliderBounds.size; 
-            myBC.center = entityColliderBounds.center - transform.position; //bounds coords are in worldspace and myBC is in local space, so have to fix it
+            myBC.size = Vector3.Scale(entityColliderBounds.size, spawnedEntity.transform.localScale); //i have no idea why this is needed. bounds are supposed to be in world space and it is during gamplay but not during awake?? i must be missing smth
+            myBC.center = entityColliderBounds.center; //bounds coords are in worldspace and myBC is in local space, so have to fix it
         }
 
         //need:

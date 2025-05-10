@@ -4,7 +4,6 @@ public class ImmobileCreature : Creature
 {
     [HideInInspector]
     protected float eatRate = 5f; //how much it eats (through photosynthesis or filter feeding or w/e) per minute
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     protected new void Awake()
     {
         
@@ -18,6 +17,13 @@ public class ImmobileCreature : Creature
         minCMCubedPer = 10000;
         initSize();
 
+        print("In Awake:"+getAllCollidersBoundingBox());
+
+
+    }
+
+    void Start()
+    {
 
     }
 
