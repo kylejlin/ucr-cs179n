@@ -28,14 +28,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6660640480602176354}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
-  m_LocalPosition: {x: -15.639864, y: 0, z: 47.159657}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 8639579401613110283}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8370475931250518094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -53,9 +53,8 @@ MonoBehaviour:
   buyMoney: 10
   sellMoney: 8
   rarity: 0
-  parentAquarium: {fileID: 0}
   shopMode: 0
-  hunger: 0
+  parentAquarium: {fileID: 0}
   energy: 100
   maxEnergy: 5
   canSwim: 0

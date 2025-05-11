@@ -17,9 +17,6 @@ public class ImmobileCreature : Creature
         minCMCubedPer = 10000;
         initSize();
 
-        print("In Awake:"+getAllCollidersBoundingBox());
-
-
     }
 
     void Start()

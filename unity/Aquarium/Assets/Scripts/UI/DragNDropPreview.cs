@@ -26,7 +26,7 @@ public class DragNDropPreview : MonoBehaviour
         entity = e;
         aquarium = a;
         cam = c;
-        transform.position = defaultPos;
+        transform.position = new Vector3(0,0,0);
         myBC = GetComponent<BoxCollider>();
         XImage = GameObject.Find("X Image");
         Xrenderer = XImage.GetComponent<Renderer>(); 
@@ -35,39 +35,33 @@ public class DragNDropPreview : MonoBehaviour
 
         setCanSpawn(false);
         spawnedEntity = Instantiate(e.gameObject, new Vector3(0, 0, 0), Quaternion.identity, transform).GetComponent<Entity>(); //spawn the fake entity to preview the placement
-        spawnedEntity.transform.localPosition = new Vector3(0,0,0);
+        spawnedEntity.transform.position = new Vector3(0,0,0);
         Bounds entityColliderBounds = spawnedEntity.getAllCollidersBoundingBox(); //get its AABB for collision checks. cant nullify struct so a size 0 bounds means DNI. also doesnt work on inactive / prefab / disabled things
-            print("In dragndrop:"+entityColliderBounds);
         spawnedEntity.initShopMode(false, true); //it is in shop mode so it does not interfere w living real creatures
         if (!myBC || (entityColliderBounds.size == new Vector3(0,0,0)) || !XImage) Debug.LogWarning("DragNDrog or entity missing components");
 
         if(myBC && (entityColliderBounds.size != new Vector3(0,0,0))) // we need a collider (in trigger mode so things can pass thru) to detect collisions and invalid spawining places. make it the same shape/size as the entities AABB
         {
             myBC.size = Vector3.Scale(entityColliderBounds.size, spawnedEntity.transform.localScale); //i have no idea why this is needed. bounds are supposed to be in world space and it is during gamplay but not during awake?? i must be missing smth
-            myBC.center = entityColliderBounds.center; //bounds coords are in worldspace and myBC is in local space, so have to fix it
+            myBC.center = Vector3.Scale(entityColliderBounds.center, spawnedEntity.transform.localScale); //IM DEADD i have no idea why this works. this is gibberish LOLLL
         }
 
-        //need:
-        //cant just delete BC because it may have more Cs
-        //need ray to go thru the prview (set layer to smth else, use ray mask?)
-        //need to detect when preview is colliding w other things (make all Cs triggers in initShopmode?) (cant just disable them) (maybe I can? for the raycast?)
-        //in entity: disableAllColliders, get boundingboxofcolliders, make Cs triggers
-        //fast(er) solution: get boundingboxofcolliders in entity. use that for preview BC
+        Vector3 temp = XImage.transform.position;
+        temp.y = myBC.center.y+ (myBC.size.y/2); //this xtra step is necessary because of how transform works ig
+        XImage.transform.position = temp; //move the X to be right on top of the entity
 
-        //need: preview to know when its colliding
-        //ray to not hit entities BC
+        //How this works:
+        //spawn entity
+        //get the bounding box of its colliders only
+        //turn on shopmode, so all of the entitie's colliders will be disabled and its RB will be deleted if it has one 
+        //change the collider on this gameObject to match the size and placement of the entity's colliders so it can detect collisions (invalid spawning places)
 
-        //plan:
-        //init entity
-        //get its C BB
-        //its RB will be deleted bc shopmode
-        //make BC 
-        //disableAllColliders (can i do that in shopmode?) V
-        //cast ray: wont hit this object because its is in IgnoreRaycast layer
-        //wont hit preview bc disabled
+        //Also:
+        //this object is in IgnoreRaycast Layer so the raycast wont hit it
+        //raycast wont hit the entity because it is in shopmode and colliders are disabled
+        //nothing will hit this because its collider is in trigger mode
+        //it still gets collision events though because it has a rigidbody. The RB is kinematic though (basically turned off)
 
-        
-        
     }
 
     // Update is called once per frame
