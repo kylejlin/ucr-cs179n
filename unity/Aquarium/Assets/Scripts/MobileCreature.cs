@@ -78,6 +78,9 @@ public class MobileCreature : Creature
         initSize();
     }
 
+    void Start(){
+    }
+
     // FixedUpdate is called at fixed time intervals
     void FixedUpdate()
     {
@@ -202,6 +205,15 @@ public class MobileCreature : Creature
         mobileCreatureRB.MoveRotation(Quaternion.LookRotation(angularVelocity, Vector3.forward));
     }
 
+    public override string getCurrStats(){
+        return( "Name: "+entityName
+        +"\nEnergy: "+energy/maxEnergy*100+"%"
+        +"\nMaturity: "+getMaturity() / adultSize*100+"%"
+        + "\nMetabolism: "+metabolismRate+" energy/s"
+        +"\nSpace Requirement: "+minCMCubedPer+" cubic cm");
+    }
+
+}
     /// <summary> scales up size and energy by the percentage passed in (wont exceed max size set) </summary>
     public override void grow(float percentage)
     {

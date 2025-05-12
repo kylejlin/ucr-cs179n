@@ -3,7 +3,7 @@ using UnityEngine;
 public class Creature : Entity
 {
     //these are mostly randomly set so that things don't crash. Each creature should set it to the correct value in their child class
-    public float hunger = 0; //current hunger?
+    // public float hunger = 0; //current hunger?
     public float energy = 2; //current health
 
     public float maxEnergy = 5; //current health cap
@@ -61,6 +61,9 @@ public class Creature : Entity
         setScaleTo(adultSize * percentage); 
         maxEnergy = percentage * adultEnergy;
     }
+    public float getMaturity(){
+        return transform.localScale.x;
+    }
 
     /// <summary> make identical copy (for now, in a random position nearby. This is probably temporary). </summary>
     public virtual void duplicate(Vector3 position) 
@@ -68,8 +71,13 @@ public class Creature : Entity
         if (parentAquarium == null) { Debug.LogWarning("Could not find Aquarium parent"); return; }
         if (!parentAquarium.isInBounds(position)) {return; } //keep w/in aquarium
 
+        bool isOutlinedRN = isOutlined();
+        setOutline(false); //have to do this else the outline materials will get duplicated onto the child and I cant find a better way to stop this
+        
         parentAquarium.addEntity(this, position, transform.localRotation); //spawn nearby in same aquarium
         beingEaten(spawnSize*adultEnergy, false); //lose the same amount as the new creature spawned has
+
+        setOutline(isOutlinedRN);
     }
 
     /// <summary> try to duplicate, but dont if there is a T too close to the attempted spawn location or too many of T in the aquarium as a whole. </summary>
@@ -142,8 +150,10 @@ public class Creature : Entity
     {
         if (changeMaturity && asAdult) setMaturity(1);
         else if (changeMaturity && !asAdult) setMaturity(spawnSize);
-        BoxCollider BC = GetComponent<BoxCollider>(); Rigidbody RB = GetComponent<Rigidbody>();
-        if (BC) { BC.enabled = false; Destroy(BC); }
+        disableAllColliders();
+        // BoxCollider BC = GetComponent<BoxCollider>(); //not necessary any more since they are all disabled for the same effect
+        // if (BC) { BC.enabled = false; Destroy(BC); }
+        Rigidbody RB = GetComponent<Rigidbody>();
         if (RB) { Destroy(RB); } //this is the only way to turn off the RB for whatever reason
 
         this.enabled = false; //turn off Update() and Start()
