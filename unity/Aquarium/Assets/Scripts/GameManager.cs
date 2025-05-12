@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
 
     private static Dictionary<Entity, bool> collection = new();
 
-    int money = 20; // todo: 
+    int money = 100; // todo: 
     public int level = 1; // todo:
     public int xpCap = 0;
     public int xp = 0;

@@ -12,7 +12,6 @@ public class DragNDropPreview : MonoBehaviour
     private Ray ray;
     private Vector3 defaultPos = new Vector3(0,0,-20);
     private BoxCollider myBC;
-    private BoxCollider entityBC;
     private GameObject XImage;
     private Renderer Xrenderer;
 
@@ -22,31 +21,46 @@ public class DragNDropPreview : MonoBehaviour
 
     public void init(Entity e, Aquarium a, Camera c){ //this is called first to set everything up
 
+        //set up all the variables
+
         entity = e;
         aquarium = a;
         cam = c;
-        transform.position = defaultPos;
-
+        transform.position = new Vector3(0,0,0);
         myBC = GetComponent<BoxCollider>();
-        entityBC = entity.GetComponent<BoxCollider>();
         XImage = GameObject.Find("X Image");
-        Xrenderer = XImage.GetComponent<Renderer>(); //set up all the variables
-
+        Xrenderer = XImage.GetComponent<Renderer>(); 
         if (!e || !a || !c) Debug.LogWarning("DragNDropPreview missing references (entity, aquarium, or camera)");
-        if (!myBC || !entityBC || !XImage) Debug.LogWarning("DragNDrog or entity missing components");
 
 
         setCanSpawn(false);
         spawnedEntity = Instantiate(e.gameObject, new Vector3(0, 0, 0), Quaternion.identity, transform).GetComponent<Entity>(); //spawn the fake entity to preview the placement
-        spawnedEntity.transform.localPosition = new Vector3(0,0,0);
+        spawnedEntity.transform.position = new Vector3(0,0,0);
+        Bounds entityColliderBounds = spawnedEntity.getAllCollidersBoundingBox(); //get its AABB for collision checks. cant nullify struct so a size 0 bounds means DNI. also doesnt work on inactive / prefab / disabled things
         spawnedEntity.initShopMode(false, true); //it is in shop mode so it does not interfere w living real creatures
+        if (!myBC || (entityColliderBounds.size == new Vector3(0,0,0)) || !XImage) Debug.LogWarning("DragNDrog or entity missing components");
 
-        if(myBC && entityBC) //it will not have a collider anymore bc shop mode. but we need a collider (in trigger mode so things can pass thru) to detect collisions and invalid spawining places. so make a new one the same size and location
+        if(myBC && (entityColliderBounds.size != new Vector3(0,0,0))) // we need a collider (in trigger mode so things can pass thru) to detect collisions and invalid spawining places. make it the same shape/size as the entities AABB
         {
-            myBC.size = Vector3.Scale(entityBC.size, spawnedEntity.transform.localScale);
-            myBC.center  = Vector3.Scale(entityBC.center, spawnedEntity.transform.localScale);
+            myBC.size = Vector3.Scale(entityColliderBounds.size, spawnedEntity.transform.localScale); //i have no idea why this is needed. bounds are supposed to be in world space and it is during gamplay but not during awake?? i must be missing smth
+            myBC.center = Vector3.Scale(entityColliderBounds.center, spawnedEntity.transform.localScale); //IM DEADD i have no idea why this works. this is gibberish LOLLL
         }
 
+        Vector3 temp = XImage.transform.position;
+        temp.y = myBC.center.y+ (myBC.size.y/2); //this xtra step is necessary because of how transform works ig
+        XImage.transform.position = temp; //move the X to be right on top of the entity
+
+        //How this works:
+        //spawn entity
+        //get the bounding box of its colliders only
+        //turn on shopmode, so all of the entitie's colliders will be disabled and its RB will be deleted if it has one 
+        //change the collider on this gameObject to match the size and placement of the entity's colliders so it can detect collisions (invalid spawning places)
+
+        //Also:
+        //this object is in IgnoreRaycast Layer so the raycast wont hit it
+        //raycast wont hit the entity because it is in shopmode and colliders are disabled
+        //nothing will hit this because its collider is in trigger mode
+        //it still gets collision events though because it has a rigidbody. The RB is kinematic though (basically turned off)
 
     }
 
@@ -71,11 +85,18 @@ public class DragNDropPreview : MonoBehaviour
             if (Input.GetMouseButtonDown(0) && canSpawn)
             {
                 aquarium.addEntity(entity, transform.position, transform.rotation);
-                Destroy(gameObject);
+                endDragNDrop();
             }
 
         }
         else transform.localPosition = defaultPos; //else hide the preview behind the camera
+
+        if (Input.GetMouseButtonDown(1)) endDragNDrop(); //exit without placing if they right click, although they will still have spent the money.. umm
+
+    }
+
+    public void endDragNDrop(){
+        Destroy(gameObject);
     }
 
     private void OnTriggerEnter(Collider other)
