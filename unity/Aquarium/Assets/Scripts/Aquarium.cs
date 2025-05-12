@@ -27,13 +27,46 @@ public class Aquarium : MonoBehaviour
         updateScentGradient();
     }
 
+    public int voxelGridXSize()
+    {
+        return (int)System.Math.Ceiling(dimensions.x / voxelSize);
+    }
+
+    public int voxelGridYSize()
+    {
+        return (int)System.Math.Ceiling(dimensions.y / voxelSize);
+    }
+
+    public int voxelGridZSize()
+    {
+        return (int)System.Math.Ceiling(dimensions.z / voxelSize);
+    }
+
+    public float scentAt(int x, int y, int z)
+    {
+        int xSize = voxelGridXSize();
+        int ySize = voxelGridYSize();
+        int zSize = voxelGridZSize();
+
+        if (x < 0 || x >= xSize ||
+            y < 0 || y >= ySize ||
+            z < 0 || z >= zSize)
+        {
+            // Out of bounds.
+            return -1;
+        }
+
+        int i = x + (y * xSize) + (z * xSize * ySize);
+        return scentGradient[i];
+    }
+
     void updateScentGradient()
     {
         scentGradient.Clear();
 
-        int xSize = (int)System.Math.Ceiling(dimensions.x / voxelSize);
-        int ySize = (int)System.Math.Ceiling(dimensions.y / voxelSize);
-        int zSize = (int)System.Math.Ceiling(dimensions.z / voxelSize);
+        int xSize = voxelGridXSize();
+        int ySize = voxelGridYSize();
+        int zSize = voxelGridZSize();
 
         int numberOfVoxels = xSize * ySize * zSize;
         for (int i = 0; i < numberOfVoxels; ++i)

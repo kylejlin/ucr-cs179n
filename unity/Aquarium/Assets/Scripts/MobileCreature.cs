@@ -117,21 +117,94 @@ public class MobileCreature : Creature
             return;
         }
 
-        Vector3 delta = closest.transform.position - transform.position;
-        float distance = delta.magnitude;
 
-        if (distance <= maxEatingDistance)
+        // Try to eat if we're close enough.
         {
-            //Eat based on consumeRate 
-            eat(closest.beingEaten(consumeRate));
-            return;
+            Vector3 delta = closest.transform.position - transform.position;
+            float distance = delta.magnitude;
+
+            if (distance <= maxEatingDistance)
+            {
+                //Eat based on consumeRate 
+                eat(closest.beingEaten(consumeRate));
+                return;
+            }
         }
 
-        Vector3 displacement = delta.normalized;
-        float k = speed * Time.deltaTime;
-        displacement.Scale(new Vector3(k, k, k));
-        transform.position += displacement;
-        rotateTowards(delta);
+        // Otherwise, perform gradient ascent.
+
+        {
+            // This assumes `transform.position` is at the center of the aquarium.
+            Vector3 voxelOriginPosition = parentAquarium.transform.position - (parentAquarium.dimensions / 2);
+
+            Vector3 positionRelativeToOrigin = transform.position - voxelOriginPosition;
+
+            float voxelSize = parentAquarium.voxelSize;
+
+            int xSize = parentAquarium.voxelGridXSize();
+            int voxelXIndex = (int)(positionRelativeToOrigin.x / voxelSize);
+            if (voxelXIndex < 0) { voxelXIndex = 0; }
+            if (voxelXIndex >= xSize) { voxelXIndex = xSize - 1; }
+
+            int ySize = parentAquarium.voxelGridYSize();
+            int voxelYIndex = (int)(positionRelativeToOrigin.y / voxelSize);
+            if (voxelYIndex < 0) { voxelYIndex = 0; }
+            if (voxelYIndex >= ySize) { voxelYIndex = ySize - 1; }
+
+            int zSize = parentAquarium.voxelGridZSize();
+            int voxelZIndex = (int)(positionRelativeToOrigin.z / voxelSize);
+            if (voxelZIndex < 0) { voxelZIndex = 0; }
+            if (voxelZIndex >= zSize) { voxelZIndex = zSize - 1; }
+
+            int bestVoxelXIndex = voxelXIndex;
+            int bestVoxelYIndex = voxelYIndex;
+            int bestVoxelZIndex = voxelZIndex;
+
+            // Check neighboring voxel to find the one with the strongest scent.
+            for (int dx = -1; dx <= 1; ++dx)
+            {
+                for (int dy = -1; dy <= 1; ++dy)
+                {
+                    for (int dz = -1; dz <= 1; ++dz)
+                    {
+                        int voxelXIndex2 = voxelXIndex + dx;
+                        if (voxelXIndex2 < 0) { voxelXIndex2 = 0; }
+                        if (voxelXIndex2 >= xSize) { voxelXIndex2 = xSize - 1; }
+
+                        int voxelYIndex2 = voxelYIndex + dy;
+                        if (voxelYIndex2 < 0) { voxelYIndex2 = 0; }
+                        if (voxelYIndex2 >= ySize) { voxelYIndex2 = ySize - 1; }
+
+                        int voxelZIndex2 = voxelZIndex + dz;
+                        if (voxelZIndex2 < 0) { voxelZIndex2 = 0; }
+                        if (voxelZIndex2 >= zSize) { voxelZIndex2 = zSize - 1; }
+
+
+                        float scent = parentAquarium.scentAt(voxelXIndex2, voxelYIndex2, voxelZIndex2);
+                        if (scent > parentAquarium.scentAt(bestVoxelXIndex, bestVoxelYIndex, bestVoxelZIndex))
+                        {
+                            bestVoxelXIndex = voxelXIndex2;
+                            bestVoxelYIndex = voxelYIndex2;
+                            bestVoxelZIndex = voxelZIndex2;
+                        }
+                    }
+                }
+            }
+
+            Vector3 destination = new Vector3(
+                bestVoxelXIndex * voxelSize,
+                bestVoxelYIndex * voxelSize,
+                bestVoxelZIndex * voxelSize
+            ) + voxelOriginPosition;
+
+            Vector3 delta = destination - transform.position;
+
+            Vector3 displacementNormal = delta.normalized;
+            float k = speed * Time.deltaTime;
+            displacementNormal.Scale(new Vector3(k, k, k));
+            transform.position += displacementNormal;
+            rotateTowards(delta);
+        }
     }
 
     //Takes in Vector3 velocity to move mobileCreature
