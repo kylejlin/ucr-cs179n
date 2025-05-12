@@ -51,7 +51,6 @@ public class MouseUIManager : MonoBehaviour
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, entityLayerMask)) //if it hits an entity
             {
                 selectedEntity = hit.collider.GetComponent<Entity>();
-                if(!selectedEntity) selectedEntity = hit.collider.GetComponentInParent<Entity>();
                 if(selectedEntity) startPopup(selectedEntity); //double check to make sure the object has the entity script
                 else closePopup();
             }

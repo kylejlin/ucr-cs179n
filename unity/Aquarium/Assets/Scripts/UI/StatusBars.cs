@@ -28,11 +28,10 @@ public class gameObject : MonoBehaviour
         money = gameObject.transform.Find("money").gameObject;
         moneyText = money.GetComponentInChildren<TextMeshProUGUI>();
 
-        if(gameObject.transform.Find("consume")) {
-            consume = gameObject.transform.Find("consume").gameObject.GetComponent<Slider>();
-            consume.interactable = false;
-            hunger = consume.transform.Find("hunger").gameObject.GetComponent<TextMeshProUGUI>();
-            supply = consume.transform.Find("supply").gameObject.GetComponent<TextMeshProUGUI>();}
+        consume = gameObject.transform.Find("consume").gameObject.GetComponent<Slider>();
+        consume.interactable = false;
+        hunger = consume.transform.Find("hunger").gameObject.GetComponent<TextMeshProUGUI>();
+        supply = consume.transform.Find("supply").gameObject.GetComponent<TextMeshProUGUI>();
     }
 
     // Update is called once per frame
@@ -41,12 +40,12 @@ public class gameObject : MonoBehaviour
         happiness.value = gameManager.getHappiness();
         happinessText.text = Mathf.RoundToInt(happiness.value * 100) + "%";
 
-        moneyText.text = "Money: " + gameManager.getMoney().ToString();
+        moneyText.text = gameManager.getMoney().ToString();
 
         int hungerValue = gameManager.getHunger();
         int supplyValue = gameManager.getAlgaesHealth();
-        if(consume)consume.value = (float)supplyValue / (hungerValue + supplyValue);
-        if(hunger) hunger.text = "Hunger: " + hungerValue.ToString();
-        if(supply) supply.text = "Supply: " + supplyValue.ToString();
+        consume.value = (float)supplyValue / (hungerValue + supplyValue);
+        hunger.text = "Hunger: " + hungerValue.ToString();
+        supply.text = "Supply: " + supplyValue.ToString();
     }
 }

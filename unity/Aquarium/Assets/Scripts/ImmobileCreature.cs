@@ -4,12 +4,13 @@ public class ImmobileCreature : Creature
 {
     [HideInInspector]
     protected float eatRate = 5f; //how much it eats (through photosynthesis or filter feeding or w/e) per minute
+    // Start is called once before the first execution of Update after the MonoBehaviour is created
     protected new void Awake()
     {
         
         base.Awake();
         growthRate = 0.1f; 
-        adultEnergy = 40; 
+        adultEnergy = 20; 
 
         spawnSize = 0.1f;
         spawnRadius = 20;
@@ -17,10 +18,6 @@ public class ImmobileCreature : Creature
         minCMCubedPer = 10000;
         initSize();
 
-    }
-
-    void Start()
-    {
 
     }
 
