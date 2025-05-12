@@ -110,7 +110,7 @@ public class Aquarium : MonoBehaviour
                 }
 
                 // If the entity is within the voxel, set the scent to 1.
-                if (voxelBounds.Contains(entity.transform.position))
+                if (voxelBounds.Intersects(entity.GetComponent<Collider>().bounds))
                 {
                     scentGradient[i] = 1;
                     floodFillQueue.Enqueue(i);
@@ -163,7 +163,9 @@ public class Aquarium : MonoBehaviour
                 }
 
                 // If the entity is within the voxel, set the scent to -1.
-                if (voxelBounds.Contains(entity.transform.position))
+                if (voxelBounds.Intersects(
+                    entity.GetComponent<Collider>().bounds
+                ))
                 {
                     scentGradient[i] = -1;
                     // No need to check other entities in this voxel,
