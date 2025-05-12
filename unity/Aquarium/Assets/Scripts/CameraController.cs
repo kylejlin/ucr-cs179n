@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+    private Coroutine moveCoroutine;
     private Transform target;
     public float rotationSpeed = 50f; // Speed of rotation
     public float zoomSpeed = 1f; // Speed of zoom in/out
@@ -55,11 +56,15 @@ public class CameraController : MonoBehaviour
         cam.fieldOfView = Mathf.SmoothDamp(cam.fieldOfView, targetFov, ref currentFovVelocity, zoomSmoothTime);
 
     }
-
+    
     public void setTarget(Transform newTarget)
     {
+        if (moveCoroutine != null)
+        {
+            StopCoroutine(moveCoroutine);
+        }
         target = newTarget;
-        StartCoroutine(SmoothMoveAndRotate());
+        moveCoroutine = StartCoroutine(SmoothMoveAndRotate());
     }
 
     private IEnumerator SmoothMoveAndRotate()
