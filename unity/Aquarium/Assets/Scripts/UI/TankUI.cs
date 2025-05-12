@@ -12,7 +12,7 @@ public class TankUI : BaseUI
     private GameObject EntitiesGrid;
     private TankItem TankItem;
     private List<TankItem> TankItems = new List<TankItem>();
-
+    private bool hasStarted = false;
     protected new void Start()
     {
         base.Start();
@@ -26,7 +26,7 @@ public class TankUI : BaseUI
 
         NextTankButton.onClick.AddListener(() => NextTank());
         PrevTankButton.onClick.AddListener(() => PrevTank());
-        PopulateTank();
+        PopulateTank();hasStarted = true;
     }
     void AddTank()
     {
@@ -47,6 +47,8 @@ public class TankUI : BaseUI
     }
     void OnEnable()
     {
+        if (!hasStarted)
+            return;
         PopulateTank();
     }
     void PopulateTank()
