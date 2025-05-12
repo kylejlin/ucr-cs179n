@@ -8,13 +8,17 @@ public enum BehaviorState
 }
 
 public class MobileCreature : Creature
-{   
-    
+{
+
     public bool canSwim = false;
     public int consumeRate = 10;
     public float speed = 1;
 
-    public static float huntingEnergyThreshold = 20;
+    // TODO: Restore this to `20` (or another more reasonable value) once
+    // we finish debugging navigation.
+    // For now, we set this outrageously high to force the creature
+    // to always hunt.
+    public static float huntingEnergyThreshold = 1000000;
     public static float metabolismRate = 1;
     public static float maxEatingDistance = 7;
 
