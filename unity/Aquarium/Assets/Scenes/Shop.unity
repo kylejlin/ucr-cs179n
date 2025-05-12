@@ -8532,7 +8532,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 5
-  zoomSpeed: 1
+  zoomSpeed: 0.1
   minFov: 10
   maxFov: 60
   zoomSmoothTime: 0.1
