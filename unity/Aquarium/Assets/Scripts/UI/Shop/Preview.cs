@@ -52,7 +52,7 @@ public class Preview : MonoBehaviour
             modelCamera = new GameObject(selectedEntity.name + "Camera");
             cam = modelCamera.AddComponent<Camera>();
             cam.clearFlags = CameraClearFlags.SolidColor;
-            cam.backgroundColor = new Color(168, 185, 185, 0); //not transparent even tho alpha = 0 :(
+            cam.backgroundColor = new Color(0, 0, 0, 0);
             cam.orthographic = false;
             cam.cullingMask = LayerMask.GetMask("ShopSelectedItem");
             cam.orthographic = true;

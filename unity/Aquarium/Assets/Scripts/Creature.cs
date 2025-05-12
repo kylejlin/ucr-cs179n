@@ -8,7 +8,7 @@ public class Creature : Entity
 
     public float maxEnergy = 5; //current health cap
     protected float growthRate = 0.1f; //how much it grows per minute
-    protected float adultEnergy = 20; //max energypool it can grow to
+    protected static float adultEnergy = 20; //max energypool it can grow to
     protected int adultSize = 1; //max size it can grow to
 
     protected float spawnSize = 0.1f; //size it starts as (since adult size is 1, its a percentage)
@@ -37,7 +37,7 @@ public class Creature : Entity
 
 
     /// <summary> scales up size and energy by the percentage passed in (wont exceed max size set) </summary>
-    public virtual void grow(float percentage)
+    public void grow(float percentage)
     {
         if (maxEnergy + (adultEnergy * percentage) > adultEnergy)
         {
@@ -56,7 +56,7 @@ public class Creature : Entity
 /// <summary>
 /// set growth to this size, keeping size and energy proportional (unlike grow, which ADDS the percentage to the current size). Percentage cant be negative
 /// </summary>
-    public virtual void setMaturity(float percentage){
+    public void setMaturity(float percentage){
         if(percentage <= 0) {Debug.LogWarning("maturity cannot be negative"); }
         setScaleTo(adultSize * percentage); 
         maxEnergy = percentage * adultEnergy;
@@ -66,22 +66,17 @@ public class Creature : Entity
     }
 
     /// <summary> make identical copy (for now, in a random position nearby. This is probably temporary). </summary>
-    public virtual void duplicate(Vector3 position) 
+    public void duplicate(Vector3 position) 
     {
         if (parentAquarium == null) { Debug.LogWarning("Could not find Aquarium parent"); return; }
         if (!parentAquarium.isInBounds(position)) {return; } //keep w/in aquarium
 
-        bool isOutlinedRN = isOutlined();
-        setOutline(false); //have to do this else the outline materials will get duplicated onto the child and I cant find a better way to stop this
-        
         parentAquarium.addEntity(this, position, transform.localRotation); //spawn nearby in same aquarium
         beingEaten(spawnSize*adultEnergy, false); //lose the same amount as the new creature spawned has
-
-        setOutline(isOutlinedRN);
     }
 
     /// <summary> try to duplicate, but dont if there is a T too close to the attempted spawn location or too many of T in the aquarium as a whole. </summary>
-    public virtual void tryDuplicate<T>(float minSpace = 0, float minCMCubedPerT = 0) where T : Entity
+    public void tryDuplicate<T>(float minSpace = 0, float minCMCubedPerT = 0) where T : Entity
     {
         Vector3 randVecNearby = new Vector3(Random.Range(-spawnRadius, spawnRadius), 0, Random.Range(-spawnRadius, spawnRadius)) + transform.localPosition; 
         
@@ -150,10 +145,8 @@ public class Creature : Entity
     {
         if (changeMaturity && asAdult) setMaturity(1);
         else if (changeMaturity && !asAdult) setMaturity(spawnSize);
-        disableAllColliders();
-        // BoxCollider BC = GetComponent<BoxCollider>(); //not necessary any more since they are all disabled for the same effect
-        // if (BC) { BC.enabled = false; Destroy(BC); }
-        Rigidbody RB = GetComponent<Rigidbody>();
+        BoxCollider BC = GetComponent<BoxCollider>(); Rigidbody RB = GetComponent<Rigidbody>();
+        if (BC) { BC.enabled = false; Destroy(BC); }
         if (RB) { Destroy(RB); } //this is the only way to turn off the RB for whatever reason
 
         this.enabled = false; //turn off Update() and Start()
