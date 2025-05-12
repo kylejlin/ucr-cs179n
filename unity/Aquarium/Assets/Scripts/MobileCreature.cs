@@ -76,6 +76,10 @@ public class MobileCreature : Creature
         setValues(true);
 
         initSize();
+
+        // MobileCreature part = FindClosest<MobileCreature>();
+        // print(part);
+        // tryDuplicate(new Vector3(20,20,20), part);
     }
 
     void Start(){
@@ -261,6 +265,8 @@ public class MobileCreature : Creature
         count = 0;
         partner.count = 0;
         parentAquarium.setBreedingMutex(false);
+        print(partner.count);
+        print(partner.transform.position);
     }
 
     /// <summary> try to duplicate, but dont if there is a T too close to the attempted spawn location or too many of T in the aquarium as a whole. </summary>
@@ -277,6 +283,7 @@ public class MobileCreature : Creature
         float currCMCubedPerT = Mathf.Infinity;
         if ((numTInTank > 0 )) { currCMCubedPerT = parentAquarium.volume() / numTInTank; }
         
+        MobileCreature potentialPartner = FindClosest<MobileCreature>();
 
         //Debug.Log("currPos "+ transform.localPosition);
         //Debug.Log("nrarbyPost "+ randVecNearby);
@@ -286,7 +293,7 @@ public class MobileCreature : Creature
         {
             print("Call duplicate");
             parentAquarium.setBreedingMutex(true);
-            duplicate(randVecNearby,findPartner<MobileCreature>(closestT));
+            duplicate(randVecNearby,findPartner<MobileCreature>(potentialPartner));
         }
     }
 
