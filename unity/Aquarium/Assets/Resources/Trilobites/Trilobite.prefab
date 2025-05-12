@@ -53,14 +53,17 @@ MonoBehaviour:
   buyMoney: 10
   sellMoney: 8
   rarity: 0
-  shopMode: 0
   parentAquarium: {fileID: 0}
+  count: 0
+  shopMode: 0
   energy: 100
   maxEnergy: 5
   canSwim: 0
   consumeRate: 8
   speed: 3
+  huntingEnergyThreshold: 30
   state: 0
+  childPrefab: {fileID: 6660640480602176354}
 --- !u!65 &6825346676113195874
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -127,7 +130,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 1, g: 0.60162604, b: 0, a: 1}
+  m_Color: {r: 0.29803923, g: 0.29803923, b: 0.29803923, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -220,6 +223,14 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: -7918335002988649766, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 16e7651c442d9af49881e1d79e96c254, type: 2}
+    - target: {fileID: 490939697822461851, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 16e7651c442d9af49881e1d79e96c254, type: 2}
     - target: {fileID: 919132149155446097, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
       propertyPath: m_Name
       value: Model
@@ -236,6 +247,14 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 15
       objectReference: {fileID: 0}
+    - target: {fileID: 6164996480583612547, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 16e7651c442d9af49881e1d79e96c254, type: 2}
+    - target: {fileID: 8143266647802600495, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7bb5d81810ff02b47b3f3ab3578217a6, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

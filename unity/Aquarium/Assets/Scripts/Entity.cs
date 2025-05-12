@@ -12,11 +12,11 @@ public class Entity : MonoBehaviour
     [SerializeField]
     private Rarity rarity;
     protected bool bottomDweller = true; //should it spawn on the bottom of the tank. True for all decorations. For creatures, its true if it is immobile or only walks along the bottom, else false.
-
+    public Aquarium parentAquarium = null;
+    [SerializeField]
     protected double count = 0; //to count deltaTime 
     public bool shopMode = false; //true if this gameobject is being displayed in UI and so should spawn as an adult and not Update() (frozen, don't interact) 
 
-    public Aquarium parentAquarium = null;
     private Outline outline;
     public virtual void Awake()
     {
