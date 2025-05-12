@@ -213,7 +213,7 @@ public class MobileCreature : Creature
         +"\nSpace Requirement: "+minCMCubedPer+" cubic cm");
     }
 
-}
+
     /// <summary> scales up size and energy by the percentage passed in (wont exceed max size set) </summary>
     public override void grow(float percentage)
     {
