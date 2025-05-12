@@ -49,7 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entityName: Trilobite1
-  id: 0
+  id: 3
   buyMoney: 0
   sellMoney: 0
   rarity: 0
@@ -58,8 +58,10 @@ MonoBehaviour:
   hunger: 0
   energy: 100
   maxEnergy: 5
+  canSwim: 0
   consumeRate: 8
   speed: 3
+  huntingEnergyThreshold: 30
   state: 0
 --- !u!65 &6825346676113195874
 BoxCollider:
@@ -127,7 +129,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 1, g: 0.60162604, b: 0, a: 1}
+  m_Color: {r: 0.21960786, g: 0.21960786, b: 0.21960786, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
