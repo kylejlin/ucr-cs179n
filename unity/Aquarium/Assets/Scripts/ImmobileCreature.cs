@@ -10,7 +10,7 @@ public class ImmobileCreature : Creature
         
         base.Awake();
         growthRate = 0.1f; 
-        adultEnergy = 20; 
+        adultEnergy = 40; 
 
         spawnSize = 0.1f;
         spawnRadius = 20;
