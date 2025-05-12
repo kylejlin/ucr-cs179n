@@ -59,7 +59,7 @@ MonoBehaviour:
   hunger: 0
   energy: 100
   maxEnergy: 5
-  canSwim: 1
+  canSwim: 0
   consumeRate: 8
   speed: 3
   huntingEnergyThreshold: 30
@@ -84,8 +84,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.2649288, y: 0.4149632, z: 3.4361496}
-  m_Center: {x: 0.03622341, y: 0.23785122, z: 0.13322449}
+  m_Size: {x: 2.7, y: 0.4149632, z: 3.4361496}
+  m_Center: {x: 0.03622341, y: 0.4, z: 0.13322449}
 --- !u!212 &4710943548981468850
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -182,7 +182,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.2
+      value: 0.265
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
       propertyPath: m_LocalPosition.z
