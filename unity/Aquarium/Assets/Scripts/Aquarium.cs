@@ -35,6 +35,7 @@ public class Aquarium : MonoBehaviour
         entities.Add(e);
         e.parentAquarium = this;
 
+
         return e;
     }
 
@@ -114,5 +115,64 @@ public class Aquarium : MonoBehaviour
         print("Set mutex");
         breedingMutex = value;
     }
+    
+    /// <returns> entity of type T that is closest to Position (in aquarium space) or null if there are none found. </returns>
+    public T FindClosest<T>(Vector3 aquariumPosition) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
+    {
+        T[] foundEntities = getAllOfType<T>();
+        if (foundEntities == null) return default(T);
+
+        T closest = default(T);
+
+        foreach (T e in foundEntities)
+        {
+            //todo: add code to transform es pos into aquarium space so wont break if the entity isnt a first cbilds
+            //delete funcions in entity
+            float newDist = getSqrDistBw(aquariumPosition, e.transform.localPosition);
+
+            if (closest == default(T)) closest = e;
+            else if ((newDist < getSqrDistBw(aquariumPosition, closest.transform.localPosition)))
+            {
+                closest = e;
+            }
+        }
+        return closest;
+    }
+    
+    /// <returns> entity of type T that is closest to Position (in aquarium space) or null if there are none found. if excludeSelf it will exclude itself by checking its uniqueID </returns>
+    public T FindClosest<T>(Entity entity, bool excludeSelf = true) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
+    {
+        T[] foundEntities = getAllOfType<T>();
+        if (foundEntities == null) return default(T);
+
+        T closest = default(T);
+
+        foreach (T e in foundEntities)
+        {
+            //todo: add code to transform es pos into aquarium space so wont break if the entity isnt a first cbilds
+            //delete funcions in entity
+            float newDist = getSqrDistBwEntities(entity, e);
+
+            if (excludeSelf && (e.getUniqueID() == entity.getUniqueID())) continue; // dont count yourself
+
+            if (closest == default(T)) closest = e;
+            else if ((newDist < getSqrDistBwEntities(entity, closest)))
+            {
+                closest = e;
+            }
+        }
+        return closest;
+    }
+    
+
+    /// <returns> array of type T of all the found entities in this aquarium, or null if none were found </returns>
+    public T[] getAllOfType<T>() where T : Entity //RETURNS NULL IF EMPTY
+    {
+        return GetComponentsInChildren<T>();
+    }
+    public float getSqrDistBw(Vector3 vec1, Vector3 vec2) { return (vec1 - vec2).sqrMagnitude; }
+    public float getSqrDistBwEntities(Entity e1, Entity e2) {return getSqrDistBw(e1.transform.position, e2.transform.position); }
+
+
 
 }

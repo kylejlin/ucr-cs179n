@@ -31,7 +31,6 @@ public class MobileCreature : Creature
     private void setValues(bool demo)
     {
         if(demo){
-            name = "Trilobite " + entityName;
             growthRate = 0.1f;
             adultEnergy = 40;
             breedingCooldown = 50; //change 
@@ -45,7 +44,6 @@ public class MobileCreature : Creature
             minSpawnSpace = 5;
             minCMCubedPer = 10000; //changed
         }else{
-            name = "Trilobite " + entityName;
             growthRate = 0.1f;
             adultEnergy = 40;
             breedingCooldown = 100; //change 
@@ -76,10 +74,6 @@ public class MobileCreature : Creature
         setValues(true);
 
         initSize();
-
-        // MobileCreature part = FindClosest<MobileCreature>();
-        // print(part);
-        // tryDuplicate(new Vector3(20,20,20), part);
     }
 
     void Start(){
@@ -157,7 +151,7 @@ public class MobileCreature : Creature
     {
         // I can't find the algae class, so for now,
         // I'm just targeting the closest entity.
-        ImmobileCreature closest = FindClosest<ImmobileCreature>();
+        ImmobileCreature closest = parentAquarium.FindClosest<ImmobileCreature>(this);
 
         if (closest == null)
         {
@@ -275,21 +269,21 @@ public class MobileCreature : Creature
         
         Vector3 randVecNearby = new Vector3(Random.Range(-spawnRadius, spawnRadius), 0, Random.Range(-spawnRadius, spawnRadius)) + transform.localPosition; 
         
-        MobileCreature closestT = FindClosest<MobileCreature>(randVecNearby); 
+        MobileCreature closestT = parentAquarium.FindClosest<MobileCreature>(randVecNearby); 
         float closestTSqrDist =  Mathf.Infinity; 
-        if (closestT != default(T)) {closestTSqrDist = getSqrDistBw(FindClosest<T>(randVecNearby).transform.localPosition, randVecNearby); } 
+        if (closestT != default(T)) {closestTSqrDist = getSqrDistBw(closestT.transform.localPosition, randVecNearby); } 
         
-        int numTInTank = getAllOfType<T>().Length;
+        int numTInTank = parentAquarium.getAllOfType<T>().Length;
         float currCMCubedPerT = Mathf.Infinity;
         if ((numTInTank > 0 )) { currCMCubedPerT = parentAquarium.volume() / numTInTank; }
         
-        MobileCreature potentialPartner = FindClosest<MobileCreature>();
+        MobileCreature potentialPartner = parentAquarium.FindClosest<MobileCreature>(this);
 
         //Debug.Log("currPos "+ transform.localPosition);
         //Debug.Log("nrarbyPost "+ randVecNearby);
         //Debug.Log("closest "+ closestTSqrDist);
         //Debug.Log("curr units per T "+ currUnitsCubedPerT);
-        if ((closestTSqrDist > minSpace*minSpace) && (minCMCubedPerT < currCMCubedPerT) && !(parentAquarium.getBreedingMutex()))
+        if ((closestTSqrDist > minSpace*minSpace) && (minCMCubedPerT < currCMCubedPerT) && !(parentAquarium.getBreedingMutex()) && (potentialPartner))
         {
             print("Call duplicate");
             parentAquarium.setBreedingMutex(true);
