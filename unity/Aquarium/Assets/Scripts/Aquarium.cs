@@ -35,7 +35,12 @@ public class Aquarium : MonoBehaviour
         entities.Add(e);
         e.parentAquarium = this;
 
-
+        print("adding "+e);
+        List<Bounds> boundsList = getBoundsInAquariumCoords<ImmobileCreature>();
+            print("entity scale: "+e.transform.localScale);
+        foreach(Bounds b in boundsList){
+            print(b);
+        }
         return e;
     }
 
@@ -83,6 +88,95 @@ public class Aquarium : MonoBehaviour
         return dimensions.x * dimensions.y * dimensions.z;
     }
 
+
+    public bool getBreedingMutex()
+    {
+        return breedingMutex;
+    }
+
+    public void setBreedingMutex(bool value)
+    {
+        print("Set mutex");
+        breedingMutex = value;
+    }
+    
+    /// <returns> entity of type T that is closest to Position (in aquarium space) or null if there are none found. </returns>
+    public T FindClosest<T>(Vector3 aquariumPosition) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
+    {
+        T[] foundEntities = getAllOfType<T>();
+        if (foundEntities == null) return default(T);
+
+        T closest = default(T);
+        foreach (T e in foundEntities)
+        {
+            float newDist = getSqrDistBw(aquariumPosition, transform.InverseTransformVector(e.transform.position));
+
+            if (closest == default(T)) closest = e;
+            else if ((newDist < getSqrDistBw(aquariumPosition, closest.transform.localPosition))) closest = e;
+        }
+        return closest;
+    }
+    
+    /// <returns> entity of type T that is closest to Position (in aquarium space) or null if there are none found. if excludeSelf it will exclude itself by checking its uniqueID </returns>
+    public T FindClosest<T>(Entity entity, bool excludeSelf = true) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
+    {
+        T[] foundEntities = getAllOfType<T>();
+        if (foundEntities == null) return default(T);
+
+        T closest = default(T);
+        foreach (T e in foundEntities)
+        {
+            float newDist = getSqrDistBwEntities(entity, e);
+
+            if (excludeSelf && (e.getUniqueID() == entity.getUniqueID())) continue; // dont count yourself
+
+            if (closest == default(T)) closest = e;
+            else if ((newDist < getSqrDistBwEntities(entity, closest))) closest = e;
+        }
+        return closest;
+    }
+
+    /// <returns> array of type T of all the found entities in this aquarium, or null if none were found </returns>
+    public T[] getAllOfType<T>() where T : Entity //RETURNS NULL IF EMPTY
+    {
+        return GetComponentsInChildren<T>();
+    }
+
+    /// <summary> gets the bounding boxes of all entities of type T in the aquarium, with their coords in the local aquarium space</summary>
+    public List<Bounds> getBoundsInAquariumCoords<T>() where T : Entity
+    {
+        T[] foundEntities = getAllOfType<T>();
+        List<Bounds> aquariumBoundsList = new List<Bounds>();
+        Vector3 newCenter = new Vector3();
+        foreach(T e in foundEntities){ //get bounds in world space
+            Collider[] colliders = e.GetComponentsInChildren<Collider>(); //get references to all colliders in that entity
+            foreach(Collider c in colliders){
+                newCenter = e.transform.TransformVector(c.bounds.center - e.transform.position) + e.transform.position - this.transform.position; //for some reason the Bounds are in the correct worldspce position, but are scaled locally. So you have to do this mess
+                //this is a mess. theres gotta be a better way
+                aquariumBoundsList.Add(new Bounds(newCenter, e.transform.TransformVector(c.bounds.size) / transform.localScale.x)); 
+                //this assumes that the aquarium is a root and that it has proportional scale and isnt rotated
+            }
+        }
+        return aquariumBoundsList;
+        
+    }
+
+    /// <summary> returns the objects position relative to this aquarium, regardless of its position in the hierarchy</summary>
+    public Vector3 getAquariumSpacePosition(GameObject obj){
+        return transform.InverseTransformVector(obj.transform.position);
+    }
+    public float getSqrDistBw(Vector3 vec1, Vector3 vec2) { return (vec1 - vec2).sqrMagnitude; }
+    public float getSqrDistBwEntities(Entity e1, Entity e2) {return getSqrDistBw(e1.transform.position, e2.transform.position); }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     public int calcCoin()
     {
         return 10; // todo: calculate the coins based on the number of creatures and decorations
@@ -104,75 +198,5 @@ public class Aquarium : MonoBehaviour
     {
         return 10;
     }
-
-    public bool getBreedingMutex()
-    {
-        return breedingMutex;
-    }
-
-    public void setBreedingMutex(bool value)
-    {
-        print("Set mutex");
-        breedingMutex = value;
-    }
-    
-    /// <returns> entity of type T that is closest to Position (in aquarium space) or null if there are none found. </returns>
-    public T FindClosest<T>(Vector3 aquariumPosition) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
-    {
-        T[] foundEntities = getAllOfType<T>();
-        if (foundEntities == null) return default(T);
-
-        T closest = default(T);
-
-        foreach (T e in foundEntities)
-        {
-            //todo: add code to transform es pos into aquarium space so wont break if the entity isnt a first cbilds
-            //delete funcions in entity
-            float newDist = getSqrDistBw(aquariumPosition, e.transform.localPosition);
-
-            if (closest == default(T)) closest = e;
-            else if ((newDist < getSqrDistBw(aquariumPosition, closest.transform.localPosition)))
-            {
-                closest = e;
-            }
-        }
-        return closest;
-    }
-    
-    /// <returns> entity of type T that is closest to Position (in aquarium space) or null if there are none found. if excludeSelf it will exclude itself by checking its uniqueID </returns>
-    public T FindClosest<T>(Entity entity, bool excludeSelf = true) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
-    {
-        T[] foundEntities = getAllOfType<T>();
-        if (foundEntities == null) return default(T);
-
-        T closest = default(T);
-
-        foreach (T e in foundEntities)
-        {
-            //todo: add code to transform es pos into aquarium space so wont break if the entity isnt a first cbilds
-            //delete funcions in entity
-            float newDist = getSqrDistBwEntities(entity, e);
-
-            if (excludeSelf && (e.getUniqueID() == entity.getUniqueID())) continue; // dont count yourself
-
-            if (closest == default(T)) closest = e;
-            else if ((newDist < getSqrDistBwEntities(entity, closest)))
-            {
-                closest = e;
-            }
-        }
-        return closest;
-    }
-    
-
-    /// <returns> array of type T of all the found entities in this aquarium, or null if none were found </returns>
-    public T[] getAllOfType<T>() where T : Entity //RETURNS NULL IF EMPTY
-    {
-        return GetComponentsInChildren<T>();
-    }
-    public float getSqrDistBw(Vector3 vec1, Vector3 vec2) { return (vec1 - vec2).sqrMagnitude; }
-    public float getSqrDistBwEntities(Entity e1, Entity e2) {return getSqrDistBw(e1.transform.position, e2.transform.position); }
-
-
 
 }

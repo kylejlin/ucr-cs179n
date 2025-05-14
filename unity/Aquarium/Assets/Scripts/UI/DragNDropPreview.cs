@@ -42,8 +42,9 @@ public class DragNDropPreview : MonoBehaviour
 
         if(myBC && (entityColliderBounds.size != new Vector3(0,0,0))) // we need a collider (in trigger mode so things can pass thru) to detect collisions and invalid spawining places. make it the same shape/size as the entities AABB
         {
+            //todo:  make this more robust (use .transform.TransformVector())
             myBC.size = Vector3.Scale(entityColliderBounds.size, spawnedEntity.transform.localScale); //i have no idea why this is needed. bounds are supposed to be in world space and it is during gamplay but not during awake?? i must be missing smth
-            myBC.center = Vector3.Scale(entityColliderBounds.center, spawnedEntity.transform.localScale); //IM DEADD i have no idea why this works. this is gibberish LOLLL
+            myBC.center = Vector3.Scale(entityColliderBounds.center, spawnedEntity.transform.localScale); //also I think this assumes that the aquarium (and all ancestors are not also scaled)
         }
 
         Vector3 temp = XImage.transform.position;
