@@ -13,17 +13,12 @@ public class Aquarium : MonoBehaviour
 
     void Start()
     {
-        print(transformAquariumCoordsToWorldCoords(new Vector3(0,0,0)));
-        print(getMinAquariumCoords());
-        print(getMaxAquariumCoords());
-        print(groundLevel);
-        print(dimensions);
+
     }
 
     // Update is called once per frame
     void Update()
     {
-
     }
     public void setID(int id)
     {
@@ -39,12 +34,6 @@ public class Aquarium : MonoBehaviour
         entities.Add(e);
         e.parentAquarium = this;
 
-        print("adding "+e);
-        List<Bounds> boundsList = getBoundsInAquariumCoords<ImmobileCreature>();
-            print("entity scale: "+e.transform.localScale);
-        foreach(Bounds b in boundsList){
-            print(b);
-        }
         return e;
     }
 
