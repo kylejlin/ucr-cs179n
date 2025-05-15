@@ -7,13 +7,17 @@ public class Aquarium : MonoBehaviour
     private int id;
     public List<Entity> entities = new List<Entity>(); // all creatures (and objects?) within the tank
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public Vector3 dimensions = new Vector3(48, 40, 48); // hard coded to fit basic aquarium, should be changable later (arbitrary water level of 40 cm)
-    public float groundLevel = 6; //position of bottom plane of aquarium (temporary until we have a better ground)
+    public Vector3 dimensions; // hard coded to fit basic aquarium, should be changable later, set in inspector
+    public float groundLevel; //position of bottom plane of aquarium, set in inspector
     private bool breedingMutex = false; //only allows one set of creatures to breed at a time
 
     void Start()
     {
-
+        print(transformAquariumCoordsToWorldCoords(new Vector3(0,0,0)));
+        print(getMinAquariumCoords());
+        print(getMaxAquariumCoords());
+        print(groundLevel);
+        print(dimensions);
     }
 
     // Update is called once per frame
@@ -76,11 +80,12 @@ public class Aquarium : MonoBehaviour
     public bool isInBounds(Vector3 position, bool local = false)
     {
         Vector3 localPos = position;
+        float accuracy = 0.0001f;
         if(!local) localPos = transform.InverseTransformPoint(position);
         
-        return ((localPos.x > -dimensions.x / 2) && (localPos.x < dimensions.x / 2)
-            && (localPos.y >= groundLevel) && (localPos.y < dimensions.y)
-            && (localPos.z > -dimensions.z / 2) && (localPos.z < dimensions.z / 2));
+        return ((localPos.x >= -dimensions.x / 2 - accuracy) && (localPos.x <= dimensions.x / 2 + accuracy)
+            && (localPos.y >= groundLevel - accuracy) && (localPos.y <= dimensions.y + accuracy)
+            && (localPos.z >= -dimensions.z / 2 - accuracy) && (localPos.z <= dimensions.z / 2 + accuracy));
     }
 
     public float volume()
