@@ -7,7 +7,7 @@ public class Aquarium : MonoBehaviour
     private int id;
     public List<Entity> entities = new List<Entity>(); // all creatures (and objects?) within the tank
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public Vector3 dimensions = new Vector3(50, 40, 50); // hard coded to fit basic aquarium, should be changable later (arbitrary water level of 40 cm)
+    public Vector3 dimensions = new Vector3(48, 40, 48); // hard coded to fit basic aquarium, should be changable later (arbitrary water level of 40 cm)
     public float groundLevel = 6; //position of bottom plane of aquarium (temporary until we have a better ground)
     private bool breedingMutex = false; //only allows one set of creatures to breed at a time
 
@@ -167,10 +167,9 @@ public class Aquarium : MonoBehaviour
     }
     public float getSqrDistBw(Vector3 vec1, Vector3 vec2) { return (vec1 - vec2).sqrMagnitude; }
     public float getSqrDistBwEntities(Entity e1, Entity e2) {return getSqrDistBw(e1.transform.position, e2.transform.position); }
-    
-    
-    
-    
+    public Vector3 getMinAquariumCoords(){ return new Vector3(-dimensions.x/2, groundLevel, -dimensions.z/2); } //hard coded for aquarium default value w scale 1
+    public Vector3 getMaxAquariumCoords(){ return new Vector3(dimensions.x/2, dimensions.y, dimensions.z/2); } //hard coded for aquarium default value w scale 1
+    public Vector3 transformAquariumCoordsToWorldCoords(Vector3 aquariumCoords) { return transform.TransformVector(aquariumCoords); }
     
     
     
