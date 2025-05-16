@@ -1,17 +1,20 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
+
 
 public class StatsPopup : MonoBehaviour
 {
     public TMP_Text statsText; //set in editor
     public RectTransform box; //set in editor
+    public Button moveButton; //set in editor
+    public Button removeButton; //set in editor
     private Entity selectedEntity; //current entity being tracked
 
     private int textVerticalPadding;
 
     void Start()
     {
-        
     }
 
     void Update()
@@ -47,8 +50,10 @@ public class StatsPopup : MonoBehaviour
         }
     }
 
-    private void setText(string newText){ //set the text on the popup and adjust box size
+    private void setText(string newText)
+    { //set the text on the popup and adjust box size
         statsText.text = newText;
         box.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, statsText.preferredHeight + 50); //idk how this anchor stuff works. this is probably not the best way
+        moveButton.transform.position = new Vector3(-100, statsText.preferredHeight / 2 + 25, 0) + box.transform.position;
     }
 }
