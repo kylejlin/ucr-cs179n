@@ -6,6 +6,7 @@ public class DragNDropPreview : MonoBehaviour
     // public Camera camera;
     private Entity entity; //prefab
     private Entity spawnedEntity;
+    private Rigidbody entityRB;
     private Aquarium aquarium;
     private Camera cam;
     private RaycastHit hit; 

@@ -15,6 +15,8 @@ public class StatsPopup : MonoBehaviour
 
     void Start()
     {
+        moveButton.onClick.AddListener(() => moveEntity());
+        removeButton.onClick.AddListener(() => removeEntity());        
     }
 
     void Update()
@@ -54,6 +56,15 @@ public class StatsPopup : MonoBehaviour
     { //set the text on the popup and adjust box size
         statsText.text = newText;
         box.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, statsText.preferredHeight + 50); //idk how this anchor stuff works. this is probably not the best way
-        moveButton.transform.position = new Vector3(-100, statsText.preferredHeight / 2 + 25, 0) + box.transform.position;
+    }
+
+    private void removeEntity(){
+        if(!selectedEntity) return; //no selected entity
+        selectedEntity.die();
+        closePopup();
+    }
+
+    private void moveEntity(){
+        
     }
 }

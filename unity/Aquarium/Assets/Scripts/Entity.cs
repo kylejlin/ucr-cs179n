@@ -21,7 +21,7 @@ public class Entity : MonoBehaviour
     public virtual void Awake()
     {
         SetLayerRecursively(transform, 15); //set to Entity layer for raycast masking
-        name = entityName + " " + id;
+        if(name == "NoName") name = entityName + " " + id;
         outline = gameObject.GetComponent<Outline>();
         if(!outline) outline = gameObject.AddComponent<Outline>(); //outline script that allows the creature or decor to be outlined when player clicks on them
         setOutline(false); 
@@ -126,12 +126,12 @@ public class Entity : MonoBehaviour
     }
     
     /// <summary>
-    /// disable all colliders of this gameobject or its children. //doesnt get inactive colliders. Im not sure if it should??
+    /// disable/enable all colliders of this gameobject or its children. //doesnt get inactive colliders. Im not sure if it should??
     /// </summary>
-    public void disableAllColliders() {
+    public void enableAllColliders(bool enable) {
         Collider[] allColliders = GetComponentsInChildren<Collider>(); 
-        foreach(Collider c in allColliders){ //go through all children colliders and disable them. They wont cause collisions or do anything
-            c.enabled = false;
+        foreach(Collider c in allColliders){
+            c.enabled = enable;
         }
     }
     /// <summary>
@@ -143,11 +143,6 @@ public class Entity : MonoBehaviour
         Collider[] allColliders = GetComponentsInChildren<Collider>(); 
         if(allColliders.Length==0) { Debug.LogWarning("No colliders"); return new Bounds(new Vector3(0,0,0), new Vector3(0,0,0));}
         Bounds colliderBounds = allColliders[0].bounds;
-
-        // print(allColliders.Length);
-        // print(allColliders[0]);
-        // print(allColliders[0].bounds);
-        // print(colliderBounds);
 
         foreach(Collider c in allColliders){ //go through all children colliders and expand the bounds to hold them all
             colliderBounds.Encapsulate(c.bounds.min);
@@ -166,9 +161,24 @@ public class Entity : MonoBehaviour
     public virtual void initShopMode(bool asAdult = true, bool changeMaturity = true) { 
         this.enabled = false;  //no update()
         shopMode = true;
-        disableAllColliders(); //dont mess w collisions or raycasts etc
-        if (GetComponent<Rigidbody>()) Destroy(GetComponent<Rigidbody>()); //no physics please
-    } //get overridden by child classes. Also this is permenant, reenabling an object would be difficult and might break things in Awake()
+        enableAllColliders(false); //dont mess w collisions or raycasts etc
+        
+        Rigidbody RB = GetComponent<Rigidbody>();
+        if (RB) {
+            RB.isKinematic = true;
+            RB.detectCollisions = false;
+            print(RB);
+        } //no physics please
+    } //get overridden by child classes.
+
+    public virtual void disableShopMode(){
+        this.enabled = true;
+        shopMode = false;
+        enableAllColliders(true);
+
+        Rigidbody RB = GetComponent<Rigidbody>();
+        if (RB) RB.isKinematic = false; //physics please
+    }
 
     public virtual string getCurrStats(){
         return "Name: "+entityName;

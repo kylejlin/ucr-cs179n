@@ -31,7 +31,6 @@ public class TankUI : BaseUI
     void AddTank()
     {
         gameManager.addTank();
-
     }
 
     void NextTank()
