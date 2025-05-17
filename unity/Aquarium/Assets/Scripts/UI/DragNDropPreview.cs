@@ -38,6 +38,7 @@ public class DragNDropPreview : MonoBehaviour
         spawnedEntity = Instantiate(e.gameObject, new Vector3(0, 0, 0), Quaternion.identity, transform).GetComponent<Entity>(); //spawn the fake entity to preview the placement
         spawnedEntity.transform.position = new Vector3(0,0,0);
         Bounds entityColliderBounds = spawnedEntity.getAllCollidersBoundingBox(); //get its AABB for collision checks. cant nullify struct so a size 0 bounds means DNI. also doesnt work on inactive / prefab / disabled things
+        entityRB = spawnedEntity.GetComponent<Rigidbody>();
         spawnedEntity.initShopMode(false, true); //it is in shop mode so it does not interfere w living real creatures
         if (!myBC || (entityColliderBounds.size == new Vector3(0,0,0)) || !XImage) Debug.LogWarning("DragNDrog or entity missing components");
 
@@ -73,6 +74,7 @@ public class DragNDropPreview : MonoBehaviour
         if (Physics.Raycast(ray, out hit)) //if it hits anything
         {
             //move to mouse position & rotate
+            // if(entityRB) entityRB.Move(hit.point,  Quaternion.LookRotation(hit.normal) * Quaternion.Euler(90f, 0f, 0f));
             transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(hit.normal) * Quaternion.Euler(90f, 0f, 0f)); //creature is oriented onto the surface
             XImage.transform.rotation = Quaternion.Euler(90f, 0f, 0f); //image of X always should point up
             if (isColliding || !aquarium.isInBounds(hit.point) || hit.collider.GetComponent<Creature>()) //detect invalid placement (collisions, out of aquarium, or on top of a creature)

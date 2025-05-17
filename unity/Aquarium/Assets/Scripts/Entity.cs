@@ -166,8 +166,6 @@ public class Entity : MonoBehaviour
         Rigidbody RB = GetComponent<Rigidbody>();
         if (RB) {
             RB.isKinematic = true;
-            RB.detectCollisions = false;
-            print(RB);
         } //no physics please
     } //get overridden by child classes.
 
