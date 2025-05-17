@@ -10,8 +10,8 @@ public enum BehaviorState
 }
 
 public class MobileCreature : Creature
-{   
-    
+{
+
     public bool canSwim = false;
     public float consumeRate = 20;
     public float speed = 1;
@@ -30,26 +30,29 @@ public class MobileCreature : Creature
     /// <summary> Set default values for trilobite bought from store. </summary>
     private void setValues(bool demo)
     {
-        if(demo){
+        if (demo)
+        {
             growthRate = 0.1f;
             adultEnergy = 40;
             breedingCooldown = 50; //change 
 
-            spawnSize = .5f; 
-            energy = maxEnergy = spawnSize*adultEnergy;
+            spawnSize = .5f;
+            energy = maxEnergy = spawnSize * adultEnergy;
             huntingEnergyThreshold = .75f * maxEnergy;
             consumeRate = .5f * maxEnergy; //changed
 
             spawnRadius = 20;
             minSpawnSpace = 5;
             minCMCubedPer = 10000; //changed
-        }else{
+        }
+        else
+        {
             growthRate = 0.1f;
             adultEnergy = 40;
             breedingCooldown = 100; //change 
 
-            spawnSize = .5f; 
-            energy = maxEnergy = spawnSize*adultEnergy;
+            spawnSize = .5f;
+            energy = maxEnergy = spawnSize * adultEnergy;
             huntingEnergyThreshold = .75f * maxEnergy;
             consumeRate = .5f * maxEnergy; //changed
 
@@ -76,29 +79,41 @@ public class MobileCreature : Creature
         initSize();
     }
 
-    void Start(){
+    void Start()
+    {
     }
 
     // FixedUpdate is called at fixed time intervals
     void FixedUpdate()
     {
-        energy -= Time.deltaTime * metabolismRate/2;
+        energy -= Time.deltaTime * metabolismRate / 2;
 
         //if the creature is an adult, high energy, and past the breedingCooldown period, try breeding
-        if(getScale() == adultSize){
+        if (getScale() == adultSize)
+        {
             count += Time.deltaTime;
-            if((energy > adultEnergy*.75f) && (count > breedingCooldown)){
+            if ((energy > adultEnergy * .75f) && (count > breedingCooldown))
+            {
                 //print("Trying to duplicate");
-                tryDuplicate<MobileCreature>(minSpawnSpace, minCMCubedPer); 
+                tryDuplicate<MobileCreature>(minSpawnSpace, minCMCubedPer);
             }
         }
-        
+
         if (energy <= 0)
         {
             // The creature starved to death. 
             state = BehaviorState.Dying;
         }
-        else if (energy <= huntingEnergyThreshold)
+        // TODO: Restore the original condition
+        // after we finish testing the navigation system.
+        //
+        // We force the creature to always hunt so we can test the navigation system.
+        //
+        // else if (energy <= huntingEnergyThreshold)
+        //
+        // This is another way of writing `else if (true)`,
+        // except the compiler won't complain about unreachable code.
+        else if (System.Math.Cos(5) < 2)
         {
             state = BehaviorState.Hunting;
         }
@@ -171,7 +186,7 @@ public class MobileCreature : Creature
         }
 
         Vector3 displacement = delta.normalized;
-        float k = speed*3 * Time.deltaTime;
+        float k = speed * 3 * Time.deltaTime;
         displacement.Scale(new Vector3(k, k, k));
         transform.position += displacement;
         rotateTowards(delta);
@@ -203,12 +218,13 @@ public class MobileCreature : Creature
         mobileCreatureRB.MoveRotation(Quaternion.LookRotation(angularVelocity, Vector3.forward));
     }
 
-    public override string getCurrStats(){
-        return( "Name: "+entityName
-        +"\nEnergy: "+energy/maxEnergy*100+"%"
-        +"\nMaturity: "+getMaturity() / adultSize*100+"%"
-        + "\nMetabolism: "+metabolismRate+" energy/s"
-        +"\nSpace Requirement: "+minCMCubedPer+" cubic cm");
+    public override string getCurrStats()
+    {
+        return ("Name: " + entityName
+        + "\nEnergy: " + energy / maxEnergy * 100 + "%"
+        + "\nMaturity: " + getMaturity() / adultSize * 100 + "%"
+        + "\nMetabolism: " + metabolismRate + " energy/s"
+        + "\nSpace Requirement: " + minCMCubedPer + " cubic cm");
     }
 
 
@@ -226,7 +242,7 @@ public class MobileCreature : Creature
         }
         else
         {
-            setMaturity(percentage + maxEnergy/adultEnergy);
+            setMaturity(percentage + maxEnergy / adultEnergy);
         }
     }
 
@@ -234,9 +250,10 @@ public class MobileCreature : Creature
     /// set growth to this size, keeping size and energy proportional (unlike grow, which ADDS the percentage to the current size). Percentage cant be negative
     /// override creature setMaturity() function to add mobileCreature values that should scale
     /// </summary>
-    public override void setMaturity(float percentage){
-        if(percentage <= 0) {Debug.LogWarning("maturity cannot be negative"); }
-        setScaleTo(adultSize * percentage); 
+    public override void setMaturity(float percentage)
+    {
+        if (percentage <= 0) { Debug.LogWarning("maturity cannot be negative"); }
+        setScaleTo(adultSize * percentage);
         maxEnergy = percentage * adultEnergy;
         huntingEnergyThreshold = .75f * maxEnergy;
         consumeRate = .5f * maxEnergy;
@@ -246,16 +263,17 @@ public class MobileCreature : Creature
     public void duplicate<T>(Vector3 position, T partner) where T : MobileCreature
     {
         if (parentAquarium == null) { parentAquarium.setBreedingMutex(false); Debug.LogWarning("Could not find Aquarium parent"); return; }
-        if (partner == null) { parentAquarium.setBreedingMutex(false); Debug.LogWarning("Could not find breeding partner"); return; }        
-        if (!parentAquarium.isInBounds(position)) {parentAquarium.setBreedingMutex(false); return; } //keep w/in aquarium
-        
-        if(partner != null){
-            
+        if (partner == null) { parentAquarium.setBreedingMutex(false); Debug.LogWarning("Could not find breeding partner"); return; }
+        if (!parentAquarium.isInBounds(position)) { parentAquarium.setBreedingMutex(false); return; } //keep w/in aquarium
+
+        if (partner != null)
+        {
+
         }
         print("Instantiating");
-        
-        MobileCreature child = (MobileCreature) parentAquarium.addEntity(childPrefab.GetComponent<Entity>(), position, transform.localRotation); //spawn nearby in same aquarium
-        child.setChildValues(this,partner);
+
+        MobileCreature child = (MobileCreature)parentAquarium.addEntity(childPrefab.GetComponent<Entity>(), position, transform.localRotation); //spawn nearby in same aquarium
+        child.setChildValues(this, partner);
         count = 0;
         partner.count = 0;
         parentAquarium.setBreedingMutex(false);
@@ -266,34 +284,36 @@ public class MobileCreature : Creature
     /// <summary> try to duplicate, but dont if there is a T too close to the attempted spawn location or too many of T in the aquarium as a whole. </summary>
     public override void tryDuplicate<T>(float minSpace = 0, float minCMCubedPerT = 0) //T constraint removed 
     {
-        
-        Vector3 randVecNearby = new Vector3(Random.Range(-spawnRadius, spawnRadius), 0, Random.Range(-spawnRadius, spawnRadius)) + transform.localPosition; 
-        
-        MobileCreature closestT = parentAquarium.FindClosest<MobileCreature>(randVecNearby); 
-        float closestTSqrDist =  Mathf.Infinity; 
-        if (closestT != default(T)) {closestTSqrDist = getSqrDistBw(closestT.transform.localPosition, randVecNearby); } 
-        
+
+        Vector3 randVecNearby = new Vector3(Random.Range(-spawnRadius, spawnRadius), 0, Random.Range(-spawnRadius, spawnRadius)) + transform.localPosition;
+
+        MobileCreature closestT = parentAquarium.FindClosest<MobileCreature>(randVecNearby);
+        float closestTSqrDist = Mathf.Infinity;
+        if (closestT != default(T)) { closestTSqrDist = getSqrDistBw(closestT.transform.localPosition, randVecNearby); }
+
         int numTInTank = parentAquarium.getAllOfType<T>().Length;
         float currCMCubedPerT = Mathf.Infinity;
-        if ((numTInTank > 0 )) { currCMCubedPerT = parentAquarium.volume() / numTInTank; }
-        
+        if ((numTInTank > 0)) { currCMCubedPerT = parentAquarium.volume() / numTInTank; }
+
         MobileCreature potentialPartner = parentAquarium.FindClosest<MobileCreature>(this);
 
         //Debug.Log("currPos "+ transform.localPosition);
         //Debug.Log("nrarbyPost "+ randVecNearby);
         //Debug.Log("closest "+ closestTSqrDist);
         //Debug.Log("curr units per T "+ currUnitsCubedPerT);
-        if ((closestTSqrDist > minSpace*minSpace) && (minCMCubedPerT < currCMCubedPerT) && !(parentAquarium.getBreedingMutex()) && (potentialPartner))
+        if ((closestTSqrDist > minSpace * minSpace) && (minCMCubedPerT < currCMCubedPerT) && !(parentAquarium.getBreedingMutex()) && (potentialPartner))
         {
             print("Call duplicate");
             parentAquarium.setBreedingMutex(true);
-            duplicate(randVecNearby,findPartner<MobileCreature>(potentialPartner));
+            duplicate(randVecNearby, findPartner<MobileCreature>(potentialPartner));
         }
     }
 
     /// <summary> Find closest available creature of same type who is also ready to breed </summary>
-    public T findPartner<T>(T closestT) where T:MobileCreature {
-        if(closestT.readyToBreed() && this.GetType().Equals(closestT.GetType())){
+    public T findPartner<T>(T closestT) where T : MobileCreature
+    {
+        if (closestT.readyToBreed() && this.GetType().Equals(closestT.GetType()))
+        {
             return closestT;
         }
         return null;
@@ -302,9 +322,12 @@ public class MobileCreature : Creature
     /// <summary>
     /// if the creature is an adult, high energy, and past the breedingCooldown period
     /// </summary>
-    public bool readyToBreed(){
-        if(getScale() == adultSize){
-            if((energy > adultEnergy*.75) && (count > breedingCooldown)){
+    public bool readyToBreed()
+    {
+        if (getScale() == adultSize)
+        {
+            if ((energy > adultEnergy * .75) && (count > breedingCooldown))
+            {
                 return true;
             }
         }
