@@ -164,9 +164,7 @@ public class Entity : MonoBehaviour
         enableAllColliders(false); //dont mess w collisions or raycasts etc
         
         Rigidbody RB = GetComponent<Rigidbody>();
-        if (RB) {
-            RB.isKinematic = true;
-        } //no physics please
+        if (RB) RB.isKinematic = true; //no physics please
     } //get overridden by child classes.
 
     public virtual void disableShopMode(){

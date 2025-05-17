@@ -9,9 +9,9 @@ public class DragNDropPreview : MonoBehaviour
     private Rigidbody entityRB;
     private Aquarium aquarium;
     private Camera cam;
-    private RaycastHit hit; 
+    private RaycastHit hit;
     private Ray ray;
-    private Vector3 defaultPos = new Vector3(0,0,-20);
+    private Vector3 defaultPos = new Vector3(0, 0, -20);
     private BoxCollider myBC;
     private GameObject XImage;
     private Renderer Xrenderer;
@@ -20,36 +20,37 @@ public class DragNDropPreview : MonoBehaviour
     private bool canSpawn;
 
 
-    public void init(Entity e, Aquarium a, Camera c){ //this is called first to set everything up
+    public void init(Entity e, Aquarium a, Camera c)
+    { //this is called first to set everything up
 
         //set up all the variables
 
         entity = e;
         aquarium = a;
         cam = c;
-        transform.position = new Vector3(0,0,0);
+        transform.position = new Vector3(0, 0, 0);
         myBC = GetComponent<BoxCollider>();
         XImage = GameObject.Find("X Image");
-        Xrenderer = XImage.GetComponent<Renderer>(); 
+        Xrenderer = XImage.GetComponent<Renderer>();
         if (!e || !a || !c) Debug.LogWarning("DragNDropPreview missing references (entity, aquarium, or camera)");
 
 
         setCanSpawn(false);
         spawnedEntity = Instantiate(e.gameObject, new Vector3(0, 0, 0), Quaternion.identity, transform).GetComponent<Entity>(); //spawn the fake entity to preview the placement
-        spawnedEntity.transform.position = new Vector3(0,0,0);
+        spawnedEntity.transform.position = new Vector3(0, 0, 0);
         Bounds entityColliderBounds = spawnedEntity.getAllCollidersBoundingBox(); //get its AABB for collision checks. cant nullify struct so a size 0 bounds means DNI. also doesnt work on inactive / prefab / disabled things
         entityRB = spawnedEntity.GetComponent<Rigidbody>();
         spawnedEntity.initShopMode(false, true); //it is in shop mode so it does not interfere w living real creatures
-        if (!myBC || (entityColliderBounds.size == new Vector3(0,0,0)) || !XImage) Debug.LogWarning("DragNDrog or entity missing components");
+        if (!myBC || (entityColliderBounds.size == new Vector3(0, 0, 0)) || !XImage) Debug.LogWarning("DragNDrog or entity missing components");
 
-        if(myBC && (entityColliderBounds.size != new Vector3(0,0,0))) // we need a collider (in trigger mode so things can pass thru) to detect collisions and invalid spawining places. make it the same shape/size as the entities AABB
+        if (myBC && (entityColliderBounds.size != new Vector3(0, 0, 0))) // we need a collider (in trigger mode so things can pass thru) to detect collisions and invalid spawining places. make it the same shape/size as the entities AABB
         {
             myBC.size = Vector3.Scale(entityColliderBounds.size, spawnedEntity.transform.localScale); //i have no idea why this is needed. bounds are supposed to be in world space and it is during gamplay but not during awake?? i must be missing smth
             myBC.center = Vector3.Scale(entityColliderBounds.center, spawnedEntity.transform.localScale); //IM DEADD i have no idea why this works. this is gibberish LOLLL
         }
 
         Vector3 temp = XImage.transform.position;
-        temp.y = myBC.center.y+ (myBC.size.y/2); //this xtra step is necessary because of how transform works ig
+        temp.y = myBC.center.y + (myBC.size.y / 2); //this xtra step is necessary because of how transform works ig
         XImage.transform.position = temp; //move the X to be right on top of the entity
 
         //How this works:
@@ -74,15 +75,13 @@ public class DragNDropPreview : MonoBehaviour
         if (Physics.Raycast(ray, out hit)) //if it hits anything
         {
             //move to mouse position & rotate
-            // if(entityRB) entityRB.Move(hit.point,  Quaternion.LookRotation(hit.normal) * Quaternion.Euler(90f, 0f, 0f));
-            transform.SetPositionAndRotation(hit.point, Quaternion.LookRotation(hit.normal) * Quaternion.Euler(90f, 0f, 0f)); //creature is oriented onto the surface
-            XImage.transform.rotation = Quaternion.Euler(90f, 0f, 0f); //image of X always should point up
+            move(hit.point, Quaternion.LookRotation(hit.normal) * Quaternion.Euler(90f, 0f, 0f));
+
             if (isColliding || !aquarium.isInBounds(hit.point) || hit.collider.GetComponent<Creature>()) //detect invalid placement (collisions, out of aquarium, or on top of a creature)
-            { 
+            {
                 setCanSpawn(false);
             }
             else setCanSpawn(true);
-
 
             //spawn entity and dissappear if player click
             if (Input.GetMouseButtonDown(0) && canSpawn)
@@ -98,7 +97,8 @@ public class DragNDropPreview : MonoBehaviour
 
     }
 
-    public void endDragNDrop(){
+    public void endDragNDrop()
+    {
         Destroy(gameObject);
     }
 
@@ -114,6 +114,17 @@ public class DragNDropPreview : MonoBehaviour
     {
         if (Xrenderer) Xrenderer.enabled = !enable; //X shows when enable is false
         canSpawn = enable;
+    }
+    private void move(Vector3 position, Quaternion rotation)
+    {
+        transform.SetPositionAndRotation(position, rotation); //creature is oriented onto the surface
+        XImage.transform.rotation = Quaternion.Euler(90f, 0f, 0f); //image of X always should point up
+        if (entityRB)//RBs unfortunately do not follow their parent and act independently, so I have to do this 
+        {
+            entityRB.position = position;
+            entityRB.rotation = rotation;
+        }
+            
     }
 }
 

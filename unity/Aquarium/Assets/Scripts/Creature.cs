@@ -146,20 +146,19 @@ public class Creature : Entity
 
 
     //completely disable creature and dont let it interact with "real" creatures (for shop display, drag n drop preview etc)
-    // public override void initShopMode(bool asAdult = true, bool changeMaturity = true)
-    // {
-    //     if (changeMaturity && asAdult) setMaturity(1);
-    //     else if (changeMaturity && !asAdult) setMaturity(spawnSize);
-    //     enableAllColliders(false);
-    //     // BoxCollider BC = GetComponent<BoxCollider>(); //not necessary any more since they are all disabled for the same effect
-    //     // if (BC) { BC.enabled = false; Destroy(BC); }
-    //     Rigidbody RB = GetComponent<Rigidbody>();
-    //     if (RB) { RB.isKinematic = true; } 
+    public override void initShopMode(bool asAdult = true, bool changeMaturity = true)
+    {
+        if (changeMaturity && asAdult) setMaturity(1);
+        else if (changeMaturity && !asAdult) setMaturity(spawnSize);
+        
+        this.enabled = false;  //no update()
+        shopMode = true;
+        enableAllColliders(false); //dont mess w collisions or raycasts etc
+        
+        Rigidbody RB = GetComponent<Rigidbody>();
+        if (RB) RB.isKinematic = true; //no physics please
 
-    //     this.enabled = false; //turn off Update() and Start()
-    //     shopMode = true;
-
-    // }
+    }
 
 }
 

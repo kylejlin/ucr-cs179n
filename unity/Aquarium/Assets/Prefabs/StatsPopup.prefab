@@ -148,6 +148,8 @@ GameObject:
   - component: {fileID: 8595545357187724505}
   - component: {fileID: 3880409402764442884}
   - component: {fileID: 6465284071363011081}
+  - component: {fileID: 6604636201089435917}
+  - component: {fileID: 3952311302977843029}
   m_Layer: 5
   m_Name: RemoveButton
   m_TagString: Untagged
@@ -257,6 +259,64 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &6604636201089435917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 761225585988469055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d26f0bf7782026348b9d0ce484ad352b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mouseIsOn: 0
+--- !u!114 &3952311302977843029
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 761225585988469055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6604636201089435917}
+          m_TargetAssemblyTypeName: ButtonMouseCheck, Assembly-CSharp
+          m_MethodName: mouseEnters
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 6604636201089435917}
+          m_TargetAssemblyTypeName: ButtonMouseCheck, Assembly-CSharp
+          m_MethodName: mouseLeaves
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
 --- !u!1 &836951651572491596
 GameObject:
   m_ObjectHideFlags: 0
@@ -269,6 +329,8 @@ GameObject:
   - component: {fileID: 6817842752363103366}
   - component: {fileID: 8858801544112385766}
   - component: {fileID: 3788418567249149885}
+  - component: {fileID: 5358483179423305718}
+  - component: {fileID: 8188114238243230897}
   m_Layer: 5
   m_Name: MoveButton
   m_TagString: Untagged
@@ -378,6 +440,64 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &5358483179423305718
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 836951651572491596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 8188114238243230897}
+          m_TargetAssemblyTypeName: buttonMouseCheck, Assembly-CSharp
+          m_MethodName: mouseEnters
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 8188114238243230897}
+          m_TargetAssemblyTypeName: buttonMouseCheck, Assembly-CSharp
+          m_MethodName: mouseLeaves
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+--- !u!114 &8188114238243230897
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 836951651572491596}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d26f0bf7782026348b9d0ce484ad352b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mouseIsOn: 0
 --- !u!1 &947384028025532573
 GameObject:
   m_ObjectHideFlags: 0
@@ -633,6 +753,10 @@ MonoBehaviour:
   box: {fileID: 689478948429691810}
   moveButton: {fileID: 3788418567249149885}
   removeButton: {fileID: 6465284071363011081}
+  boxMouseChecker: {fileID: 4196645838418253030}
+  moveButtonMouseChecker: {fileID: 8188114238243230897}
+  removeButtonMouseChecker: {fileID: 6604636201089435917}
+  mouseIsOn: 0
 --- !u!1 &5181630904918861886
 GameObject:
   m_ObjectHideFlags: 0
@@ -780,6 +904,8 @@ GameObject:
   - component: {fileID: 689478948429691810}
   - component: {fileID: 2038773287248831922}
   - component: {fileID: 4159660694862263842}
+  - component: {fileID: 4196645838418253030}
+  - component: {fileID: 906453045526711675}
   m_Layer: 5
   m_Name: StatsPopup
   m_TagString: Untagged
@@ -830,7 +956,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.392}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -847,3 +973,61 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!114 &4196645838418253030
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7171077624553571662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d26f0bf7782026348b9d0ce484ad352b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mouseIsOn: 0
+--- !u!114 &906453045526711675
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7171077624553571662}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0b148fe25e99eb48b9724523833bab1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Delegates:
+  - eventID: 0
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4196645838418253030}
+          m_TargetAssemblyTypeName: ButtonMouseCheck, Assembly-CSharp
+          m_MethodName: mouseEnters
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
+  - eventID: 1
+    callback:
+      m_PersistentCalls:
+        m_Calls:
+        - m_Target: {fileID: 4196645838418253030}
+          m_TargetAssemblyTypeName: ButtonMouseCheck, Assembly-CSharp
+          m_MethodName: mouseLeaves
+          m_Mode: 1
+          m_Arguments:
+            m_ObjectArgument: {fileID: 0}
+            m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+            m_IntArgument: 0
+            m_FloatArgument: 0
+            m_StringArgument: 
+            m_BoolArgument: 0
+          m_CallState: 2
