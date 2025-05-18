@@ -164,10 +164,10 @@ public class Creature : Entity
 
     }
 
-    public Bounds getBoundsInAquariumCoords()
+    public Vector3 getPositionInAquariumCoords()
     {
-        // TODO: Return the correct bounds.
-        return new Bounds(new Vector3(), new Vector3());
+        // TODO: Return the correct position.
+        return new Vector3();
     }
 
 }

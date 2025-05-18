@@ -350,7 +350,7 @@ public class Aquarium : MonoBehaviour
         return deltas;
     }
 
-    public Vector3 bestNeighborCoordsInAquariumCoords(Vector3 startInAquariumCoords)
+    public Vector3 getBestNeighborCoordsInAquariumCoords(Vector3 startInAquariumCoords)
     {
         Vector3 minAquariumCoords = getMinAquariumCoords();
         Vector3 maxAquariumCoords = getMaxAquariumCoords();
