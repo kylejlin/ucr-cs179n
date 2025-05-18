@@ -28,7 +28,7 @@ public class Creature : Entity
     {
 
     }
-    
+
     protected void initSize()
     {
         setMaturity(spawnSize);
@@ -50,32 +50,34 @@ public class Creature : Entity
         }
         else
         {
-            setMaturity(percentage + maxEnergy/adultEnergy);
+            setMaturity(percentage + maxEnergy / adultEnergy);
         }
     }
-/// <summary>
-/// set growth to this size, keeping size and energy proportional (unlike grow, which ADDS the percentage to the current size). Percentage cant be negative
-/// </summary>
-    public virtual void setMaturity(float percentage){
-        if(percentage <= 0) {Debug.LogWarning("maturity cannot be negative"); }
-        setScaleTo(adultSize * percentage); 
+    /// <summary>
+    /// set growth to this size, keeping size and energy proportional (unlike grow, which ADDS the percentage to the current size). Percentage cant be negative
+    /// </summary>
+    public virtual void setMaturity(float percentage)
+    {
+        if (percentage <= 0) { Debug.LogWarning("maturity cannot be negative"); }
+        setScaleTo(adultSize * percentage);
         maxEnergy = percentage * adultEnergy;
     }
-    public float getMaturity(){
+    public float getMaturity()
+    {
         return transform.localScale.x;
     }
 
     /// <summary> make identical copy (for now, in a random position nearby. This is probably temporary). </summary>
-    public virtual void duplicate(Vector3 position) 
+    public virtual void duplicate(Vector3 position)
     {
         if (parentAquarium == null) { Debug.LogWarning("Could not find Aquarium parent"); return; }
-        if (!parentAquarium.isInBounds(position)) {return; } //keep w/in aquarium
+        if (!parentAquarium.isInBounds(position)) { return; } //keep w/in aquarium
 
         bool isOutlinedRN = isOutlined();
         setOutline(false); //have to do this else the outline materials will get duplicated onto the child and I cant find a better way to stop this
-        
+
         parentAquarium.addEntity(this, position, transform.localRotation); //spawn nearby in same aquarium
-        beingEaten(spawnSize*adultEnergy, false); //lose the same amount as the new creature spawned has
+        beingEaten(spawnSize * adultEnergy, false); //lose the same amount as the new creature spawned has
 
         setOutline(isOutlinedRN);
     }
@@ -83,21 +85,21 @@ public class Creature : Entity
     /// <summary> try to duplicate, but dont if there is a T too close to the attempted spawn location or too many of T in the aquarium as a whole. </summary>
     public virtual void tryDuplicate<T>(float minSpace = 0, float minCMCubedPerT = 0) where T : Entity
     {
-        Vector3 randVecNearby = new Vector3(Random.Range(-spawnRadius, spawnRadius), 0, Random.Range(-spawnRadius, spawnRadius)) + transform.localPosition; 
-        
-        T closestT = FindClosest<T>(randVecNearby); 
-        float closestTSqrDist =  Mathf.Infinity; 
-        if (closestT != default(T)) {closestTSqrDist = getSqrDistBw(FindClosest<T>(randVecNearby).transform.localPosition, randVecNearby); } 
-        
+        Vector3 randVecNearby = new Vector3(Random.Range(-spawnRadius, spawnRadius), 0, Random.Range(-spawnRadius, spawnRadius)) + transform.localPosition;
+
+        T closestT = FindClosest<T>(randVecNearby);
+        float closestTSqrDist = Mathf.Infinity;
+        if (closestT != default(T)) { closestTSqrDist = getSqrDistBw(FindClosest<T>(randVecNearby).transform.localPosition, randVecNearby); }
+
         int numTInTank = getAllOfType<T>().Length;
         float currCMCubedPerT = Mathf.Infinity;
-        if ((numTInTank > 0 )) { currCMCubedPerT = parentAquarium.volume() / numTInTank; }
+        if ((numTInTank > 0)) { currCMCubedPerT = parentAquarium.volume() / numTInTank; }
 
         //Debug.Log("currPos "+ transform.localPosition);
         //Debug.Log("nrarbyPost "+ randVecNearby);
         //Debug.Log("closest "+ closestTSqrDist);
         //Debug.Log("curr units per T "+ currUnitsCubedPerT);
-        if ((closestTSqrDist > minSpace*minSpace) && (minCMCubedPerT < currCMCubedPerT))
+        if ((closestTSqrDist > minSpace * minSpace) && (minCMCubedPerT < currCMCubedPerT))
         {
             duplicate(randVecNearby);
         }
@@ -129,7 +131,7 @@ public class Creature : Entity
         else //if it does survive and should shrink
         {
             energy -= amount;
-            grow(-amount/adultEnergy); //will never shrink to death
+            grow(-amount / adultEnergy); //will never shrink to death
         }
         return amount;
     }
@@ -137,7 +139,7 @@ public class Creature : Entity
     public void eat(float amount)
     {
         if (amount < 0) { Debug.LogWarning("eat() amount negative"); return; }
-        if(energy + amount > maxEnergy)
+        if (energy + amount > maxEnergy)
         {
             energy = maxEnergy;
         }
@@ -150,15 +152,15 @@ public class Creature : Entity
     {
         if (changeMaturity && asAdult) setMaturity(1);
         else if (changeMaturity && !asAdult) setMaturity(spawnSize);
-        
+
         this.enabled = false;  //no update()
         shopMode = true;
         enableAllColliders(false); //dont mess w collisions or raycasts etc
-        
+
         Rigidbody RB = GetComponent<Rigidbody>();
         if (RB) RB.isKinematic = true; //no physics please
 
     }
-
+    
 }
 

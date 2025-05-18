@@ -38,11 +38,11 @@ public class MouseUIManager : MonoBehaviour
     /// <summary>
     /// start a dragNDrop session. Will show a preview of what the entity is and where it will spawn. restricts it to aquarium and doesnt allow collisions
     /// </summary>
-    public void startPreview(Entity entity, Aquarium aquarium) //called by gameManager when adding smth from the shop
+    public void startPreview(Entity entity, Aquarium aquarium, bool isPrefab = true) //called by gameManager when adding smth from the shop
     {
         if (currentPPRay) Debug.LogWarning("Multiple DragNDrop previews present (there should only be one at any time)");
         currentPPRay = Instantiate(PPRay, new Vector3(0, 0, 0), Quaternion.identity, transform);
-        currentPPRay.init(entity, aquarium, cam);
+        currentPPRay.init(entity, aquarium, cam, isPrefab);
         closePopup(); // I think it would be weird if both were happening at the same time
     }
 
@@ -90,7 +90,8 @@ public class MouseUIManager : MonoBehaviour
     /// </summary>
     private void moveEntity()
     {
-
+        if (selectedEntity) startPreview(selectedEntity, selectedEntity.parentAquarium, false);
+        closePopup();
     }
 
 }

@@ -26,7 +26,7 @@ public class Aquarium : MonoBehaviour
         this.id = id;
     }
 
-    public Entity addEntity(Entity newEntity, Vector3 position, Quaternion rotation) //returns a reference to the newly created object 
+    public Entity addEntity(Entity newEntity, Vector3 position, Quaternion rotation) //returns a reference to the newly created object //GLOBAL positions
     {
         if (newEntity == null) { Debug.LogWarning("Null entity passed into addEntity"); return null; }
         if (!isInBounds(position)) { Debug.Log("not within bounds " + position); return null; } //keep within aquarium bounds
