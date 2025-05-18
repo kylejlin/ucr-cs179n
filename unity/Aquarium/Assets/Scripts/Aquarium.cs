@@ -248,9 +248,9 @@ public class Aquarium : MonoBehaviour
                     continue;
                 }
 
-                int neighborBufIndex = voxelCoordsToBufIndex(neighborVoxelCoords);
 
-                float oldNeighborScentValue = voxelGridBuf[neighborBufIndex];
+
+                float oldNeighborScentValue = getScentAt(neighborVoxelCoords);
 
                 if (oldNeighborScentValue < 0f)
                 {
@@ -265,6 +265,7 @@ public class Aquarium : MonoBehaviour
                     continue;
                 }
 
+                int neighborBufIndex = voxelCoordsToBufIndex(neighborVoxelCoords);
                 voxelGridBuf[neighborBufIndex] = newNeighborScentValue;
                 floodBufIndices.Enqueue(neighborBufIndex);
             }
@@ -310,6 +311,17 @@ public class Aquarium : MonoBehaviour
         return voxelCoords.x + (voxelCoords.y * gridSize.x) + (voxelCoords.z * gridSize.x * gridSize.y);
     }
 
+    public float getScentAt(Vector3Int voxelCoords)
+    {
+        int bufIndex = voxelCoordsToBufIndex(voxelCoords);
+        if (bufIndex < 0 || bufIndex >= voxelGridBuf.Count)
+        {
+            Debug.LogWarning("bufIndex out of bounds");
+            return 0f;
+        }
+        return voxelGridBuf[bufIndex];
+    }
+
     public Bounds bufIndexToVoxelBounds(int index)
     {
         Vector3Int voxelCoords = bufIndexToVoxelCoords(index);
@@ -336,6 +348,58 @@ public class Aquarium : MonoBehaviour
         deltas.Add(new Vector3Int(1, 1, 1));
 
         return deltas;
+    }
+
+    public Vector3 bestNeighborCoordsInAquariumCoords(Vector3 startInAquariumCoords)
+    {
+        Vector3 minAquariumCoords = getMinAquariumCoords();
+        Vector3 maxAquariumCoords = getMaxAquariumCoords();
+
+        if (!(
+            minAquariumCoords.x <= startInAquariumCoords.x && startInAquariumCoords.x <= maxAquariumCoords.x
+            && minAquariumCoords.y <= startInAquariumCoords.y && startInAquariumCoords.y <= maxAquariumCoords.y
+            && minAquariumCoords.z <= startInAquariumCoords.z && startInAquariumCoords.z <= maxAquariumCoords.z))
+        {
+            {
+                Debug.LogWarning("startInAquariumCoords is not in aquarium bounds");
+                return startInAquariumCoords;
+            }
+        }
+
+        Vector3 startRelativeToMin = startInAquariumCoords - minAquariumCoords;
+        Vector3Int startVoxelCoords = new Vector3Int(
+            Mathf.FloorToInt(startRelativeToMin.x / voxelSize),
+            Mathf.FloorToInt(startRelativeToMin.y / voxelSize),
+            Mathf.FloorToInt(startRelativeToMin.z / voxelSize)
+        );
+        if (!areVoxelCoordsValid(startVoxelCoords))
+        {
+            Debug.LogWarning("startVoxelCoords is not valid");
+            return startInAquariumCoords;
+        }
+
+        Vector3Int bestVoxelCoords = startVoxelCoords;
+
+        List<Vector3Int> deltasToNeighborsExcludingSelf = getDeltasToNeighborsExcludingSelf();
+        foreach (Vector3Int delta in deltasToNeighborsExcludingSelf)
+        {
+            Vector3Int neighborVoxelCoords = startVoxelCoords + delta;
+            if (!areVoxelCoordsValid(neighborVoxelCoords))
+            {
+                continue;
+            }
+
+            if (getScentAt(neighborVoxelCoords) > getScentAt(bestVoxelCoords))
+            {
+                bestVoxelCoords = neighborVoxelCoords;
+            }
+        }
+
+        return minAquariumCoords + new Vector3(
+            bestVoxelCoords.x * voxelSize,
+            bestVoxelCoords.y * voxelSize,
+            bestVoxelCoords.z * voxelSize
+        ) - new Vector3(voxelSize / 2f, voxelSize / 2f, voxelSize / 2f);
     }
 
 
