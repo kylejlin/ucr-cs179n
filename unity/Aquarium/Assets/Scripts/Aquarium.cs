@@ -11,6 +11,10 @@ public class Aquarium : MonoBehaviour
     public float groundLevel; //position of bottom plane of aquarium, set in inspector
     private bool breedingMutex = false; //only allows one set of creatures to breed at a time
 
+    public List<float> voxelGridBuf = new List<float>();
+
+    public float voxelSize = 5;
+
     void Start()
     {
 
@@ -19,7 +23,9 @@ public class Aquarium : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        UpdateScentGradient();
     }
+
     public void setID(int id)
     {
         this.id = id;
@@ -70,8 +76,8 @@ public class Aquarium : MonoBehaviour
     {
         Vector3 localPos = position;
         float accuracy = 0.0001f;
-        if(!local) localPos = transform.InverseTransformPoint(position);
-        
+        if (!local) localPos = transform.InverseTransformPoint(position);
+
         return ((localPos.x >= -dimensions.x / 2 - accuracy) && (localPos.x <= dimensions.x / 2 + accuracy)
             && (localPos.y >= groundLevel - accuracy) && (localPos.y <= dimensions.y + accuracy)
             && (localPos.z >= -dimensions.z / 2 - accuracy) && (localPos.z <= dimensions.z / 2 + accuracy));
@@ -93,7 +99,7 @@ public class Aquarium : MonoBehaviour
         print("Set mutex");
         breedingMutex = value;
     }
-    
+
     /// <returns> entity of type T that is closest to Position (in aquarium space) or null if there are none found. </returns>
     public T FindClosest<T>(Vector3 aquariumPosition) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
     {
@@ -110,7 +116,7 @@ public class Aquarium : MonoBehaviour
         }
         return closest;
     }
-    
+
     /// <returns> entity of type T that is closest to Position (in aquarium space) or null if there are none found. if excludeSelf it will exclude itself by checking its uniqueID </returns>
     public T FindClosest<T>(Entity entity, bool excludeSelf = true) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
     {
@@ -142,34 +148,198 @@ public class Aquarium : MonoBehaviour
         T[] foundEntities = getAllOfType<T>();
         List<Bounds> aquariumBoundsList = new List<Bounds>();
         Vector3 newCenter = new Vector3();
-        foreach(T e in foundEntities){ //get bounds in world space
+        foreach (T e in foundEntities)
+        { //get bounds in world space
             Collider[] colliders = e.GetComponentsInChildren<Collider>(); //get references to all colliders in that entity
-            foreach(Collider c in colliders){
+            foreach (Collider c in colliders)
+            {
                 newCenter = e.transform.TransformVector(c.bounds.center - e.transform.position) + e.transform.position - this.transform.position; //for some reason the Bounds are in the correct worldspce position, but are scaled locally. So you have to do this mess
                 //this is a mess. theres gotta be a better way
-                aquariumBoundsList.Add(new Bounds(newCenter, e.transform.TransformVector(c.bounds.size) / transform.localScale.x)); 
+                aquariumBoundsList.Add(new Bounds(newCenter, e.transform.TransformVector(c.bounds.size) / transform.localScale.x));
                 //this assumes that the aquarium is a root and that it has proportional scale and isnt rotated
             }
         }
         return aquariumBoundsList;
-        
+
     }
 
     /// <summary> returns the objects position relative to this aquarium, regardless of its position in the hierarchy</summary>
-    public Vector3 getAquariumSpacePosition(GameObject obj){
+    public Vector3 getAquariumSpacePosition(GameObject obj)
+    {
         return transform.InverseTransformVector(obj.transform.position);
     }
     public float getSqrDistBw(Vector3 vec1, Vector3 vec2) { return (vec1 - vec2).sqrMagnitude; }
-    public float getSqrDistBwEntities(Entity e1, Entity e2) {return getSqrDistBw(e1.transform.position, e2.transform.position); }
-    public Vector3 getMinAquariumCoords(){ return new Vector3(-dimensions.x/2, groundLevel, -dimensions.z/2); } //hard coded for aquarium default value w scale 1
-    public Vector3 getMaxAquariumCoords(){ return new Vector3(dimensions.x/2, dimensions.y, dimensions.z/2); } //hard coded for aquarium default value w scale 1
+    public float getSqrDistBwEntities(Entity e1, Entity e2) { return getSqrDistBw(e1.transform.position, e2.transform.position); }
+    public Vector3 getMinAquariumCoords() { return new Vector3(-dimensions.x / 2, groundLevel, -dimensions.z / 2); } //hard coded for aquarium default value w scale 1
+    public Vector3 getMaxAquariumCoords() { return new Vector3(dimensions.x / 2, dimensions.y, dimensions.z / 2); } //hard coded for aquarium default value w scale 1
     public Vector3 transformAquariumCoordsToWorldCoords(Vector3 aquariumCoords) { return transform.TransformVector(aquariumCoords); }
-    
-    
-    
-    
-    
-    
+
+
+    public void UpdateScentGradient()
+    {
+        voxelGridBuf.Clear();
+
+        int requiredBufSize = requiredVoxelGridBufSize();
+        for (int i = 0; i < requiredBufSize; ++i)
+        {
+            voxelGridBuf.Add(0f);
+        }
+
+        // Forgive the bad grammar ("boundses").
+        // The problem is that "bounds" is already plural,
+        // so we need a "double plural" to describe a list of bounds.
+
+        // For now, we assume the only scent blockers are creatures.
+        // This means the navigation algorithm will ignore non-creatures (e.g., decorations).
+        // However, we can expand this later.
+        List<Bounds> scentBlockerBoundses = getBoundsInAquariumCoords<Creature>();
+
+        // For now, we assume the only food sources are immobile creatures.
+        List<Bounds> foodBoundses = getBoundsInAquariumCoords<ImmobileCreature>();
+
+        List<Vector3Int> deltasToNeighborsExcludingSelf = getDeltasToNeighborsExcludingSelf();
+
+        Queue<int> floodBufIndices = new Queue<int>();
+
+        for (int i = 0; i < requiredBufSize; ++i)
+        {
+            Bounds voxelBounds = bufIndexToVoxelBounds(i);
+
+            foreach (Bounds blockerBounds in scentBlockerBoundses)
+            {
+                if (blockerBounds.Intersects(voxelBounds))
+                {
+                    voxelGridBuf[i] = -1f;
+                    break;
+                }
+            }
+
+            foreach (Bounds foodBounds in foodBoundses)
+            {
+                if (foodBounds.Intersects(voxelBounds))
+                {
+                    voxelGridBuf[i] = 1f;
+                    floodBufIndices.Enqueue(i);
+                    break;
+                }
+            }
+        }
+
+        while (floodBufIndices.Count > 0)
+        {
+            int bufIndex = floodBufIndices.Dequeue();
+
+            float newNeighborScentValue = voxelGridBuf[bufIndex] - 0.01f;
+
+            if (newNeighborScentValue <= 0f)
+            {
+                // The scent is too weak to be useful,
+                // so we skip this queue item.
+                continue;
+            }
+
+            Vector3Int voxelCoords = bufIndexToVoxelCoords(bufIndex);
+
+            foreach (Vector3Int delta in deltasToNeighborsExcludingSelf)
+            {
+                Vector3Int neighborVoxelCoords = voxelCoords + delta;
+                if (!areVoxelCoordsValid(neighborVoxelCoords))
+                {
+                    continue;
+                }
+
+                int neighborBufIndex = voxelCoordsToBufIndex(neighborVoxelCoords);
+
+                float oldNeighborScentValue = voxelGridBuf[neighborBufIndex];
+
+                if (oldNeighborScentValue < 0f)
+                {
+                    // This voxel is blocked; we cannot flood it.
+                    continue;
+                }
+
+                if (newNeighborScentValue <= oldNeighborScentValue)
+                {
+                    // This voxel was already flooded with a stronger scent.
+                    // We must not flood it again, or else we will create an infinite loop.
+                    continue;
+                }
+
+                voxelGridBuf[neighborBufIndex] = newNeighborScentValue;
+                floodBufIndices.Enqueue(neighborBufIndex);
+            }
+        }
+    }
+
+    public Vector3Int voxelGridSize()
+    {
+        Vector3 gridDimensions = getMaxAquariumCoords() - getMinAquariumCoords();
+        Vector3Int gridSize = new Vector3Int();
+        gridSize.x = Mathf.CeilToInt(gridDimensions.x / voxelSize);
+        gridSize.y = Mathf.CeilToInt(dimensions.y / voxelSize);
+        gridSize.z = Mathf.CeilToInt(dimensions.z / voxelSize);
+        return gridSize;
+    }
+
+    public bool areVoxelCoordsValid(Vector3Int voxelCoords)
+    {
+        Vector3Int gridSize = voxelGridSize();
+        return (voxelCoords.x >= 0 && voxelCoords.x < gridSize.x
+            && voxelCoords.y >= 0 && voxelCoords.y < gridSize.y
+            && voxelCoords.z >= 0 && voxelCoords.z < gridSize.z);
+    }
+
+    public int requiredVoxelGridBufSize()
+    {
+        Vector3Int gridSize = voxelGridSize();
+        return gridSize.x * gridSize.y * gridSize.z;
+    }
+
+    public Vector3Int bufIndexToVoxelCoords(int index)
+    {
+        Vector3Int gridSize = voxelGridSize();
+        int x = index % gridSize.x;
+        int y = index / gridSize.x % gridSize.y;
+        int z = index / (gridSize.x * gridSize.y);
+        return new Vector3Int(x, y, z);
+    }
+
+    public int voxelCoordsToBufIndex(Vector3Int voxelCoords)
+    {
+        Vector3Int gridSize = voxelGridSize();
+        return voxelCoords.x + (voxelCoords.y * gridSize.x) + (voxelCoords.z * gridSize.x * gridSize.y);
+    }
+
+    public Bounds bufIndexToVoxelBounds(int index)
+    {
+        Vector3Int voxelCoords = bufIndexToVoxelCoords(index);
+        Vector3 min = getMinAquariumCoords() + new Vector3(voxelCoords.x * voxelSize, voxelCoords.y * voxelSize, voxelCoords.z * voxelSize);
+        Vector3 max = min + new Vector3(voxelSize, voxelSize, voxelSize);
+        return new Bounds((min + max) / 2f, max - min);
+    }
+
+    public static List<Vector3Int> getDeltasToNeighborsExcludingSelf()
+    {
+        List<Vector3Int> deltas = new List<Vector3Int>();
+
+        deltas.Add(new Vector3Int(-1, -1, -1));
+        deltas.Add(new Vector3Int(-1, -1, 0));
+        deltas.Add(new Vector3Int(-1, -1, 1));
+
+        deltas.Add(new Vector3Int(0, 0, -1));
+        // We comment out the zero delta to exclude self.
+        // deltas.Add(new Vector3Int(0, 0, 0));
+        deltas.Add(new Vector3Int(0, 0, 1));
+
+        deltas.Add(new Vector3Int(1, 1, -1));
+        deltas.Add(new Vector3Int(1, 1, 0));
+        deltas.Add(new Vector3Int(1, 1, 1));
+
+        return deltas;
+    }
+
+
+
     public int calcCoin()
     {
         return 10; // todo: calculate the coins based on the number of creatures and decorations
