@@ -2,19 +2,18 @@ using UnityEngine;
 
 public class Creature : Entity
 {
-    //these are mostly randomly set so that things don't crash. Each creature should set it to the correct value in their child class
-    // public float hunger = 0; //current hunger?
+    //for each individual type of creature these should be set in the prefab editor 
     public float energy = 2; //current health
 
-    public float maxEnergy = 5; //current health cap
-    protected float growthRate = 0.1f; //how much it grows per minute
-    protected float adultEnergy = 20; //max energypool it can grow to
-    protected int adultSize = 1; //max size it can grow to
+    [SerializeField] public float maxEnergy = 5; //current health cap
+    [SerializeField] protected float growthRate = 0.1f; //how much it grows per minute
+    [SerializeField] protected float adultEnergy = 20; //max energypool it can grow to
+    [SerializeField] protected int adultSize = 1; //max size it can grow to
 
-    protected float spawnSize = 0.1f; //size it starts as (since adult size is 1, its a percentage)
-    protected float spawnRadius = 5; //how far away it can spawn offspring
-    protected float minSpawnSpace = 1; //space needed for offspring to spawn (avoids crowding, needs to be smaller than spawnRadius)
-    protected float minCMCubedPer = 10000; //limits max population according to the size of the tank (each creature needs this amount of cm^3 of water)
+    [SerializeField] protected float spawnSize = 0.1f; //size it starts as (since adult size is 1, its a percentage)
+    [SerializeField] protected float spawnRadius = 5; //how far away it can spawn offspring
+    [SerializeField] protected float minSpawnSpace = 1; //space needed for offspring to spawn (avoids crowding, needs to be smaller than spawnRadius)
+    [SerializeField] protected float minCMCubedPer = 10000; //limits max population according to the size of the tank (each creature needs this amount of cm^3 of water)
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     protected new void Awake()
     {

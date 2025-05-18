@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class Entity : MonoBehaviour
 {
-    public string entityName = "NoName";
-    [HideInInspector]
-    public int id; //id of the entity
+    public int id; //id of the entity type, set in gamemanager
     [SerializeField]
+    private static double uniqueIDCount = 0;
+    private double uniqueID = -1; //unique ID of this gameobject only
     private int buyMoney;
     [SerializeField]
     private int sellMoney;
@@ -15,16 +15,21 @@ public class Entity : MonoBehaviour
     public Aquarium parentAquarium = null;
     [SerializeField]
     protected double count = 0; //to count deltaTime 
-    public bool shopMode = false; //true if this gameobject is being displayed in UI and so should spawn as an adult and not Update() (frozen, don't interact) 
+    protected bool shopMode = false; //true if this gameobject is being displayed in UI and so should spawn as an adult and not Update() (frozen, don't interact) 
 
     private Outline outline;
     public virtual void Awake()
     {
         SetLayerRecursively(transform, 15); //set to Entity layer for raycast masking
-        if(name == "NoName") name = entityName + " " + id;
+        if (uniqueID == -1) //need the if because awake is called when a gameobject is disactivated and activated again
+        {
+            name = name + " " + uniqueIDCount;
+            uniqueID = uniqueIDCount;
+            uniqueIDCount++;
+        }
         outline = gameObject.GetComponent<Outline>();
-        if(!outline) outline = gameObject.AddComponent<Outline>(); //outline script that allows the creature or decor to be outlined when player clicks on them
-        setOutline(false); 
+        if (!outline) outline = gameObject.AddComponent<Outline>(); //outline script that allows the creature or decor to be outlined when player clicks on them
+        setOutline(false);
     }
 
     // Update is called once per frame
@@ -85,15 +90,18 @@ public class Entity : MonoBehaviour
     /// <returns> array of type T of all the found entities, or null if none were found </returns>
     public T[] getAllOfType<T>(bool global = false) where T : Entity //RETURNS NULL IF EMPTY
     {
-        if(global){ //replace w getcompinchildren no casting needed
+        if (global)
+        { //replace w getcompinchildren no casting needed
             Object[] foundObjects = FindObjectsByType(typeof(T), FindObjectsSortMode.None); //find all of the type
             if (foundObjects.Length == 0) return null;
 
 
             T[] foundEntities = new T[foundObjects.Length]; //cast to T
             for (int i = 0; i < foundObjects.Length; i++) foundEntities[i] = (T)foundObjects[i];
-            return foundEntities;}
-        else {
+            return foundEntities;
+        }
+        else
+        {
             T[] foundComponents = parentAquarium.GetComponentsInChildren<T>();
             return foundComponents;
         }
@@ -106,16 +114,16 @@ public class Entity : MonoBehaviour
 
     }
 
-/// <summary>
-/// destroy the gameobject and let the aquarium know
-/// </summary>
+    /// <summary>
+    /// destroy the gameobject and let the aquarium know
+    /// </summary>
     public void die()
     {
         if (parentAquarium != null) { parentAquarium.removeEntity(this); }
         else { Debug.LogWarning("Could not find Aquarium parent"); }
         Destroy(gameObject);
     }
-    
+
     public void SetLayerRecursively(Transform obj, int newLayer)
     {
         obj.gameObject.layer = newLayer;
@@ -124,13 +132,15 @@ public class Entity : MonoBehaviour
             SetLayerRecursively(child, newLayer);
         }
     }
-    
+
     /// <summary>
     /// disable/enable all colliders of this gameobject or its children. //doesnt get inactive colliders. Im not sure if it should??
     /// </summary>
-    public void enableAllColliders(bool enable) {
-        Collider[] allColliders = GetComponentsInChildren<Collider>(); 
-        foreach(Collider c in allColliders){
+    public void enableAllColliders(bool enable)
+    {
+        Collider[] allColliders = GetComponentsInChildren<Collider>();
+        foreach (Collider c in allColliders)
+        {
             c.enabled = enable;
         }
     }
@@ -138,13 +148,15 @@ public class Entity : MonoBehaviour
     /// ONLY WORKS IF GAMEOBJECT AND COLLIDERS ARE ENABLED AND ACTIVE. get the axis aligned BB of all the colliders on this gameobject or its children. //doesnt get inactive colliders. Im not sure if it should??
     /// </summary>
     /// <returns> Bounds struct of AABB. will return a Bounds with center 0,0,0 and size 0,0,0 if there are no colliders, because structs cant be null</returns>
-    public Bounds getAllCollidersBoundingBox(){
-        if(!gameObject.activeInHierarchy) { Debug.LogWarning("Object Inactive. No bounds"); return new Bounds(new Vector3(0,0,0), new Vector3(0,0,0));}
-        Collider[] allColliders = GetComponentsInChildren<Collider>(); 
-        if(allColliders.Length==0) { Debug.LogWarning("No colliders"); return new Bounds(new Vector3(0,0,0), new Vector3(0,0,0));}
+    public Bounds getAllCollidersBoundingBox()
+    {
+        if (!gameObject.activeInHierarchy) { Debug.LogWarning("Object Inactive. No bounds"); return new Bounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0)); }
+        Collider[] allColliders = GetComponentsInChildren<Collider>();
+        if (allColliders.Length == 0) { Debug.LogWarning("No colliders"); return new Bounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0)); }
         Bounds colliderBounds = allColliders[0].bounds;
 
-        foreach(Collider c in allColliders){ //go through all children colliders and expand the bounds to hold them all
+        foreach (Collider c in allColliders)
+        { //go through all children colliders and expand the bounds to hold them all
             colliderBounds.Encapsulate(c.bounds.min);
             colliderBounds.Encapsulate(c.bounds.max);
         }
@@ -158,16 +170,18 @@ public class Entity : MonoBehaviour
     /// </summary>
     /// <param name="asAdult"> set self to be an adult or a baby as they would naturally spawn</param>
     /// <param name="changeMaturity"> should this set the maturity. if false, isadult doesnt matter</param>
-    public virtual void initShopMode(bool asAdult = true, bool changeMaturity = true) { 
+    public virtual void initShopMode(bool asAdult = true, bool changeMaturity = true)
+    {
         this.enabled = false;  //no update()
         shopMode = true;
         enableAllColliders(false); //dont mess w collisions or raycasts etc
-        
+
         Rigidbody RB = GetComponent<Rigidbody>();
         if (RB) RB.isKinematic = true; //no physics please
     } //get overridden by child classes.
 
-    public virtual void disableShopMode(){
+    public virtual void disableShopMode()
+    {
         this.enabled = true;
         shopMode = false;
         enableAllColliders(true);
@@ -176,18 +190,21 @@ public class Entity : MonoBehaviour
         if (RB) RB.isKinematic = false; //physics please
     }
 
-    public virtual string getCurrStats(){
-        return "Name: "+entityName;
+    public virtual string getCurrStats()
+    {
+        return "Name: " + name;
     }
 
     public float getSqrDistToEntity(Entity entity) { return (transform.localPosition - entity.transform.localPosition).sqrMagnitude; }
     public float getSqrDistBw(Vector3 vec1, Vector3 vec2) { return (vec1 - vec2).sqrMagnitude; }
-    public void setOutline(bool enable){ outline.enabled = enable; }
+    public void setOutline(bool enable) { outline.enabled = enable; }
     public int getID() { return id; }
     public int getBuyMoney() { return buyMoney; }
     public int getSellMoney() { return sellMoney; }
     public float getScale() { return transform.localScale.x; }
     public Rarity GetRarity() { return rarity; }
-    public bool isOutlined(){ return outline.enabled; }
+    public bool isOutlined() { return outline.enabled; }
+    public bool isShopMode() { return shopMode;  }
+    
     
 }
