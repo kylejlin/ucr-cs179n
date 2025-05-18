@@ -166,8 +166,8 @@ public class Creature : Entity
 
     public Vector3 getPositionInAquariumCoords()
     {
-        // TODO: Return the correct position.
-        return new Vector3();
+        //assumes that this gameobject is a direct child of the aquarium it is in
+        return transform.localPosition;
     }
 
 }
