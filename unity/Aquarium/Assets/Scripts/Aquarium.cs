@@ -104,6 +104,8 @@ public class Aquarium : MonoBehaviour
         T closest = default(T);
         foreach (T e in foundEntities)
         {
+            if (!e.enabled) continue;
+
             float newDist = getSqrDistBw(aquariumPosition, transform.InverseTransformVector(e.transform.position));
 
             if (closest == default(T)) closest = e;
@@ -121,8 +123,9 @@ public class Aquarium : MonoBehaviour
         T closest = default(T);
         foreach (T e in foundEntities)
         {
-            float newDist = getSqrDistBwEntities(entity, e);
+            if (!e.enabled) continue;
 
+            float newDist = getSqrDistBwEntities(entity, e);
             if (excludeSelf && (e.getUniqueID() == entity.getUniqueID())) continue; // dont count yourself
 
             if (closest == default(T)) closest = e;

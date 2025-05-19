@@ -19,7 +19,7 @@ public class Anomalocaris : MobileCreature
 
     protected override void UpdateHunting()
     {
-        Trilobite closest = FindClosest<Trilobite>();
+        Trilobite closest = parentAquarium.FindClosest<Trilobite>(this);
 
         if (closest == null)
         {

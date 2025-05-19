@@ -144,7 +144,7 @@ public class Creature : Entity
         return amount;
     }
 
-s    public void eat(float amount)
+    public void eat(float amount)
     {
         if (amount < 0) { Debug.LogWarning("eat() amount negative"); return; }
         if (energy + amount > maxEnergy)
