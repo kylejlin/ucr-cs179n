@@ -37,80 +37,7 @@ public class Entity : MonoBehaviour
     {
 
     }
-
-    /// <param name="global"> if true search entire scene, if false search only the same aquarium</param>
-    /// <returns> entity of type T that is closest to the caller (excludes self) or null if there are none found </returns>
-    public T FindClosest<T>(bool global = false) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
-
-    {
-        T[] foundEntities = getAllOfType<T>(global);
-        if (foundEntities == null) return default(T);
-
-        T closest = default(T);
-
-        foreach (T entity in foundEntities)
-        {
-            if (!entity.enabled) continue;
-            float newDist = getSqrDistToEntity(entity);
-            if (newDist <= 0) continue; // dont count yourself
-
-            if (closest == default(T)) closest = entity;
-            else if ((newDist < getSqrDistToEntity(closest)))
-            {
-                closest = entity;
-            }
-        }
-        return closest;
-    }
-
-    /// <param name="global"> if true search entire scene, if false search only the same aquarium</param>
-    /// <returns> entity of type T that is closest to Position (does not exclude self) or null if there are none found </returns>
-    public T FindClosest<T>(Vector3 position, bool global = false) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self and shopmode items)
-
-    {
-        T[] foundEntities = getAllOfType<T>(global);
-        if (foundEntities == null) return default(T);
-
-        T closest = default(T);
-
-        foreach (T entity in foundEntities)
-        {
-            if (!entity.enabled) continue;
-            float newDist = getSqrDistBw(entity.transform.localPosition, position);
-
-            if (closest == default(T)) closest = entity;
-            else if ((newDist < getSqrDistBw(closest.transform.localPosition, position)))
-            {
-                closest = entity;
-            }
-        }
-        return closest;
-    }
-
-
-    /// <param name="global"> if true search entire scene, if false search only the same aquarium</param>
-    /// <returns> array of type T of all the found entities, or null if none were found </returns>
-    public T[] getAllOfType<T>(bool global = false) where T : Entity //RETURNS NULL IF EMPTY, includes shopmode items :\
-    {
-
-        if (global)
-        { //replace w getcompinchildren no casting needed
-            Object[] foundObjects = FindObjectsByType(typeof(T), FindObjectsSortMode.None); //find all of the type
-            if (foundObjects.Length == 0) return null;
-
-
-            T[] foundEntities = new T[foundObjects.Length]; //cast to T
-            for (int i = 0; i < foundObjects.Length; i++) foundEntities[i] = (T)foundObjects[i];
-            return foundEntities;
-        }
-        else if (parentAquarium)
-        {
-            T[] foundComponents = parentAquarium.GetComponentsInChildren<T>();
-            return foundComponents;
-        }
-         return null;
-    }
-
+    
     protected void setScaleTo(float scaleFactor) //limited to proportional scaling only
     {
         if (scaleFactor <= 0) { Debug.LogWarning("setScaleTo() scaleFactor cannot be <= 0 "); return; }
@@ -164,7 +91,7 @@ public class Entity : MonoBehaviour
             colliderBounds.Encapsulate(c.bounds.min);
             colliderBounds.Encapsulate(c.bounds.max);
         }
-
+        
 
         return colliderBounds;
 
@@ -220,6 +147,7 @@ public class Entity : MonoBehaviour
     public float getSqrDistBw(Vector3 vec1, Vector3 vec2) { return (vec1 - vec2).sqrMagnitude; }
     public void setOutline(bool enable) { outline.enabled = enable; }
     public int getID() { return id; }
+    public double getUniqueID() { return uniqueID; }
     public int getBuyMoney() { return buyMoney; }
     public int getSellMoney() { return sellMoney; }
     public float getScale() { return transform.localScale.x; }

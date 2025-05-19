@@ -87,13 +87,14 @@ public class Creature : Entity
     /// <summary> try to duplicate, but dont if there is a T too close to the attempted spawn location or too many of T in the aquarium as a whole. </summary>
     public virtual void tryDuplicate<T>(float minSpace = 0, float minCMCubedPerT = 0) where T : Entity
     {
-        Vector3 randVecNearby = new Vector3(Random.Range(-spawnRadius, spawnRadius), 0, Random.Range(-spawnRadius, spawnRadius)) + transform.localPosition;
-
-        T closestT = FindClosest<T>(randVecNearby);
-        float closestTSqrDist = Mathf.Infinity;
-        if (closestT != default(T)) { closestTSqrDist = getSqrDistBw(FindClosest<T>(randVecNearby).transform.localPosition, randVecNearby); }
-
-        int numTInTank = getAllOfType<T>().Length;
+        //this will also break if this entity is not a direct child of aquarium
+        Vector3 randVecNearby = new Vector3(Random.Range(-spawnRadius, spawnRadius), 0, Random.Range(-spawnRadius, spawnRadius)) + transform.localPosition; 
+        
+        T closestT = parentAquarium.FindClosest<T>(randVecNearby); 
+        float closestTSqrDist =  Mathf.Infinity; 
+        if (closestT != default(T)) {closestTSqrDist = getSqrDistBw(closestT.transform.localPosition, randVecNearby); } 
+        
+        int numTInTank = parentAquarium.getAllOfType<T>().Length;
         float currCMCubedPerT = Mathf.Infinity;
         if ((numTInTank > 0)) { currCMCubedPerT = parentAquarium.volume() / numTInTank; }
 
@@ -143,7 +144,7 @@ public class Creature : Entity
         return amount;
     }
 
-    public void eat(float amount)
+s    public void eat(float amount)
     {
         if (amount < 0) { Debug.LogWarning("eat() amount negative"); return; }
         if (energy + amount > maxEnergy)
