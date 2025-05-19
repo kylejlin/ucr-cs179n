@@ -108,7 +108,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: 7bb5d81810ff02b47b3f3ab3578217a6, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -130,7 +130,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 10907, guid: 0000000000000000f000000000000000, type: 0}
-  m_Color: {r: 0.29803923, g: 0.29803923, b: 0.29803923, a: 0}
+  m_Color: {r: 1, g: 0.2965721, b: 0.2735849, a: 0}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -215,6 +215,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7918335002988649766, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 7bb5d81810ff02b47b3f3ab3578217a6, type: 2}
     - target: {fileID: -7029948723529949830, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
       propertyPath: m_Layer
       value: 15
@@ -223,14 +227,10 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 15
       objectReference: {fileID: 0}
-    - target: {fileID: -7918335002988649766, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 16e7651c442d9af49881e1d79e96c254, type: 2}
     - target: {fileID: 490939697822461851, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 16e7651c442d9af49881e1d79e96c254, type: 2}
+      objectReference: {fileID: 2100000, guid: 7bb5d81810ff02b47b3f3ab3578217a6, type: 2}
     - target: {fileID: 919132149155446097, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
       propertyPath: m_Name
       value: Model
@@ -243,18 +243,18 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 15
       objectReference: {fileID: 0}
-    - target: {fileID: 8511622685634201988, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
-      propertyPath: m_Layer
-      value: 15
-      objectReference: {fileID: 0}
     - target: {fileID: 6164996480583612547, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
-      objectReference: {fileID: 2100000, guid: 16e7651c442d9af49881e1d79e96c254, type: 2}
+      objectReference: {fileID: 2100000, guid: 7bb5d81810ff02b47b3f3ab3578217a6, type: 2}
     - target: {fileID: 8143266647802600495, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 7bb5d81810ff02b47b3f3ab3578217a6, type: 2}
+    - target: {fileID: 8511622685634201988, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

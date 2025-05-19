@@ -55,17 +55,30 @@ public class MobileCreature : Creature
             huntingEnergyThreshold = .75f * maxEnergy;
             consumeRate = .5f * maxEnergy; //changed
 
-            spawnRadius = 5;
-            minSpawnSpace = 1;
-            minCMCubedPer = 200; //changed
+            spawnRadius = 20;
+            minSpawnSpace = 5;
+            minCMCubedPer = 20000; //changed
         }
     }
 
     public void setChildValues(MobileCreature parent1, MobileCreature parent2)
     {
-        speed = parent1.speed + parent2.speed;
+        //speed
+        speed = (parent1.speed + parent2.speed) / 2 + Random.Range(0, 1);
         count = 0;
+        //size
         //color
+        //Color.Lerp(parent1, parent2, Random.Range(0, 1));
+
+        // // Create a new MaterialPropertyBlock
+        // MaterialPropertyBlock propertyBlock = new MaterialPropertyBlock();
+
+        // // Set a random color in the MaterialPropertyBlock
+        // propertyBlock.SetColor("_Color", Random.ColorHSV());
+
+        // // Apply the MaterialPropertyBlock to the GameObject
+        // this.GetComponent<SpriteRenderer>().SetPropertyBlock(propertyBlock);
+
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

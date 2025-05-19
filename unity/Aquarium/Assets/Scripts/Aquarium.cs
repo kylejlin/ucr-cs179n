@@ -9,6 +9,8 @@ public class Aquarium : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public Vector3 dimensions = new Vector3(50, 40, 50); // hard coded to fit basic aquarium, should be changable later (arbitrary water level of 40 cm)
     public float groundLevel = 6; //position of bottom plane of aquarium (temporary until we have a better ground)
+
+    [SerializeField]
     private bool breedingMutex = false; //only allows one set of creatures to breed at a time
 
     void Start()
