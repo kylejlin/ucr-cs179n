@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdbdd96ea906b6641ab6c8b634bf1a19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 0
+  id: 3
   sellMoney: 8
   rarity: 0
   parentAquarium: {fileID: 0}
@@ -62,6 +62,8 @@ MonoBehaviour:
   spawnRadius: 5
   minSpawnSpace: 1
   minCMCubedPer: 10000
+  scaleDownWhenEaten: 0
+  mustBeKilledToBeEaten: 1
   canSwim: 1
   consumeRate: 8
   speed: 3

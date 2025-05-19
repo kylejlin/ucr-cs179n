@@ -90,6 +90,7 @@ public class Entity : MonoBehaviour
     /// <returns> array of type T of all the found entities, or null if none were found </returns>
     public T[] getAllOfType<T>(bool global = false) where T : Entity //RETURNS NULL IF EMPTY
     {
+
         if (global)
         { //replace w getcompinchildren no casting needed
             Object[] foundObjects = FindObjectsByType(typeof(T), FindObjectsSortMode.None); //find all of the type
@@ -100,11 +101,12 @@ public class Entity : MonoBehaviour
             for (int i = 0; i < foundObjects.Length; i++) foundEntities[i] = (T)foundObjects[i];
             return foundEntities;
         }
-        else
+        else if (parentAquarium)
         {
             T[] foundComponents = parentAquarium.GetComponentsInChildren<T>();
             return foundComponents;
         }
+         return null;
     }
 
     protected void setScaleTo(float scaleFactor) //limited to proportional scaling only
@@ -163,6 +165,23 @@ public class Entity : MonoBehaviour
 
 
         return colliderBounds;
+
+    }
+    public Vector3 getClosestPointOnColliders(Vector3 position)
+    {
+        Collider[] allColliders = GetComponentsInChildren<Collider>();
+        if (allColliders.Length == 0) { Debug.LogWarning("No colliders, returning original position"); return position; }
+        Vector3 closest = allColliders[0].ClosestPoint(position);
+        Vector3 temp;
+
+        foreach (Collider c in allColliders)
+        {
+            if (!c.enabled) Debug.LogWarning("Collider disabled, will return original position");
+            temp = c.ClosestPoint(position);
+            if ((temp - position).sqrMagnitude < closest.sqrMagnitude) closest = temp;
+        }
+
+        return closest;
 
     }
     /// <summary>

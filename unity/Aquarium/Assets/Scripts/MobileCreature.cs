@@ -13,11 +13,10 @@ public class MobileCreature : Creature
 {
 
     public bool canSwim = false;
-    public float consumeRate = 20;
+    public float consumeRate = 20f;
     public float speed = 1;
 
     public float huntingEnergyThreshold = 30;
-    public static float metabolismRate = 1;
     public float maxEatingDistance = 7;
 
     public BehaviorState state = BehaviorState.Idle;
@@ -25,6 +24,9 @@ public class MobileCreature : Creature
     private Rigidbody mobileCreatureRB;
 
     [SerializeField] protected double breedingCooldown = 10;
+    [SerializeField] protected double predateCooldown = 0.5f; // how long between damage dealing events. can think of it like its dps. bigger values will require more "fighting"
+    private float predateCount = 0f; //delta time tracking for ^
+
     public GameObject childPrefab; //used to instantiate new prefab for child 
 
     protected new void Awake()
@@ -33,7 +35,7 @@ public class MobileCreature : Creature
         mobileCreatureRB = GetComponent<Rigidbody>();
 
         initSize();
-
+        
     }
     /// <summary> Set default values for trilobite bought from store. </summary>
 
@@ -142,8 +144,7 @@ public class MobileCreature : Creature
         if (distance <= maxEatingDistance * getMaturity())
         {
             //Eat based on consumeRate 
-
-            predate(closest, true);
+            predate(closest);
             return;
         }
 
@@ -296,12 +297,19 @@ public class MobileCreature : Creature
         return false;
     }
 
-    public void predate(Creature creature, bool preyScaleDown)
+    public void predate(Creature creature)
     {
-        float energyGained = creature.beingEaten(consumeRate, preyScaleDown);
-        eat(energyGained);
-        if (energyGained > maxEnergy) grow(growthRate);
-        else grow(growthRate * energyGained / maxEnergy); // it shouldnt grow fast from taking a bunch of tiny bites super fast
+        predateCount += Time.deltaTime;
+        if (predateCount < predateCooldown) return;
+        else predateCount = 0;
+
+        float damageDone = creature.beingEaten(consumeRate);
+        if (creature.mustBeKilledToBeEaten && (damageDone >= consumeRate)) return;
+        //did not kill the prey and prey must be killed to be eaten, so gets nothing. Have to check w a roundabout method because Destroy() does not work immediately
+        //technically possible for prey to have the exact amount of energy as consumeRate and die and this creature gets no food anyways. 
+        eat(damageDone);
+        if (damageDone > maxEnergy) grow(growthRate); 
+        else grow(growthRate * damageDone / maxEnergy); // it shouldnt grow fast from taking a bunch of tiny bites super fast
     }
 
 }

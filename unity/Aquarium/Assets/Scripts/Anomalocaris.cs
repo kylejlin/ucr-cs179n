@@ -27,21 +27,24 @@ public class Anomalocaris : MobileCreature
             return;
         }
 
-        Vector3 delta = closest.transform.position - transform.position;
-        float distance = delta.magnitude;
+        Vector3 delta = closest.getClosestPointOnColliders(transform.position) - transform.position; //distance to closest point on the surface of the colliders
+        float distanceSqr = delta.sqrMagnitude; //  sqr bc its faster
 
-        if (distance <= maxEatingDistance * getMaturity())
+        if (distanceSqr <= (maxEatingDistance * getMaturity()) * (maxEatingDistance * getMaturity()))
         {
             //Eat based on consumeRate 
-            predate(closest, false);
+            predate(closest);
             return;
         }
-
-        Vector3 displacement = delta.normalized;
-        float k = speed*3 * Time.deltaTime;
-        displacement.Scale(new Vector3(k, k, k));
-        transform.position += displacement;
-        rotateTowards(delta);
+        else
+        {
+            Vector3 displacement = delta.normalized;
+            float k = speed * 3 * Time.deltaTime;
+            displacement.Scale(new Vector3(k, k, k));
+            transform.position += displacement;
+            rotateTowards(delta);
+        }
+        
     }
 
     private void setDemoValues()

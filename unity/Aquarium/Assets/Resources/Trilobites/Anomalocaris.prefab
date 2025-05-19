@@ -95,7 +95,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 238b82ed279832849b55c784f5ad69c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 0
+  id: 2
   sellMoney: 50
   rarity: 0
   parentAquarium: {fileID: 0}
@@ -105,17 +105,21 @@ MonoBehaviour:
   growthRate: 0.01
   adultEnergy: 100
   adultSize: 1
-  spawnSize: 0.1
+  metabolismRate: 0.2
+  spawnSize: 0.5
   spawnRadius: 5
   minSpawnSpace: 1
   minCMCubedPer: 16000
+  scaleDownWhenEaten: 0
+  mustBeKilledToBeEaten: 1
   canSwim: 1
-  consumeRate: 50
+  consumeRate: 100
   speed: 3
   huntingEnergyThreshold: 30
-  maxEatingDistance: 5
+  maxEatingDistance: 6
   state: 0
   breedingCooldown: 10
+  predateCooldown: 0.5
   childPrefab: {fileID: 7541186808266831616}
   demo: 0
 --- !u!1001 &2899574785119636183
