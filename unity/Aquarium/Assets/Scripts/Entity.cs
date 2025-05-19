@@ -50,6 +50,7 @@ public class Entity : MonoBehaviour
 
         foreach (T entity in foundEntities)
         {
+            if (!entity.enabled) continue;
             float newDist = getSqrDistToEntity(entity);
             if (newDist <= 0) continue; // dont count yourself
 
@@ -64,7 +65,7 @@ public class Entity : MonoBehaviour
 
     /// <param name="global"> if true search entire scene, if false search only the same aquarium</param>
     /// <returns> entity of type T that is closest to Position (does not exclude self) or null if there are none found </returns>
-    public T FindClosest<T>(Vector3 position, bool global = false) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
+    public T FindClosest<T>(Vector3 position, bool global = false) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self and shopmode items)
 
     {
         T[] foundEntities = getAllOfType<T>(global);
@@ -74,6 +75,7 @@ public class Entity : MonoBehaviour
 
         foreach (T entity in foundEntities)
         {
+            if (!entity.enabled) continue;
             float newDist = getSqrDistBw(entity.transform.localPosition, position);
 
             if (closest == default(T)) closest = entity;
@@ -88,7 +90,7 @@ public class Entity : MonoBehaviour
 
     /// <param name="global"> if true search entire scene, if false search only the same aquarium</param>
     /// <returns> array of type T of all the found entities, or null if none were found </returns>
-    public T[] getAllOfType<T>(bool global = false) where T : Entity //RETURNS NULL IF EMPTY
+    public T[] getAllOfType<T>(bool global = false) where T : Entity //RETURNS NULL IF EMPTY, includes shopmode items :\
     {
 
         if (global)
