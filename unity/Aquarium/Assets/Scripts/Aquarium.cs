@@ -94,7 +94,6 @@ public class Aquarium : MonoBehaviour
         print("Set mutex");
         breedingMutex = value;
     }
-    
     /// <returns> entity of type T that is closest to Position (in aquarium space) or null if there are none found. </returns>
     public T FindClosest<T>(Vector3 aquariumPosition) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
     {
@@ -168,15 +167,18 @@ public class Aquarium : MonoBehaviour
     public Vector3 getMinAquariumCoords(){ return new Vector3(-dimensions.x/2, groundLevel, -dimensions.z/2); } //hard coded for aquarium default value w scale 1
     public Vector3 getMaxAquariumCoords(){ return new Vector3(dimensions.x/2, dimensions.y, dimensions.z/2); } //hard coded for aquarium default value w scale 1
     public Vector3 transformAquariumCoordsToWorldCoords(Vector3 aquariumCoords) { return transform.TransformVector(aquariumCoords); }
-    
-    
-    
-    
-    
-    
-    public int calcCoin()
+
+
+
+
+
+
+    public float calcMoney()
     {
-        return 10; // todo: calculate the coins based on the number of creatures and decorations
+        float currMoneyBonus = 1f; //start w 1 for the tank itself
+        foreach (Entity e in entities) currMoneyBonus += e.calcMoneyBonus();
+        return currMoneyBonus;
+        
     }
 
     public int getHunger()

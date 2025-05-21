@@ -95,9 +95,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 238b82ed279832849b55c784f5ad69c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 2
+  id: 1
   sellMoney: 50
-  rarity: 0
+  rarity: 1
   parentAquarium: {fileID: 0}
   count: 0
   energy: 100

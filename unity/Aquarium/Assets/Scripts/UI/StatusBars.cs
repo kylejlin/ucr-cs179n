@@ -41,7 +41,7 @@ public class gameObject : MonoBehaviour
         happiness.value = gameManager.getHappiness();
         happinessText.text = Mathf.RoundToInt(happiness.value * 100) + "%";
 
-        moneyText.text = "Money: " + gameManager.getMoney().ToString();
+        moneyText.text = gameManager.getMoney().ToString("F2");
 
         int hungerValue = gameManager.getHunger();
         int supplyValue = gameManager.getAlgaesHealth();

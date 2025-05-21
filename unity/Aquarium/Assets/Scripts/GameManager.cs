@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using System.Collections.ObjectModel;
 
+
 public enum Rarity
 {
     Common,
@@ -10,7 +11,6 @@ public enum Rarity
     Epic
 };
 [System.Serializable]
-
 public class GameManager : MonoBehaviour
 {
     private CameraController cameraController;
@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour
 
     private static Dictionary<Entity, bool> collection = new();
 
-    int money = 100; // todo: 
+    float money = 100f; 
     public int level = 1; // todo:
     public int xpCap = 0;
     public int xp = 0;
@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-
+        calcMoneyTick(Time.deltaTime);
     }
     public void levelUp(int xp) // todo: fix this
     {
@@ -76,10 +76,13 @@ public class GameManager : MonoBehaviour
             this.xpCap = levels[level - 1].xpCap;
         }
     }
-    public void getCoin()
+    public void calcMoneyTick(float timeStep)
     {
-        money += tanks[selectedTank].calcCoin();
-        this.levelUp(1); // todo: fix this to caluelate an xp
+        foreach (Aquarium aquarium in tanks)
+        {
+            money += aquarium.calcMoney() * timeStep * 0.01f;
+        }
+        // this.levelUp(1); // todo: fix this to caluelate an xp
     }
 
     // public void addEntity(Entity entity, Aquarium aquarium, bool playerDragNDrop = true)
@@ -112,7 +115,7 @@ public class GameManager : MonoBehaviour
     {
         return tanks[selectedTank].getHappiness();
     }
-    public int getMoney()
+    public float getMoney()
     {
         return money;
     }

@@ -37,7 +37,7 @@ public class Entity : MonoBehaviour
     {
 
     }
-    
+
     protected void setScaleTo(float scaleFactor) //limited to proportional scaling only
     {
         if (scaleFactor <= 0) { Debug.LogWarning("setScaleTo() scaleFactor cannot be <= 0 "); return; }
@@ -91,7 +91,7 @@ public class Entity : MonoBehaviour
             colliderBounds.Encapsulate(c.bounds.min);
             colliderBounds.Encapsulate(c.bounds.max);
         }
-        
+
 
         return colliderBounds;
 
@@ -153,7 +153,23 @@ public class Entity : MonoBehaviour
     public float getScale() { return transform.localScale.x; }
     public Rarity GetRarity() { return rarity; }
     public bool isOutlined() { return outline.enabled; }
-    public bool isShopMode() { return shopMode;  }
+    public bool isShopMode() { return shopMode; }
+    public float calcMoneyBonus()
+    {
+        float h = getHappiness();
+        switch (GetRarity())
+        {
+            case Rarity.Common:
+                return h;
+            case Rarity.Rare:
+                return h * 3;
+            case Rarity.Epic:
+                return h * 7;
+            default:
+                return h;
+        }
+     }
+    public float getHappiness() { return 1;  }
     
     
 }
