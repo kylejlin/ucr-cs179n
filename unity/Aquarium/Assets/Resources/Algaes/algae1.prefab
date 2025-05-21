@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 493546922659241747}
   - component: {fileID: 2325726681504843972}
   - component: {fileID: 1004895821287141659}
-  - component: {fileID: 2454679809097315881}
+  - component: {fileID: 9222233250522203025}
   m_Layer: 0
   m_Name: algae1
   m_TagString: Untagged
@@ -101,7 +101,7 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 10, y: 15, z: 10}
   m_Center: {x: 0, y: 8, z: 0}
---- !u!114 &2454679809097315881
+--- !u!114 &9222233250522203025
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -110,18 +110,28 @@ MonoBehaviour:
   m_GameObject: {fileID: 7900513276540884955}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fa09326fe0fa4cb499f06c023acf7d0f, type: 3}
+  m_Script: {fileID: 11500000, guid: 3e58f20ed12979e4198a4f0a4dd1e626, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entityName: algae1
   id: 0
-  buyMoney: 0
   sellMoney: 0
   rarity: 0
-  shopMode: 0
   parentAquarium: {fileID: 0}
+  count: 0
   energy: 2
   maxEnergy: 5
+  growthRate: 0.1
+  adultEnergy: 40
+  adultSize: 1
+  spawnSize: 0.1
+  spawnRadius: 20
+  minSpawnSpace: 5
+  minCMCubedPer: 10000
+  scaleDownWhenEaten: 1
+  mustBeKilledToBeEaten: 0
+  eatRate: 5
+  growthCooldown: 60
+  demo: 1
 --- !u!1001 &6201904890997071672
 PrefabInstance:
   m_ObjectHideFlags: 0

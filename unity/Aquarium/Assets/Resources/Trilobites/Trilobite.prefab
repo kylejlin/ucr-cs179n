@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5479246289493934708}
-  - component: {fileID: 8370475931250518094}
+  - component: {fileID: 4730127056220747094}
   - component: {fileID: 6825346676113195874}
   - component: {fileID: 4710943548981468850}
   - component: {fileID: 6303874632496072109}
@@ -36,7 +36,7 @@ Transform:
   - {fileID: 8639579401613110283}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &8370475931250518094
+--- !u!114 &4730127056220747094
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -45,24 +45,32 @@ MonoBehaviour:
   m_GameObject: {fileID: 6660640480602176354}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a2d6ee26761dc9147a24915a9edb21ae, type: 3}
+  m_Script: {fileID: 11500000, guid: bdbdd96ea906b6641ab6c8b634bf1a19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entityName: Trilobite1
-  id: 2
-  buyMoney: 10
+  id: 3
   sellMoney: 8
   rarity: 0
   parentAquarium: {fileID: 0}
   count: 0
-  shopMode: 0
   energy: 100
-  maxEnergy: 5
-  canSwim: 0
+  maxEnergy: 100
+  growthRate: 0.1
+  adultEnergy: 100
+  adultSize: 1
+  spawnSize: 0.1
+  spawnRadius: 5
+  minSpawnSpace: 1
+  minCMCubedPer: 10000
+  scaleDownWhenEaten: 0
+  mustBeKilledToBeEaten: 1
+  canSwim: 1
   consumeRate: 8
   speed: 3
   huntingEnergyThreshold: 30
+  maxEatingDistance: 2
   state: 0
+  breedingCooldown: 10
   childPrefab: {fileID: 6660640480602176354}
 --- !u!65 &6825346676113195874
 BoxCollider:
@@ -215,6 +223,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7918335002988649766, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 16e7651c442d9af49881e1d79e96c254, type: 2}
     - target: {fileID: -7029948723529949830, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
       propertyPath: m_Layer
       value: 15
@@ -223,10 +235,6 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 15
       objectReference: {fileID: 0}
-    - target: {fileID: -7918335002988649766, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
-      propertyPath: 'm_Materials.Array.data[0]'
-      value: 
-      objectReference: {fileID: 2100000, guid: 16e7651c442d9af49881e1d79e96c254, type: 2}
     - target: {fileID: 490939697822461851, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -243,10 +251,6 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 15
       objectReference: {fileID: 0}
-    - target: {fileID: 8511622685634201988, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
-      propertyPath: m_Layer
-      value: 15
-      objectReference: {fileID: 0}
     - target: {fileID: 6164996480583612547, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
@@ -255,6 +259,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 2100000, guid: 7bb5d81810ff02b47b3f3ab3578217a6, type: 2}
+    - target: {fileID: 8511622685634201988, guid: e0f66145596fe7642bc2300560e6ad17, type: 3}
+      propertyPath: m_Layer
+      value: 15
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
