@@ -154,22 +154,19 @@ public class Entity : MonoBehaviour
     public Rarity GetRarity() { return rarity; }
     public bool isOutlined() { return outline.enabled; }
     public bool isShopMode() { return shopMode; }
-    public float calcMoneyBonus()
+    public virtual float calcMoneyBonus()
     {
-        float h = getHappiness();
         switch (GetRarity())
         {
             case Rarity.Common:
-                return h;
+                return 1;
             case Rarity.Rare:
-                return h * 3;
+                return 3;
             case Rarity.Epic:
-                return h * 7;
+                return 7;
             default:
-                return h;
+                return 1;
         }
-     }
-    public float getHappiness() { return 1;  }
-    
+     }    
     
 }
