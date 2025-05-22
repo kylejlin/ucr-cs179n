@@ -14,11 +14,10 @@ public enum Rarity
 public class GameManager : MonoBehaviour
 {
     private CameraController cameraController;
-    public GameObject aquariumPrefab; // this will have to be changed: it should be spawned, not referenced, but this is convenient for the MVP
+    public GameObject aquariumPrefab; 
     public Camera mainCamera;
     // we can have a list of all the creatures but maybe also three lists, I just feel like maybe it is easier to change from three list to one if we really need to, so I started with three lists
-    // public ImmobileCreature algeaPrefab;
-    public List<Entity> creatures = new List<Entity>();
+    public List<Entity> creatures = new List<Entity>(); //list of all the prefabs of all entities
     public List<Entity> decorations = new List<Entity>();
 
 
@@ -41,10 +40,11 @@ public class GameManager : MonoBehaviour
         cameraController = GameObject.Find("Main Camera").GetComponent<CameraController>();
 
         creatures = InitIDs(creaturesPrefabs);
+        InitAABBs(creatures);
 
-        List<GameObject> decorationprefabs = new List<GameObject>();
-        decorationprefabs.AddRange(Resources.LoadAll<GameObject>("Decorations"));
-        decorations = InitIDs(decorationprefabs);
+        // List<GameObject> decorationprefabs = new List<GameObject>();
+        // decorationprefabs.AddRange(Resources.LoadAll<GameObject>("Decorations"));
+        // decorations = InitIDs(decorationprefabs);
 
 
         levels.Add(new LevelData(100, new List<int>() { 0 }, new List<int>() { 0 }, new List<int>() { 0 }));
@@ -140,8 +140,16 @@ public class GameManager : MonoBehaviour
                 entities.Add(entity);
                 collection[entity] = false;
             }
+            else Debug.LogWarning("Non entity in entity list");
         }
         return entities;
+    }
+    private void InitAABBs(List<Entity> allEntities){ //List is automatically passed by reference
+        foreach(Entity e in allEntities){
+            Entity spawnedEntity = Instantiate(e.gameObject, Vector3.zero, Quaternion.identity, transform.root).GetComponent<Entity>(); //this feels silly but they need to be active to get bounds
+            if(spawnedEntity) e.setAABB(spawnedEntity.getAllCollidersBoundingBox()); //set the AABB value of the prefabs. So all future entities spawned will be able to use this value and not recalculate it
+            Destroy(spawnedEntity.gameObject); 
+        }
     }
     public bool isCollected(Entity entity)
     {

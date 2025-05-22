@@ -53,13 +53,9 @@ public class DragNDropPreview : MonoBehaviour
             entityPrefab = null;
             previewedEntity = e;
         }
-        Vector3 originalEntityPos = previewedEntity.transform.position;
         move(Vector3.zero, Quaternion.identity, false);
-        
         entityRB = previewedEntity.GetComponent<Rigidbody>(); // doesnt work in shopmode? bc disabled?
-        Bounds entityColliderBounds = previewedEntity.getAllCollidersBoundingBox(); //get its AABB for collision checks. cant nullify struct so a size 0 bounds means DNI. also doesnt work on inactive / prefab / disabled things
-        print(entityColliderBounds);
-        if (!prefab) entityColliderBounds.center -= originalEntityPos; //for some reason Bounds require this. it does not update immediately when I set the transform above. So if the object was not at 0,0,0, the center of the AABB has the original pos added to it incorrectly
+        Bounds entityColliderBounds = previewedEntity.getAABB(); //get its AABB for collision checks. cant nullify struct so a size 0 bounds means DNI. 
         previewedEntity.initShopMode(false, isPrefab); //it is in shop mode so it does not interfere w living real creatures
         if (!myBC || (entityColliderBounds.size == Vector3.zero) || !XImage) Debug.LogWarning("DragNDrog or entity missing components");
 
@@ -76,7 +72,7 @@ public class DragNDropPreview : MonoBehaviour
         //How this works:
         //spawn entity
         //get the bounding box of its colliders only
-        //turn on shopmode, so all of the entitie's colliders will be disabled and its RB will be deleted if it has one 
+        //turn on shopmode, so all of the entitie's colliders and RB will be disabled  
         //change the collider on this gameObject to match the size and placement of the entity's colliders so it can detect collisions (invalid spawning places)
 
         //Also:

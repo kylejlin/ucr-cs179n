@@ -2,20 +2,17 @@ using UnityEngine;
 
 public class Entity : MonoBehaviour
 {
-    public int id; //id of the entity type, set in gamemanager
-    [SerializeField]
+    [SerializeField] public int id; //id of the entity type, set in gamemanager
     private static double uniqueIDCount = 0;
-    private double uniqueID = -1; //unique ID of this gameobject only
-    private int buyMoney;
-    [SerializeField]
-    private int sellMoney;
-    [SerializeField]
-    private Rarity rarity;
-    protected bool bottomDweller = true; //should it spawn on the bottom of the tank. True for all decorations. For creatures, its true if it is immobile or only walks along the bottom, else false.
-    public Aquarium parentAquarium = null;
-    [SerializeField]
+    [SerializeField] private double uniqueID = -1; //unique ID of this gameobject only
+    [SerializeField] private int buyMoney;
+    [SerializeField] private int sellMoney;
+    [SerializeField] private Rarity rarity;
+    [SerializeField] protected bool bottomDweller = true; //should it spawn on the bottom of the tank. True for all decorations. For creatures, its true if it is immobile or only walks along the bottom, else false.
+    [SerializeField] public Aquarium parentAquarium = null;
+    [SerializeField] private Bounds AABB; // set on prefab in Gamemanager when the game starts. Applies to unrotated, unscaled prefab at 0,0,0. This seems janky but I couldn't find a better way because Bounds/Colliders dont update with the transform immediately which leads to a host of problems
+    [SerializeField] protected bool shopMode = false; //true if this gameobject is being displayed in UI and so should spawn as an adult and not Update() (frozen, don't interact) 
     protected double count = 0; //to count deltaTime 
-    protected bool shopMode = false; //true if this gameobject is being displayed in UI and so should spawn as an adult and not Update() (frozen, don't interact) 
 
     private Outline outline;
     public virtual void Awake()
@@ -154,6 +151,8 @@ public class Entity : MonoBehaviour
     public Rarity GetRarity() { return rarity; }
     public bool isOutlined() { return outline.enabled; }
     public bool isShopMode() { return shopMode; }
+    public void setAABB(Bounds newAABB) { AABB = newAABB; }
+    public Bounds getAABB() { return AABB; }
     public virtual float calcMoneyBonus()
     {
         switch (GetRarity())
