@@ -72,7 +72,15 @@ public class Aquarium : MonoBehaviour
         Vector3 localPos = position;
         float accuracy = 0.0001f;
         if(!local) localPos = transform.InverseTransformPoint(position);
-        
+
+        // if (!(localPos.x >= -dimensions.x / 2 - accuracy) && (localPos.x <= dimensions.x / 2 + accuracy)) print("xpos problem");
+        // if (!(localPos.y >= groundLevel - accuracy)) print("ypos too low");
+        // if (!(localPos.y <= dimensions.y + accuracy)) print("ypos too high");
+        // if (!(localPos.z >= -dimensions.z / 2 - accuracy) && (localPos.z <= dimensions.z / 2 + accuracy)) print("zpos problem");
+        // if (!((localPos.x >= -dimensions.x / 2 - accuracy) && (localPos.x <= dimensions.x / 2 + accuracy)
+        //     && (localPos.y >= groundLevel - accuracy) && (localPos.y <= dimensions.y + accuracy)
+        //     && (localPos.z >= -dimensions.z / 2 - accuracy) && (localPos.z <= dimensions.z / 2 + accuracy))) print("returning fasle");
+
         return ((localPos.x >= -dimensions.x / 2 - accuracy) && (localPos.x <= dimensions.x / 2 + accuracy)
             && (localPos.y >= groundLevel - accuracy) && (localPos.y <= dimensions.y + accuracy)
             && (localPos.z >= -dimensions.z / 2 - accuracy) && (localPos.z <= dimensions.z / 2 + accuracy));

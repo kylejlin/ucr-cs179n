@@ -88,12 +88,12 @@ public class Creature : Entity
     public virtual void tryDuplicate<T>(float minSpace = 0, float minCMCubedPerT = 0) where T : Entity
     {
         //this will also break if this entity is not a direct child of aquarium
-        Vector3 randVecNearby = new Vector3(Random.Range(-spawnRadius, spawnRadius), 0, Random.Range(-spawnRadius, spawnRadius)) + transform.localPosition; 
-        
-        T closestT = parentAquarium.FindClosest<T>(randVecNearby); 
-        float closestTSqrDist =  Mathf.Infinity; 
-        if (closestT != default(T)) {closestTSqrDist = getSqrDistBw(closestT.transform.localPosition, randVecNearby); } 
-        
+        Vector3 randVecNearby = new Vector3(Random.Range(-spawnRadius, spawnRadius), 0, Random.Range(-spawnRadius, spawnRadius)) + transform.localPosition;
+
+        T closestT = parentAquarium.FindClosest<T>(randVecNearby);
+        float closestTSqrDist = Mathf.Infinity;
+        if (closestT != default(T)) { closestTSqrDist = getSqrDistBw(closestT.transform.localPosition, randVecNearby); }
+
         int numTInTank = parentAquarium.getAllOfType<T>().Length;
         float currCMCubedPerT = Mathf.Infinity;
         if ((numTInTank > 0)) { currCMCubedPerT = parentAquarium.volume() / numTInTank; }
@@ -169,6 +169,25 @@ public class Creature : Entity
         if (RB) RB.isKinematic = true; //no physics please
 
     }
+
+    public override float calcMoneyBonus()
+    {
+        float h = getHappiness();
+        switch (GetRarity())
+        {
+            case Rarity.Common:
+                return h;
+            case Rarity.Rare:
+                return h * 3;
+            case Rarity.Epic:
+                return h * 7;
+            default:
+                return h;
+        }
+    }
+     
+    public virtual float getHappiness() { return 1;  }
+
     
 }
 

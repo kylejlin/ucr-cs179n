@@ -389,6 +389,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: AquariumFloor
       objectReference: {fileID: 0}
+    - target: {fileID: 6798748253582510624, guid: 7ac172f5d968dba499ffc0e1fd282cda, type: 3}
+      propertyPath: m_Name
+      value: AquariumFloorCube
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
