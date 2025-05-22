@@ -9,7 +9,7 @@ public class ShopUI : BaseUI
     private GameObject ShopGrid;
     private ShopItem ShopItem;
     private Entity SelectedEntity;
-    private Preview SelectedItemPreview;
+    private SelectedItem SelectedItemPreview;
     private CategoryTabs categoryTabs;
 
     public List<ShopItem> ShopItems = new List<ShopItem>();
@@ -18,7 +18,7 @@ public class ShopUI : BaseUI
     {
         base.Start();
         ShopGrid = gameObject.transform.Find("ShopGrid").gameObject;
-        SelectedItemPreview = gameObject.transform.Find("SelectedItem").gameObject.GetComponent<Preview>();
+        SelectedItemPreview = gameObject.transform.Find("SelectedItem").gameObject.GetComponent<SelectedItem>();
         categoryTabs = gameObject.transform.Find("CategoryTabs").gameObject.GetComponent<CategoryTabs>();
 
         ShopItem = Resources.Load<GameObject>("Shop/ShopItem").GetComponent<ShopItem>();
