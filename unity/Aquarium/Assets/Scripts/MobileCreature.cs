@@ -189,24 +189,32 @@ public class MobileCreature : Creature
             return;
         }
 
-        Vector3 targetPositionInWorldCoords = getTargetPositionInWorldCoords();
-
-        Vector3 delta = targetPositionInWorldCoords - transform.position;
-        float distance = delta.magnitude;
-
-        if (distance <= maxEatingDistance)
+        // Eat the prey if it's within range.
         {
-            //Eat based on consumeRate 
-            eat(closest.beingEaten(consumeRate));
-            grow(growthRate);
-            return;
+            Vector3 delta = closest.transform.position - transform.position;
+            float distance = delta.magnitude;
+
+            if (distance <= maxEatingDistance)
+            {
+                //Eat based on consumeRate 
+                eat(closest.beingEaten(consumeRate));
+                grow(growthRate);
+                return;
+            }
         }
 
-        Vector3 displacement = delta.normalized;
-        float k = speed * 3 * Time.deltaTime;
-        displacement.Scale(new Vector3(k, k, k));
-        transform.position += displacement;
-        rotateTowards(delta);
+        // ...Otherwise, move towards the scent of food.
+        {
+            Vector3 targetPositionInWorldCoords = getTargetPositionInWorldCoords();
+
+            Vector3 delta = targetPositionInWorldCoords - transform.position;
+
+            Vector3 displacement = delta.normalized;
+            float k = speed * 3 * Time.deltaTime;
+            displacement.Scale(new Vector3(k, k, k));
+            transform.position += displacement;
+            rotateTowards(delta);
+        }
     }
 
     Vector3 getTargetPositionInWorldCoords()
