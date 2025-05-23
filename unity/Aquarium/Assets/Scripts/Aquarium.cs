@@ -272,6 +272,12 @@ public class Aquarium : MonoBehaviour
 
         while (floodBufIndices.Count > 0)
         {
+            if (floodBufIndices.Count > requiredBufSize)
+            {
+                Debug.LogWarning("Flood buffer indices count exceeded required buffer size. FAILING.");
+                break;
+            }
+
             int bufIndex = floodBufIndices.Dequeue();
 
             float newNeighborScentValue = voxelGridBuf[bufIndex] - 0.01f;
@@ -381,18 +387,59 @@ public class Aquarium : MonoBehaviour
     {
         List<Vector3Int> deltas = new List<Vector3Int>();
 
-        deltas.Add(new Vector3Int(-1, -1, -1));
-        deltas.Add(new Vector3Int(-1, -1, 0));
-        deltas.Add(new Vector3Int(-1, -1, 1));
+        for (int dx = -1; dx <= 1; ++dx)
+        {
+            for (int dy = -1; dy <= 1; ++dy)
+            {
+                for (int dz = -1; dz <= 1; ++dz)
+                {
+                    if (dx == 0 && dy == 0 && dz == 0)
+                    {
+                        continue;
+                    }
+                    deltas.Add(new Vector3Int(dx, dy, dz));
+                }
+            }
+        }
 
-        deltas.Add(new Vector3Int(0, 0, -1));
-        // We comment out the zero delta to exclude self.
-        // deltas.Add(new Vector3Int(0, 0, 0));
-        deltas.Add(new Vector3Int(0, 0, 1));
+        // deltas.Add(new Vector3Int(-1, -1, -1));
+        // deltas.Add(new Vector3Int(-1, -1, 0));
+        // deltas.Add(new Vector3Int(-1, -1, 1));
 
-        deltas.Add(new Vector3Int(1, 1, -1));
-        deltas.Add(new Vector3Int(1, 1, 0));
-        deltas.Add(new Vector3Int(1, 1, 1));
+        // deltas.Add(new Vector3Int(-1, 0, -1));
+        // deltas.Add(new Vector3Int(-1, 0, 0));
+        // deltas.Add(new Vector3Int(-1, 0, 1));
+
+        // deltas.Add(new Vector3Int(-1, 1, -1));
+        // deltas.Add(new Vector3Int(-1, 1, 0));
+        // deltas.Add(new Vector3Int(-1, 1, 1));
+
+        // deltas.Add(new Vector3Int(0, -1, -1));
+        // deltas.Add(new Vector3Int(0, -1, 0));
+        // deltas.Add(new Vector3Int(0, -1, 1));
+
+        // deltas.Add(new Vector3Int(0, 0, -1));
+        // // deltas.Add(new Vector3Int(0, 0, 0));
+        // deltas.Add(new Vector3Int(0, 0, 1));
+
+        // deltas.Add(new Vector3Int(0, 1, -1));
+        // deltas.Add(new Vector3Int(0, 1, 0));
+        // deltas.Add(new Vector3Int(0, 1, 1));
+
+        // deltas.Add(new Vector3Int(1, -1, -1));
+        // deltas.Add(new Vector3Int(1, -1, 0));
+        // deltas.Add(new Vector3Int(1, -1, 1));
+
+        // deltas.Add(new Vector3Int(1, 0, -1));
+        // deltas.Add(new Vector3Int(1, 0, 0));
+        // deltas.Add(new Vector3Int(1, 0, 1));
+
+        // deltas.Add(new Vector3Int(1, 1, -1));
+        // deltas.Add(new Vector3Int(1, 1, 0));
+        // deltas.Add(new Vector3Int(1, 1, 1));
+
+
+        Debug.Log($"Delta count: {deltas.Count}");
 
         return deltas;
     }
