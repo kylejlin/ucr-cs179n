@@ -361,7 +361,7 @@ public class Aquarium : MonoBehaviour
             && minAquariumCoords.z <= startInAquariumCoords.z && startInAquariumCoords.z <= maxAquariumCoords.z))
         {
             {
-                Debug.LogWarning("startInAquariumCoords is not in aquarium bounds");
+                Debug.LogWarning($"startInAquariumCoords is not in aquarium bounds. startInAquariumCoords: {startInAquariumCoords}; minAquariumCoords: {minAquariumCoords}; maxAquariumCoords: {maxAquariumCoords}");
                 return startInAquariumCoords;
             }
         }
