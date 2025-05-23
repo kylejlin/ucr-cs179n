@@ -402,45 +402,6 @@ public class Aquarium : MonoBehaviour
             }
         }
 
-        // deltas.Add(new Vector3Int(-1, -1, -1));
-        // deltas.Add(new Vector3Int(-1, -1, 0));
-        // deltas.Add(new Vector3Int(-1, -1, 1));
-
-        // deltas.Add(new Vector3Int(-1, 0, -1));
-        // deltas.Add(new Vector3Int(-1, 0, 0));
-        // deltas.Add(new Vector3Int(-1, 0, 1));
-
-        // deltas.Add(new Vector3Int(-1, 1, -1));
-        // deltas.Add(new Vector3Int(-1, 1, 0));
-        // deltas.Add(new Vector3Int(-1, 1, 1));
-
-        // deltas.Add(new Vector3Int(0, -1, -1));
-        // deltas.Add(new Vector3Int(0, -1, 0));
-        // deltas.Add(new Vector3Int(0, -1, 1));
-
-        // deltas.Add(new Vector3Int(0, 0, -1));
-        // // deltas.Add(new Vector3Int(0, 0, 0));
-        // deltas.Add(new Vector3Int(0, 0, 1));
-
-        // deltas.Add(new Vector3Int(0, 1, -1));
-        // deltas.Add(new Vector3Int(0, 1, 0));
-        // deltas.Add(new Vector3Int(0, 1, 1));
-
-        // deltas.Add(new Vector3Int(1, -1, -1));
-        // deltas.Add(new Vector3Int(1, -1, 0));
-        // deltas.Add(new Vector3Int(1, -1, 1));
-
-        // deltas.Add(new Vector3Int(1, 0, -1));
-        // deltas.Add(new Vector3Int(1, 0, 0));
-        // deltas.Add(new Vector3Int(1, 0, 1));
-
-        // deltas.Add(new Vector3Int(1, 1, -1));
-        // deltas.Add(new Vector3Int(1, 1, 0));
-        // deltas.Add(new Vector3Int(1, 1, 1));
-
-
-        Debug.Log($"Delta count: {deltas.Count}");
-
         return deltas;
     }
 
