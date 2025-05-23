@@ -63,12 +63,13 @@ public class Aquarium : MonoBehaviour
             return "x";
         }
 
-        int v = (int)System.Math.Floor(scentLevel * 10);
-        if (v == 10)
+        int v = (int)System.Math.Floor(scentLevel * 100) - 100;
+        if (v >= -25)
         {
-            return "A";
+            char c = (char)('Z' + v);
+            return c.ToString();
         }
-        return v.ToString();
+        return "?";
     }
 
     public void setID(int id)
