@@ -52,7 +52,6 @@ public class Aquarium : MonoBehaviour
             s += "]\n";
         }
 
-        Debug.Log(s.Length.ToString());
         Debug.Log(s);
     }
 
@@ -63,13 +62,15 @@ public class Aquarium : MonoBehaviour
             return "x";
         }
 
-        int v = (int)System.Math.Floor(scentLevel * 100) - 100;
-        if (v >= -25)
-        {
-            char c = (char)('Z' + v);
-            return c.ToString();
-        }
-        return "?";
+        // int v = (int)System.Math.Floor(scentLevel * 100) - 100;
+        // if (v >= -25)
+        // {
+        //     char c = (char)('Z' + v);
+        //     return c.ToString();
+        // }
+        // return "?";
+
+        return scentLevel.ToString();
     }
 
     public void setID(int id)
@@ -450,6 +451,8 @@ public class Aquarium : MonoBehaviour
                 bestVoxelCoords = neighborVoxelCoords;
             }
         }
+
+        Debug.Log($"Start voxel coords: {startVoxelCoords}, best voxel coords: {bestVoxelCoords}");
 
         return minAquariumCoords + new Vector3(
             bestVoxelCoords.x * voxelSize,
