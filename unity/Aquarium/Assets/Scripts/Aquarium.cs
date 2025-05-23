@@ -24,6 +24,51 @@ public class Aquarium : MonoBehaviour
     void Update()
     {
         UpdateScentGradient();
+        PrintScentGradient();
+    }
+
+    void PrintScentGradient()
+    {
+        Vector3Int gridSize = voxelGridSize();
+        string s = "";
+        {
+            int x = gridSize.x;
+            int y = gridSize.y;
+            int z = gridSize.z;
+            s += $"GRID({x}x{y}x{z}):\n\n";
+        }
+
+        for (int z = 0; z < gridSize.z; ++z)
+        {
+            s += "\n\n\n\nz=" + z + "[\n";
+            for (int y = 0; y < gridSize.y; ++y)
+            {
+                for (int x = 0; x < gridSize.x; ++x)
+                {
+                    s += formatScentLevel(getScentAt(new Vector3Int(x, y, z))) + " ";
+                }
+                s += "\n";
+            }
+            s += "]\n";
+        }
+
+        Debug.Log(s.Length.ToString());
+        Debug.Log(s);
+    }
+
+    static string formatScentLevel(float scentLevel)
+    {
+        if (scentLevel < 0f)
+        {
+            return "x";
+        }
+
+        int v = (int)System.Math.Ceiling(scentLevel * 10);
+        if (v == 10)
+        {
+            return "A";
+        }
+        return v.ToString();
     }
 
     public void setID(int id)
