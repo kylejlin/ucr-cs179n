@@ -63,7 +63,7 @@ public class Aquarium : MonoBehaviour
             return "x";
         }
 
-        int v = (int)System.Math.Ceiling(scentLevel * 10);
+        int v = (int)System.Math.Floor(scentLevel * 10);
         if (v == 10)
         {
             return "A";
@@ -313,6 +313,8 @@ public class Aquarium : MonoBehaviour
                 int neighborBufIndex = voxelCoordsToBufIndex(neighborVoxelCoords);
                 voxelGridBuf[neighborBufIndex] = newNeighborScentValue;
                 floodBufIndices.Enqueue(neighborBufIndex);
+
+                // Debug.Log($"Enqueued voxel at {neighborVoxelCoords} with scent value {newNeighborScentValue}");
             }
         }
     }
