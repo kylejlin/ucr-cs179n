@@ -276,8 +276,6 @@ public class Aquarium : MonoBehaviour
             }
         }
 
-        string s = "";
-
         while (floodBufIndices.Count > 0)
         {
             (int bufIndex, float sourceStrength) = floodBufIndices.Dequeue();
@@ -324,11 +322,9 @@ public class Aquarium : MonoBehaviour
                     floodBufIndices.Enqueue((neighborBufIndex, newNeighborScentValue));
                 }
 
-                s += $"Enqueued voxel at {neighborVoxelCoords} with scent value {newNeighborScentValue}\n";
+                // Debug.Log($"Enqueued voxel at {neighborVoxelCoords} with scent value {newNeighborScentValue}");
             }
         }
-
-        Debug.Log(s);
     }
 
     public Vector3Int voxelGridSize()
