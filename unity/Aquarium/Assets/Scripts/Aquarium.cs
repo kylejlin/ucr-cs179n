@@ -13,7 +13,7 @@ public class Aquarium : MonoBehaviour
 
     public List<float> voxelGridBuf = new List<float>();
 
-    public float voxelSize = 5;
+    public float voxelSize = 2;
 
     void Start()
     {
