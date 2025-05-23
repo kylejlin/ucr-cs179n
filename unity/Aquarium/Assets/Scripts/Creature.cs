@@ -167,7 +167,16 @@ public class Creature : Entity
     public Vector3 getPositionInAquariumCoords()
     {
         //assumes that this gameobject is a direct child of the aquarium it is in
-        return transform.localPosition;
+        Vector3 unclamped = transform.localPosition;
+
+        Vector3 min = parentAquarium.getMinAquariumCoords();
+        Vector3 max = parentAquarium.getMaxAquariumCoords();
+
+        return new Vector3(
+            Mathf.Clamp(unclamped.x, min.x, max.x),
+            Mathf.Clamp(unclamped.y, min.y, max.y),
+            Mathf.Clamp(unclamped.z, min.z, max.z)
+        );
     }
 
 }
