@@ -244,12 +244,7 @@ public class Aquarium : MonoBehaviour
 
         List<Vector3Int> deltasToNeighborsExcludingSelf = getDeltasToNeighborsExcludingSelf();
 
-        Queue<(int, float)> floodBufIndices = new Queue<(int, float)>();
-        List<float> floodHistory = new List<float>();
-        for (int i = 0; i < requiredBufSize; ++i)
-        {
-            floodHistory.Add(0f);
-        }
+        Queue<int> floodBufIndices = new Queue<int>();
 
         for (int i = 0; i < requiredBufSize; ++i)
         {
@@ -269,8 +264,7 @@ public class Aquarium : MonoBehaviour
                 if (foodBounds.Intersects(voxelBounds))
                 {
                     voxelGridBuf[i] = 1f;
-                    floodHistory[i] = 1f;
-                    floodBufIndices.Enqueue((i, 1f));
+                    floodBufIndices.Enqueue(i);
                     break;
                 }
             }
@@ -278,9 +272,9 @@ public class Aquarium : MonoBehaviour
 
         while (floodBufIndices.Count > 0)
         {
-            (int bufIndex, float sourceStrength) = floodBufIndices.Dequeue();
+            int bufIndex = floodBufIndices.Dequeue();
 
-            float newNeighborScentValue = sourceStrength - 0.01f;
+            float newNeighborScentValue = voxelGridBuf[bufIndex] - 0.01f;
 
             if (newNeighborScentValue <= 0f)
             {
@@ -309,18 +303,16 @@ public class Aquarium : MonoBehaviour
                     continue;
                 }
 
+                if (newNeighborScentValue <= oldNeighborScentValue)
+                {
+                    // This voxel was already flooded with a stronger scent.
+                    // We must not flood it again, or else we will create an infinite loop.
+                    continue;
+                }
+
                 int neighborBufIndex = voxelCoordsToBufIndex(neighborVoxelCoords);
-
-                if (newNeighborScentValue > oldNeighborScentValue)
-                {
-                    voxelGridBuf[neighborBufIndex] = newNeighborScentValue;
-                }
-
-                if (newNeighborScentValue > floodHistory[neighborBufIndex])
-                {
-                    floodHistory[neighborBufIndex] = newNeighborScentValue;
-                    floodBufIndices.Enqueue((neighborBufIndex, newNeighborScentValue));
-                }
+                voxelGridBuf[neighborBufIndex] = newNeighborScentValue;
+                floodBufIndices.Enqueue(neighborBufIndex);
 
                 // Debug.Log($"Enqueued voxel at {neighborVoxelCoords} with scent value {newNeighborScentValue}");
             }
