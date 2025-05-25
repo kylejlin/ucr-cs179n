@@ -33,7 +33,9 @@ public class Anomalocaris : MobileCreature
         if (distanceSqr <= (maxEatingDistance * getMaturity()) * (maxEatingDistance * getMaturity()))
         {
             //Eat based on consumeRate 
+            if (animator) animator.SetTrigger("eat");
             predate(closest);
+            
             return;
         }
         else

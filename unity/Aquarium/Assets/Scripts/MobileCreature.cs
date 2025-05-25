@@ -22,6 +22,7 @@ public class MobileCreature : Creature
     public BehaviorState state = BehaviorState.Idle;
 
     private Rigidbody mobileCreatureRB;
+    [SerializeField] protected Animator animator; 
 
     [SerializeField] protected double breedingCooldown = 10;
     [SerializeField] protected double predateCooldown = 0.5f; // how long between damage dealing events. can think of it like its dps. bigger values will require more "fighting"
@@ -33,6 +34,7 @@ public class MobileCreature : Creature
     {
         base.Awake(); //call Creature Start()
         mobileCreatureRB = GetComponent<Rigidbody>();
+        animator = GetComponentInChildren<Animator>();
 
         initSize();
         
@@ -82,6 +84,7 @@ public class MobileCreature : Creature
         else if (energy <= huntingEnergyThreshold)
         {
             state = BehaviorState.Hunting;
+            if (animator) animator.SetTrigger("hunt");
         }
         else
         {
@@ -146,6 +149,7 @@ public class MobileCreature : Creature
         if (distance <= maxEatingDistance * getMaturity())
         {
             //Eat based on consumeRate 
+            if (animator) animator.SetTrigger("eat");
             predate(closest);
             return;
         }
