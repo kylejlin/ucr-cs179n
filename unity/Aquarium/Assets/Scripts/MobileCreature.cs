@@ -154,7 +154,7 @@ public class MobileCreature : Creature
         rotateTowards(delta);
     }
 
-    //Takes in Vector3 velocity to move mobileCreature
+    //Takes in Vector3 velocity to move mobileCreature, needs to have parameter true when creature is hunting
     protected void move(Vector3 velocity, bool hunting = false)
     {
         if (shopMode) { Debug.LogWarning("Can't move in shop mode"); return; }
