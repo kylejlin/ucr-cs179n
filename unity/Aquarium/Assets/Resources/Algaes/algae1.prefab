@@ -53,8 +53,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 10, y: 15, z: 10}
-  m_Center: {x: 0, y: 8, z: 0}
+  m_Size: {x: 10, y: 15.1331005, z: 6.6059065}
+  m_Center: {x: 0, y: 7.7005215, z: -0.56568277}
 --- !u!114 &9222233250522203025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -68,10 +68,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
+  uniqueID: -1
+  buyMoney: 0
   sellMoney: 0
   rarity: 0
+  bottomDweller: 1
   parentAquarium: {fileID: 0}
-  count: 0
+  AABB:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  shopMode: 0
   energy: 2
   maxEnergy: 5
   growthRate: 0.1
@@ -97,11 +103,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 5d241387b70c9a14a84784d5b873af97, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5d241387b70c9a14a84784d5b873af97, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.5
+      value: 0.5105405
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5d241387b70c9a14a84784d5b873af97, type: 3}
       propertyPath: m_LocalPosition.z
@@ -109,7 +115,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5d241387b70c9a14a84784d5b873af97, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.7071067
+      value: 0.7071068
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5d241387b70c9a14a84784d5b873af97, type: 3}
       propertyPath: m_LocalRotation.x
@@ -121,11 +127,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5d241387b70c9a14a84784d5b873af97, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5d241387b70c9a14a84784d5b873af97, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
+      value: -90
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 5d241387b70c9a14a84784d5b873af97, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
