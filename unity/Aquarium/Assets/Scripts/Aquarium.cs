@@ -28,7 +28,7 @@ public class Aquarium : MonoBehaviour
                 spheres.Add(Instantiate(debugSphere, voxelCoordsToAquariumCoords(bufIndexToVoxelCoords(i)), Quaternion.identity, transform));
             }
         }
-            
+
 
     }
 
@@ -342,10 +342,39 @@ public class Aquarium : MonoBehaviour
         // debugSphere.transform.localScale = new Vector3(scentStrenght, scentStrenght, scentStrenght);
         if (sphereDebug)
         {
+            List<int> targetedBufIndices = new List<int>();
+
+            {
+                MobileCreature[] foundEntities = getAllOfType<MobileCreature>();
+                foreach (MobileCreature e in foundEntities)
+                {
+                    Vector3Int targetVoxelCoords = e.getTargetPositionInVoxelCoords();
+                    if (!areVoxelCoordsValid(targetVoxelCoords))
+                    {
+                        continue;
+                    }
+
+                    int targetBufIndex = voxelCoordsToBufIndex(targetVoxelCoords);
+
+                    if (targetedBufIndices.Contains(targetBufIndex))
+                    {
+                        continue; // The index is already in the list, so we skip it.
+                    }
+
+                    targetedBufIndices.Add(targetBufIndex);
+                }
+            }
+
             for (int i = 0; i < voxelGridBuf.Count; i++)
             {
                 if (voxelGridBuf[i] >= 0) spheres[i].transform.localScale = new Vector3(voxelGridBuf[i], voxelGridBuf[i], voxelGridBuf[i]);
                 else spheres[i].transform.localScale = Vector3.zero;
+
+                if (targetedBufIndices.Contains(i))
+                {
+                    float big = 10f;
+                    spheres[i].transform.localScale = new Vector3(big, big, big);
+                }
             }
         }
     }
@@ -407,7 +436,8 @@ public class Aquarium : MonoBehaviour
         Vector3 max = min + new Vector3(voxelSize, voxelSize, voxelSize);
         return new Bounds((min + max) / 2f, max - min);
     }
-    public Vector3 voxelCoordsToAquariumCoords(Vector3 voxelCoords) {
+    public Vector3 voxelCoordsToAquariumCoords(Vector3 voxelCoords)
+    {
         Vector3 min = getMinAquariumCoords() + new Vector3(voxelCoords.x * voxelSize, voxelCoords.y * voxelSize, voxelCoords.z * voxelSize);
         Vector3 max = min + new Vector3(voxelSize, voxelSize, voxelSize);
         return (max + min) * 0.5f; //average of max and min is the center of the voxel in aquarium coords
@@ -435,7 +465,7 @@ public class Aquarium : MonoBehaviour
         return deltas;
     }
 
-    public Vector3 getBestNeighborCoordsInAquariumCoords(Vector3 startInAquariumCoords)
+    public Vector3Int getBestNeighborCoordsInVoxelCoords(Vector3 startInAquariumCoords)
     {
         Vector3 minAquariumCoords = getMinAquariumCoords();
         Vector3 maxAquariumCoords = getMaxAquariumCoords();
@@ -447,7 +477,7 @@ public class Aquarium : MonoBehaviour
         {
             {
                 Debug.LogWarning($"startInAquariumCoords is not in aquarium bounds. startInAquariumCoords: {startInAquariumCoords}; minAquariumCoords: {minAquariumCoords}; maxAquariumCoords: {maxAquariumCoords}");
-                return startInAquariumCoords;
+                return new Vector3Int(-1, -1, -1);
             }
         }
 
@@ -460,7 +490,7 @@ public class Aquarium : MonoBehaviour
         if (!areVoxelCoordsValid(startVoxelCoords))
         {
             Debug.LogWarning("startVoxelCoords is not valid");
-            return startInAquariumCoords;
+            return new Vector3Int(-1, -1, -1);
         }
 
         Vector3Int bestVoxelCoords = startVoxelCoords;
@@ -480,8 +510,13 @@ public class Aquarium : MonoBehaviour
             }
         }
 
-        Debug.Log($"Start voxel coords: {startVoxelCoords}, best voxel coords: {bestVoxelCoords}");
+        return bestVoxelCoords;
+    }
 
+    public Vector3 getBestNeighborCoordsInAquariumCoords(Vector3 startInAquariumCoords)
+    {
+        Vector3Int bestVoxelCoords = getBestNeighborCoordsInVoxelCoords(startInAquariumCoords);
+        Vector3 minAquariumCoords = getMinAquariumCoords();
         return minAquariumCoords + new Vector3(
             bestVoxelCoords.x * voxelSize,
             bestVoxelCoords.y * voxelSize,

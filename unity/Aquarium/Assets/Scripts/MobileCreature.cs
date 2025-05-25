@@ -217,6 +217,12 @@ public class MobileCreature : Creature
         }
     }
 
+    public Vector3Int getTargetPositionInVoxelCoords()
+    {
+        Vector3 positionInAquariumCoords = getPositionInAquariumCoords();
+        return parentAquarium.getBestNeighborCoordsInVoxelCoords(positionInAquariumCoords);
+    }
+
     Vector3 getTargetPositionInWorldCoords()
     {
         Vector3 positionInAquariumCoords = getPositionInAquariumCoords();
