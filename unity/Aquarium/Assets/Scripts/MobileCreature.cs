@@ -108,10 +108,10 @@ public class MobileCreature : Creature
         Vector3 vec = new Vector3(0, 0, 1); //move forward
         move(vec);
         if (transform.localRotation.eulerAngles.x > 45)
-        { //if creature pointed downwards, rotate upwards
-            // Vector3 angVec = new Vector3(30, 0, 0); 
-            // rotate(angVec);
-        }
+            { //if creature pointed downwards, rotate upwards
+                Vector3 angVec = new Vector3(30, 0, 0); 
+                rotate(angVec);
+            }
         else
         {
             Vector3 angVec = new Vector3(0, 10, 0); //rotate a little bit around axes
@@ -167,11 +167,6 @@ public class MobileCreature : Creature
         else
         {
             mobileCreatureRB.MovePosition(mobileCreatureRB.position + mobileCreatureRB.rotation * velocity * speed * Time.fixedDeltaTime);
-            if (transform.localRotation.eulerAngles.x > 45)
-            { //if creature pointed downwards, rotate upwards
-                Vector3 angVec = new Vector3(30, 0, 0); 
-                rotate(angVec);
-            }
         }
     }
 
