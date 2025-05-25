@@ -12,12 +12,18 @@ public class Aquarium : MonoBehaviour
 
     public List<float> voxelGridBuf = new List<float>();
     public float voxelSize = 2;
-    // public GameObject debugSphere;
+    public GameObject debugSphere; //sphere to copy
+    public List<GameObject> spheres = new List<GameObject>();
     // public Vector3Int testVoxel = new Vector3Int(10, 10, 10);
 
 
     void Start()
     {
+        spheres.Clear();
+        for (int i = 0; i < requiredVoxelGridBufSize(); ++i)
+        {
+            spheres.Add(Instantiate(debugSphere, voxelCoordsToAquariumCoords(bufIndexToVoxelCoords(i)), Quaternion.identity, transform));
+        }
 
     }
 
@@ -329,6 +335,11 @@ public class Aquarium : MonoBehaviour
         // debugSphere.transform.localPosition = voxelCoordsToAquariumCoords(testVoxel);
         // float scentStrenght = voxelGridBuf[voxelCoordsToBufIndex(testVoxel)];
         // debugSphere.transform.localScale = new Vector3(scentStrenght, scentStrenght, scentStrenght);
+        for (int i = 0; i < voxelGridBuf.Count; i++)
+        {
+            if (voxelGridBuf[i] >= 0) spheres[i].transform.localScale = new Vector3(voxelGridBuf[i], voxelGridBuf[i], voxelGridBuf[i]);
+            else spheres[i].transform.localScale = Vector3.zero;
+        }
     }
 
     public Vector3Int voxelGridSize()
