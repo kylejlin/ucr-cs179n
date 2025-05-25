@@ -151,7 +151,6 @@ public class MobileCreature : Creature
         }
 
         move(delta,true);
-        rotateTowards(delta);
     }
 
     //Takes in Vector3 velocity to move mobileCreature, needs to have parameter true when creature is hunting
@@ -162,7 +161,8 @@ public class MobileCreature : Creature
         //MovePosition(currentPosition + displacement)
         if (hunting)
         {
-            mobileCreatureRB.MovePosition(mobileCreatureRB.position + velocity * (speed/2) * Time.fixedDeltaTime);
+            mobileCreatureRB.MovePosition(mobileCreatureRB.position + velocity * (speed / 2) * Time.fixedDeltaTime);
+            rotateTowards(velocity);
         }
         else
         {
