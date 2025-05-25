@@ -143,27 +143,36 @@ public class MobileCreature : Creature
         Vector3 delta = closest.transform.position - transform.position;
         float distance = delta.magnitude;
 
-        if (distance <= maxEatingDistance * getMaturity())
+        if (distance <= maxEatingDistance * getMaturity() +2)
         {
             //Eat based on consumeRate 
             predate(closest);
             return;
         }
 
-        Vector3 displacement = delta.normalized;
-        float k = speed * 3 * Time.deltaTime;
-        displacement.Scale(new Vector3(k, k, k));
-        transform.position += displacement;
+        move(delta,true);
         rotateTowards(delta);
     }
 
     //Takes in Vector3 velocity to move mobileCreature
-    protected void move(Vector3 velocity)
+    protected void move(Vector3 velocity, bool hunting = false)
     {
         if (shopMode) { Debug.LogWarning("Can't move in shop mode"); return; }
         //using rigidbody.MovePosition() will make transitioning to the new position smoother if interpolation is enabled
         //MovePosition(currentPosition + displacement)
-        mobileCreatureRB.MovePosition(mobileCreatureRB.position + mobileCreatureRB.rotation * velocity * speed * Time.fixedDeltaTime);
+        if (hunting)
+        {
+            mobileCreatureRB.MovePosition(mobileCreatureRB.position + velocity * (speed/2) * Time.fixedDeltaTime);
+        }
+        else
+        {
+            mobileCreatureRB.MovePosition(mobileCreatureRB.position + mobileCreatureRB.rotation * velocity * speed * Time.fixedDeltaTime);
+            if (transform.localRotation.eulerAngles.x > 45)
+            { //if creature pointed downwards, rotate upwards
+                Vector3 angVec = new Vector3(30, 0, 0); 
+                rotate(angVec);
+            }
+        }
     }
 
     //Takes in Vector3 angularVelocity to rotate mobileCreature
