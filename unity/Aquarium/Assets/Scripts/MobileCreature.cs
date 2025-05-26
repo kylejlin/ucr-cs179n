@@ -206,6 +206,7 @@ public class MobileCreature : Creature
         // ...Otherwise, move towards the scent of food.
         {
             Vector3 targetPositionInWorldCoords = getTargetPositionInWorldCoords();
+            print("target position " + targetPositionInWorldCoords);
 
             Vector3 delta = targetPositionInWorldCoords - transform.position;
 

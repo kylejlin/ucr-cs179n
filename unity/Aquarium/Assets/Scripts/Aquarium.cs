@@ -36,7 +36,7 @@ public class Aquarium : MonoBehaviour
     void Update()
     {
         UpdateScentGradient();
-        PrintScentGradient();
+        // PrintScentGradient();
     }
 
     void PrintScentGradient()
@@ -231,7 +231,7 @@ public class Aquarium : MonoBehaviour
     public float getSqrDistBwEntities(Entity e1, Entity e2) { return getSqrDistBw(e1.transform.position, e2.transform.position); }
     public Vector3 getMinAquariumCoords() { return new Vector3(-dimensions.x / 2, groundLevel, -dimensions.z / 2); } //hard coded for aquarium default value w scale 1
     public Vector3 getMaxAquariumCoords() { return new Vector3(dimensions.x / 2, dimensions.y, dimensions.z / 2); } //hard coded for aquarium default value w scale 1
-    public Vector3 transformAquariumCoordsToWorldCoords(Vector3 aquariumCoords) { return transform.TransformVector(aquariumCoords); }
+    public Vector3 transformAquariumCoordsToWorldCoords(Vector3 aquariumCoords) { return aquariumCoords + transform.position; } //assuming theres no scale or rotation
 
 
     public void UpdateScentGradient()
@@ -370,11 +370,11 @@ public class Aquarium : MonoBehaviour
                 if (voxelGridBuf[i] >= 0) spheres[i].transform.localScale = new Vector3(voxelGridBuf[i], voxelGridBuf[i], voxelGridBuf[i]);
                 else spheres[i].transform.localScale = Vector3.zero;
 
-                if (targetedBufIndices.Contains(i))
-                {
-                    float big = 10f;
-                    spheres[i].transform.localScale = new Vector3(big, big, big);
-                }
+                // if (targetedBufIndices.Contains(i))
+                // {
+                //     float big = 10f;
+                //     spheres[i].transform.localScale = new Vector3(big, big, big);
+                // }
             }
         }
     }
@@ -510,6 +510,9 @@ public class Aquarium : MonoBehaviour
             }
         }
 
+        // spheres[voxelCoordsToBufIndex(bestVoxelCoords)].transform.localScale = new Vector3(10, 10, 10);
+        print(bestVoxelCoords);
+        print("world coords: "+voxelCoordsToAquariumCoords(bestVoxelCoords));
         return bestVoxelCoords;
     }
 
@@ -517,11 +520,10 @@ public class Aquarium : MonoBehaviour
     {
         Vector3Int bestVoxelCoords = getBestNeighborCoordsInVoxelCoords(startInAquariumCoords);
         Vector3 minAquariumCoords = getMinAquariumCoords();
-        return minAquariumCoords + new Vector3(
-            bestVoxelCoords.x * voxelSize,
-            bestVoxelCoords.y * voxelSize,
-            bestVoxelCoords.z * voxelSize
-        ) - new Vector3(voxelSize / 2f, voxelSize / 2f, voxelSize / 2f);
+        Vector3 coords = voxelCoordsToAquariumCoords(bestVoxelCoords);
+
+        print("aquarium coords: " + coords);
+        return coords;
     }
 
 
