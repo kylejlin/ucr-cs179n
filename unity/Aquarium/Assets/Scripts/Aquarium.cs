@@ -112,6 +112,25 @@ public class Aquarium : MonoBehaviour
         }
         return closest;
     }
+
+    /// <returns> entity of type of T passed in that is closest to Position (in aquarium space) or null if there are none found. </returns>
+    public T FindClosestOfType<T>(T entity, Vector3 aquariumPosition) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
+    {
+        List<Entity> foundEntities = getAllOfType(entity);
+        if (foundEntities == null) return default(T);
+
+        T closest = default(T);
+        foreach (T e in foundEntities)
+        {
+            if (!e.enabled) continue;
+
+            float newDist = getSqrDistBw(aquariumPosition, transform.InverseTransformVector(e.transform.position));
+
+            if (closest == default(T)) closest = e;
+            else if ((newDist < getSqrDistBw(aquariumPosition, closest.transform.localPosition))) closest = e;
+        }
+        return closest;
+    }
     
     /// <returns> entity of type T that is closest to Position (in aquarium space) or null if there are none found. if excludeSelf it will exclude itself by checking its uniqueID </returns>
     public T FindClosest<T>(Entity entity, bool excludeSelf = true) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
@@ -131,6 +150,31 @@ public class Aquarium : MonoBehaviour
             else if ((newDist < getSqrDistBwEntities(entity, closest))) closest = e;
         }
         return closest;
+    }
+
+    /// <returns> entity of same type as input that is closest to Position (in aquarium space) or null if there are none found. if excludeSelf it will exclude itself by checking its uniqueID </returns>
+    public T FindClosestOfType<T>(T entity, bool excludeSelf = true) where T : Entity //get all objects of one type, then check their positions and return the closest (excluding self)
+    {
+        List<Entity> foundEntities = getAllOfType(entity);
+        if (foundEntities == null) return null;
+
+        T closest = default(T);
+        foreach (T e in foundEntities)
+        {
+            if (!e.enabled) continue;
+
+            float newDist = getSqrDistBwEntities(entity, e);
+            if (excludeSelf && (e.getUniqueID() == entity.getUniqueID())) continue; // dont count yourself
+
+            if (closest == default(T)) closest = e;
+            else if (newDist < getSqrDistBwEntities(entity, closest)) closest = e;
+        }
+        return closest;
+    }
+
+    public List<Entity> getAllOfType(Entity entity)
+    {
+        return entities.FindAll(x => x.GetType() == entity.GetType()); //predicate defining a condition of what to find 
     }
 
     /// <returns> array of type T of all the found entities in this aquarium, or null if none were found </returns>

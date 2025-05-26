@@ -252,15 +252,15 @@ public class MobileCreature : Creature
         
         Vector3 randVecNearby = new Vector3(Random.Range(-spawnRadius, spawnRadius), 0, Random.Range(-spawnRadius, spawnRadius)) + transform.localPosition; 
         
-        MobileCreature closestT = parentAquarium.FindClosest<MobileCreature>(randVecNearby); 
+        MobileCreature closestT = parentAquarium.FindClosestOfType(this,randVecNearby); 
         float closestTSqrDist =  Mathf.Infinity; 
         if (closestT != default(T)) {closestTSqrDist = getSqrDistBw(closestT.transform.localPosition, randVecNearby); } 
         
-        int numTInTank = parentAquarium.getAllOfType<T>().Length;
+        int numTInTank = parentAquarium.getAllOfType(this).Count;
         float currCMCubedPerT = Mathf.Infinity;
         if ((numTInTank > 0 )) { currCMCubedPerT = parentAquarium.volume() / numTInTank; }
         
-        MobileCreature potentialPartner = parentAquarium.FindClosest<MobileCreature>(this);
+        MobileCreature potentialPartner = parentAquarium.FindClosestOfType(this);
 
         //Debug.Log("currPos "+ transform.localPosition);
         //Debug.Log("nrarbyPost "+ randVecNearby);
