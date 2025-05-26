@@ -45,12 +45,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 942109f3a88ad43f0ba45d3cb085ffde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 0
+  id: 4
   sellMoney: 10
   rarity: 0
   parentAquarium: {fileID: 0}
   count: 0
-  moneyBonus: 2
+  moneyBonus: 10
 --- !u!1001 &6766141354272442162
 PrefabInstance:
   m_ObjectHideFlags: 0

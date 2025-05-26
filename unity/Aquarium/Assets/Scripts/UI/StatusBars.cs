@@ -39,7 +39,9 @@ public class gameObject : MonoBehaviour
     void Update()
     {
         happiness.value = gameManager.getHappiness();
-        happinessText.text = Mathf.RoundToInt(happiness.value * 100) + "%";
+        print("happiness: " + gameManager.getHappiness());
+        //happinessText.text = Mathf.RoundToInt(happiness.value * 100) + "%";
+        happinessText.text = Mathf.RoundToInt(happiness.value)+"%";
 
         moneyText.text = gameManager.getMoney().ToString("F2");
 

@@ -174,7 +174,12 @@ public class Aquarium : MonoBehaviour
 
     public List<Entity> getAllOfType(Entity entity)
     {
-        return entities.FindAll(x => x.GetType() == entity.GetType()); //predicate defining a condition of what to find 
+        List<Entity> allEntities = entities.FindAll(x => x.GetType() == entity.GetType());
+        if (allEntities == null)
+        {
+            return null;
+        }
+        return allEntities; //predicate defining a condition of what to find 
     }
 
     /// <returns> array of type T of all the found entities in this aquarium, or null if none were found </returns>
@@ -231,7 +236,9 @@ public class Aquarium : MonoBehaviour
     }
     public float getHappiness() // todo: calulate happiness bonus based on the decorations
     {
-        return 0.10f;
+        float currHappiness = 1;
+        foreach (Entity e in entities) currHappiness += e.getHappiness();
+        return currHappiness;
     }
     public int getAlgaesHealth() // todo: calulate algaes health based on algaes
     {

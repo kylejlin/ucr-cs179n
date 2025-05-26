@@ -113,7 +113,12 @@ public class GameManager : MonoBehaviour
     }
     public float getHappiness()
     {
-        return tanks[selectedTank].getHappiness();
+        float happiness = 0;
+        foreach (Aquarium aquarium in tanks)
+        {
+            happiness += aquarium.getHappiness();
+        }
+        return happiness;
     }
     public float getMoney()
     {

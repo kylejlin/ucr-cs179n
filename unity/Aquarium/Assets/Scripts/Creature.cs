@@ -188,7 +188,7 @@ public class Creature : Entity
         }
     }
 
-    public virtual float getHappiness()
+    public override float getHappiness()
     {
         float happiness = energy / maxEnergy * 5;
         if (parentAquarium.getAllOfType(this).Count > 1) //if creature is not the last of its kind
