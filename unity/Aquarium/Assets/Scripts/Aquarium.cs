@@ -294,7 +294,7 @@ public class Aquarium : MonoBehaviour
 
             int bufIndex = floodBufIndices.Dequeue();
 
-            float newNeighborScentValue = voxelGridBuf[bufIndex] - 0.3f;
+            float newNeighborScentValue = voxelGridBuf[bufIndex] - 0.01f;
 
             if (newNeighborScentValue <= 0f)
             {
@@ -519,11 +519,7 @@ public class Aquarium : MonoBehaviour
     public Vector3 getBestNeighborCoordsInAquariumCoords(Vector3 startInAquariumCoords)
     {
         Vector3Int bestVoxelCoords = getBestNeighborCoordsInVoxelCoords(startInAquariumCoords);
-        Vector3 minAquariumCoords = getMinAquariumCoords();
-        Vector3 coords = voxelCoordsToAquariumCoords(bestVoxelCoords);
-
-        print("aquarium coords: " + coords);
-        return coords;
+        return voxelCoordsToAquariumCoords(bestVoxelCoords);
     }
 
 

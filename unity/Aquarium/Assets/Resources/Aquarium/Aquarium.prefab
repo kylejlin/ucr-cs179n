@@ -55,7 +55,7 @@ MonoBehaviour:
   dimensions: {x: 49, y: 40, z: 49}
   groundLevel: 6
   voxelGridBuf: []
-  voxelSize: 10
+  voxelSize: 2
   sphereDebug: 0
   debugSphere: {fileID: 4654774905163350638}
   spheres: []
