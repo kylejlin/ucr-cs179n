@@ -12,6 +12,7 @@ public class CameraController : MonoBehaviour
     public float zoomSmoothTime = 0.3f; // Time to smooth the zooming effect
     public float movementSpeed = 5f; // Speed of camera movement
     public float distance = 150f; // Distance from the target
+    public Vector3 targetWorldOffset = new Vector3(0,15,0); // I want the camera to center on somewhere in the middle of the tank, instead of the bottom
 
     private Camera cam;
     private float targetFov;
@@ -39,11 +40,11 @@ public class CameraController : MonoBehaviour
 
         if (horizontal != 0 || vertical != 0)
         {
-            transform.RotateAround(target.position, Vector3.up, horizontal * rotationSpeed * movementSpeed * Time.deltaTime);
-            transform.RotateAround(target.position, transform.right, vertical * rotationSpeed * movementSpeed * Time.deltaTime);
+            transform.RotateAround(target.position + targetWorldOffset, Vector3.up, horizontal * rotationSpeed * movementSpeed * Time.deltaTime);
+            transform.RotateAround(target.position + targetWorldOffset, transform.right, vertical * rotationSpeed * movementSpeed * Time.deltaTime);
             if (transform.up.y < 0)
             {
-                transform.RotateAround(target.position, transform.right, -vertical * rotationSpeed * Time.deltaTime * movementSpeed);
+                transform.RotateAround(target.position + targetWorldOffset, transform.right, -vertical * rotationSpeed * Time.deltaTime * movementSpeed);
             }
         }
 
@@ -68,7 +69,7 @@ public class CameraController : MonoBehaviour
     private IEnumerator SmoothMoveAndRotate()
     {
 
-        Vector3 targetPosition = new Vector3(target.position.x, target.position.y + distance, target.position.z);
+        Vector3 targetPosition = target.position + targetWorldOffset + new Vector3(0,distance,0);
         Quaternion targetRotation = Quaternion.Euler(90, 0, 0);
 
         // Smoothly move to the target position
