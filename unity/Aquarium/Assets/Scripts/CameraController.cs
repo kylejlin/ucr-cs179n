@@ -7,8 +7,8 @@ public class CameraController : MonoBehaviour
     private Transform target;
     public float rotationSpeed = 50f; // Speed of rotation
     public float zoomSpeed = 1f; // Speed of zoom in/out
-    public float minFov = 20f; // Minimum field of view
-    public float maxFov = 60f; // Maximum field of view
+    public float minFov = 0f; // Minimum field of view
+    public float maxFov = 100f; // Maximum field of view
     public float zoomSmoothTime = 0.3f; // Time to smooth the zooming effect
     public float movementSpeed = 5f; // Speed of camera movement
     public float distance = 150f; // Distance from the target
@@ -19,7 +19,7 @@ public class CameraController : MonoBehaviour
     void Start()
     {
         cam = GetComponent<Camera>();
-        targetFov = cam.fieldOfView;
+        targetFov = cam.orthographicSize;
     }
 
     void Update()
@@ -52,11 +52,9 @@ public class CameraController : MonoBehaviour
         if (Input.GetKey(KeyCode.DownArrow))
             targetFov += zoomSpeed;
 
-        targetFov = Mathf.Clamp(targetFov, minFov, maxFov);
-        cam.fieldOfView = Mathf.SmoothDamp(cam.fieldOfView, targetFov, ref currentFovVelocity, zoomSmoothTime);
-
+        cam.orthographicSize = targetFov;
     }
-    
+
     public void setTarget(Transform newTarget)
     {
         if (moveCoroutine != null)
