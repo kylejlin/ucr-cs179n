@@ -48,6 +48,7 @@ public class MouseUIManager : MonoBehaviour
 
     public void startPopup(Entity entity)
     {
+        selectedEntity = entity;
         currentStatsPopup.startPopup(entity);
     }
     public void closePopup()
