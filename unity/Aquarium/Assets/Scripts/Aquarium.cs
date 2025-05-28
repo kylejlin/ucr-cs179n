@@ -102,6 +102,8 @@ public class Aquarium : MonoBehaviour
         print("Set mutex");
         breedingMutex = value;
     }
+
+    ///<summary> Must specify the class to search for in the <>. Finds closest one to aquariumPosition (in the same tank only). </summary>///
     /// <returns> entity of type T that is closest to Position (in aquarium space) or null if there are none found. </returns>
     public T FindClosest<T>(Vector3 aquariumPosition) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
     {
@@ -121,25 +123,7 @@ public class Aquarium : MonoBehaviour
         return closest;
     }
 
-    /// <returns> entity of type of T passed in that is closest to Position (in aquarium space) or null if there are none found. </returns>
-    public T FindClosestOfType<T>(T entity, Vector3 aquariumPosition) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
-    {
-        List<Entity> foundEntities = getAllOfType(entity);
-        if (foundEntities == null) return default(T);
-
-        T closest = default(T);
-        foreach (T e in foundEntities)
-        {
-            if (!e.enabled) continue;
-
-            float newDist = getSqrDistBw(aquariumPosition, transform.InverseTransformVector(e.transform.position));
-
-            if (closest == default(T)) closest = e;
-            else if ((newDist < getSqrDistBw(aquariumPosition, closest.transform.localPosition))) closest = e;
-        }
-        return closest;
-    }
-    
+    ///<summary> Must specify the class to search for in the <>. Finds closest one to the entity given (does NOT need to be the same type). </summary>///
     /// <returns> entity of type T that is closest to Position (in aquarium space) or null if there are none found. if excludeSelf it will exclude itself by checking its uniqueID </returns>
     public T FindClosest<T>(Entity entity, bool excludeSelf = true) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
     {
@@ -159,8 +143,39 @@ public class Aquarium : MonoBehaviour
         }
         return closest;
     }
+    /// <summary> returns an array of all of the entities in the tank with the type T. Can be any type in the inheritance hierarchy. If a parent class calls this it will search for that parent class type </summary>
+    /// <returns> array of type T of all the found entities in this aquarium, or null if none were found </returns>
+    public T[] getAllOfType<T>() where T : Entity
+    {
+        return GetComponentsInChildren<T>();
+    }
 
-    /// <returns> entity of same type as input that is closest to Position (in aquarium space) or null if there are none found. if excludeSelf it will exclude itself by checking its uniqueID </returns>
+
+    ///<summary> Same as above, but it will search for ONLY the most derived class of entity, even if called in a parent class. 
+    /// Since entity is of type T, you do NOT need to specify the type on the <>. You can call like: parentAquarium.FindClosestOfType(this, true) </summary>
+    /// <returns> entity of type of T passed in that is closest to Position (in aquarium space) or null if there are none found. </returns>
+    public T FindClosestOfType<T>(T entity, Vector3 aquariumPosition) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
+    {
+        List<Entity> foundEntities = getAllOfType(entity);
+        if (foundEntities == null) return default(T);
+
+        T closest = default(T);
+        foreach (T e in foundEntities)
+        {
+            if (!e.enabled) continue;
+
+            float newDist = getSqrDistBw(aquariumPosition, transform.InverseTransformVector(e.transform.position));
+
+            if (closest == default(T)) closest = e;
+            else if ((newDist < getSqrDistBw(aquariumPosition, closest.transform.localPosition))) closest = e;
+        }
+        return closest;
+    }
+    
+
+    ///<summary> Same as above, but it will search for ONLY the most derived class of entity, even if called in a parent class. 
+    /// Since entity is of type T, you do NOT need to specify the type on the <>. You can call like: parentAquarium.FindClosestOfType(this, true) </summary>
+    /// <returns> entity of type of T passed in that is closest to the position of entity, excluding entity itself if excludeSelf, or null if there are none found. </returns>
     public T FindClosestOfType<T>(T entity, bool excludeSelf = true) where T : Entity //get all objects of one type, then check their positions and return the closest (excluding self)
     {
         List<Entity> foundEntities = getAllOfType(entity);
@@ -180,7 +195,7 @@ public class Aquarium : MonoBehaviour
         return closest;
     }
 
-    /// <summary> Return list of all entities in the tank with the type of the entity passed in (the most derived class) </summary>
+    /// <summary> Return list of all entities in the tank with the type of the entity passed in. Uses the MOST derived class of entity, even if called by a parent class. </summary>
     public List<Entity> getAllOfType(Entity entity)
     {
         List<Entity> allEntities = entities.FindAll(x => x.GetType() == entity.GetType());
@@ -191,12 +206,6 @@ public class Aquarium : MonoBehaviour
         return allEntities; //predicate defining a condition of what to find 
     }
 
-    /// <summary> returns an array of all of the entities in the tank with the type T. Can be any type in the inheritance hierarchy. If a parent class calls this it will search for that parent class type </summary>
-    /// <returns> array of type T of all the found entities in this aquarium, or null if none were found </returns>
-    public T[] getAllOfType<T>() where T : Entity //RETURNS NULL IF EMPTY
-    {
-        return GetComponentsInChildren<T>();
-    }
 
     /// <summary> gets the bounding boxes of all entities of type T in the aquarium, with their coords in the local aquarium space</summary>
     public List<Bounds> getBoundsInAquariumCoords<T>() where T : Entity

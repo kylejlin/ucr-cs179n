@@ -298,6 +298,8 @@ public class MobileCreature : Creature
 
     public void predate(Creature creature)
     {
+        
+
         predateCount += Time.deltaTime;
         if (predateCount < predateCooldown) return;
         else predateCount = 0;
@@ -305,7 +307,7 @@ public class MobileCreature : Creature
         float damageDone = creature.beingEaten(consumeRate);
         if (creature.mustBeKilledToBeEaten && (damageDone >= consumeRate)) return;
         //did not kill the prey and prey must be killed to be eaten, so gets nothing. Have to check w a roundabout method because Destroy() does not work immediately
-        //technically possible for prey to have the exact amount of energy as consumeRate and die and this creature gets no food anyways. 
+        //technically possible for prey to have the exact amount of energy as consumeRate and die and this creature gets no food anyways. lol
         eat(damageDone);
         if (damageDone > maxEnergy) grow(growthRate);
         else grow(growthRate * damageDone / maxEnergy); // it shouldnt grow fast from taking a bunch of tiny bites super fast
