@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -37,7 +38,7 @@ public class MobileCreature : Creature
         animator = GetComponentInChildren<Animator>();
 
         initSize();
-        
+
     }
     /// <summary> Set default values for trilobite bought from store. </summary>
 
@@ -253,24 +254,24 @@ public class MobileCreature : Creature
     /// <summary> try to duplicate, but dont if there is a T too close to the attempted spawn location or too many of T in the aquarium as a whole. </summary>
     public override void tryDuplicate<T>(float minSpace = 0, float minCMCubedPerT = 0) //T constraint removed 
     {
-        
-        Vector3 randVecNearby = new Vector3(Random.Range(-spawnRadius, spawnRadius), 0, Random.Range(-spawnRadius, spawnRadius)) + transform.localPosition; 
-        
-        MobileCreature closestT = parentAquarium.FindClosest<MobileCreature>(randVecNearby); 
-        float closestTSqrDist =  Mathf.Infinity; 
-        if (closestT != default(T)) {closestTSqrDist = getSqrDistBw(closestT.transform.localPosition, randVecNearby); } 
-        
-        int numTInTank = parentAquarium.getAllOfType<T>().Length;
+
+        Vector3 randVecNearby = new Vector3(Random.Range(-spawnRadius, spawnRadius), 0, Random.Range(-spawnRadius, spawnRadius)) + transform.localPosition;
+
+        MobileCreature closestT = parentAquarium.FindClosestOfType(this, randVecNearby);
+        float closestTSqrDist = Mathf.Infinity;
+        if (closestT != default(T)) { closestTSqrDist = getSqrDistBw(closestT.transform.localPosition, randVecNearby); }
+
+        int numTInTank = parentAquarium.getAllOfType(this).Count;
         float currCMCubedPerT = Mathf.Infinity;
-        if ((numTInTank > 0 )) { currCMCubedPerT = parentAquarium.volume() / numTInTank; }
-        
-        MobileCreature potentialPartner = parentAquarium.FindClosest<MobileCreature>(this);
+        if ((numTInTank > 0)) { currCMCubedPerT = parentAquarium.volume() / numTInTank; }
+
+        MobileCreature potentialPartner = parentAquarium.FindClosestOfType(this);
 
         //Debug.Log("currPos "+ transform.localPosition);
         //Debug.Log("nrarbyPost "+ randVecNearby);
         //Debug.Log("closest "+ closestTSqrDist);
         //Debug.Log("curr units per T "+ currUnitsCubedPerT);
-        if ((closestTSqrDist > minSpace*minSpace) && (minCMCubedPerT < currCMCubedPerT) && !(parentAquarium.getBreedingMutex()) && (potentialPartner))
+        if ((closestTSqrDist > minSpace * minSpace) && (minCMCubedPerT < currCMCubedPerT) && !(parentAquarium.getBreedingMutex()) && (potentialPartner))
         {
             print("Call duplicate");
             parentAquarium.setBreedingMutex(true);
@@ -314,8 +315,31 @@ public class MobileCreature : Creature
         //did not kill the prey and prey must be killed to be eaten, so gets nothing. Have to check w a roundabout method because Destroy() does not work immediately
         //technically possible for prey to have the exact amount of energy as consumeRate and die and this creature gets no food anyways. 
         eat(damageDone);
-        if (damageDone > maxEnergy) grow(growthRate); 
+        if (damageDone > maxEnergy) grow(growthRate);
         else grow(growthRate * damageDone / maxEnergy); // it shouldnt grow fast from taking a bunch of tiny bites super fast
+    }
+    
+    /// <summary>
+    /// Calculates happiness of MobileCreature from energy level, friends, and decorations in tank
+    /// </summary>
+    /// <returns>float happiness value</returns>
+    public override float getHappiness()
+    {
+        float happiness = energy / maxEnergy * 5;
+        if (parentAquarium.getAllOfType(this).Count > 1) //if creature is not the last of its kind
+        {
+            happiness += 5;
+        }
+
+        Decoration[] decorations = parentAquarium.getAllOfType<Decoration>(); 
+        happiness += decorations.Length * 5; //add based on qty of decorations
+
+        foreach (Decoration d in decorations) //add based on individual decoration value
+        {
+            happiness += d.moneyBonus/2;
+        }
+
+        return happiness;
     }
 
 }

@@ -166,6 +166,11 @@ public class Entity : MonoBehaviour
             default:
                 return 1;
         }
-     }    
+    }
+
+    public virtual float getHappiness()
+    {
+        return 0;
+    }
     
 }

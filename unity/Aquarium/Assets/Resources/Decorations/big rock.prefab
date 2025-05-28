@@ -96,7 +96,7 @@ MonoBehaviour:
   rarity: 0
   parentAquarium: {fileID: 0}
   count: 0
-  moneyBonus: 2
+  moneyBonus: 8
 --- !u!1001 &1574659676339120964
 PrefabInstance:
   m_ObjectHideFlags: 0
