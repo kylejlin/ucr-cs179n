@@ -180,6 +180,7 @@ public class Aquarium : MonoBehaviour
         return closest;
     }
 
+    /// <summary> Return list of all entities in the tank with the type of the entity passed in (the most derived class) </summary>
     public List<Entity> getAllOfType(Entity entity)
     {
         List<Entity> allEntities = entities.FindAll(x => x.GetType() == entity.GetType());
@@ -190,6 +191,7 @@ public class Aquarium : MonoBehaviour
         return allEntities; //predicate defining a condition of what to find 
     }
 
+    /// <summary> returns an array of all of the entities in the tank with the type T. Can be any type in the inheritance hierarchy. If a parent class calls this it will search for that parent class type </summary>
     /// <returns> array of type T of all the found entities in this aquarium, or null if none were found </returns>
     public T[] getAllOfType<T>() where T : Entity //RETURNS NULL IF EMPTY
     {

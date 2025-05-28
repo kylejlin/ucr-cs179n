@@ -197,25 +197,7 @@ public class Creature : Entity
         }
         return happiness;
     }
-
-    public override float calcMoneyBonus()
-    {
-        float h = getHappiness();
-        switch (GetRarity())
-        {
-            case Rarity.Common:
-                return h;
-            case Rarity.Rare:
-                return h * 3;
-            case Rarity.Epic:
-                return h * 7;
-            default:
-                return h;
-        }
-    }
      
-    public virtual float getHappiness() { return 1;  }
-
     
 }
 
