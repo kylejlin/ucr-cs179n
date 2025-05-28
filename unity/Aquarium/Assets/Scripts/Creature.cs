@@ -198,6 +198,14 @@ public class Creature : Entity
         return happiness;
     }
      
-    
+        public override string getCurrStats()
+    {
+        return ("Name: " + name
+        + "\nHappiness: "+ getHappiness()
+        + "\nEnergy: " + energy / maxEnergy * 100 + "%"
+        + "\nMaturity: " + getMaturity() / adultSize * 100 + "%"
+        + "\nMetabolism: " + metabolismRate + " energy/s"
+        + "\nSpace Requirement: " + minCMCubedPer + " cubic cm");
+    }
 }
 

@@ -38,8 +38,7 @@ public class gameObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        happiness.value = gameManager.getHappiness(); //TODO: Fix happiness slider
-        print("happiness: " + gameManager.getHappiness());
+        // happiness.value = gameManager.getHappiness(); //TODO: Fix happiness slider
         //happinessText.text = Mathf.RoundToInt(happiness.value * 100) + "%";
         happinessText.text = Mathf.RoundToInt(gameManager.getHappiness())+" happiness";
 
