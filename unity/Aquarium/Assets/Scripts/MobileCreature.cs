@@ -225,7 +225,7 @@ public class MobileCreature : Creature
     public void duplicate<T>(Vector3 position, T partner) where T : MobileCreature
     {
         if (parentAquarium == null) { parentAquarium.setBreedingMutex(false); Debug.LogWarning("Could not find Aquarium parent"); return; }
-        if (partner == null) { parentAquarium.setBreedingMutex(false); Debug.LogWarning("Could not find breeding partner"); return; }
+        if (partner == null) { parentAquarium.setBreedingMutex(false);  return; } //Debug.LogWarning("Could not find breeding partner");
         if (!parentAquarium.isInBounds(position)) { parentAquarium.setBreedingMutex(false); return; } //keep w/in aquarium
 
         if (partner != null)

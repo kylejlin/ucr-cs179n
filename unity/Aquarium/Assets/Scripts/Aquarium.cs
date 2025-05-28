@@ -99,7 +99,7 @@ public class Aquarium : MonoBehaviour
 
     public void setBreedingMutex(bool value)
     {
-        print("Set mutex");
+        // print("Set mutex");
         breedingMutex = value;
     }
 
