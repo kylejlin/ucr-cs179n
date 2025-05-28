@@ -13,6 +13,7 @@ public class TankUI : BaseUI
     private TankItem TankItem;
     private List<TankItem> TankItems = new List<TankItem>();
     private bool hasStarted = false;
+    MouseUIManager mouseUIManager;
     protected new void Start()
     {
         base.Start();
@@ -21,12 +22,13 @@ public class TankUI : BaseUI
         NextTankButton = gameObject.transform.Find("NextTankButton").gameObject.GetComponent<Button>();
         PrevTankButton = gameObject.transform.Find("PrevTankButton").gameObject.GetComponent<Button>();
         TankItem = Resources.Load<GameObject>("Shop/TankItem").GetComponent<TankItem>();
+        mouseUIManager = GameObject.Find("Main Camera").GetComponent<MouseUIManager>();
 
         AddTankButton.onClick.AddListener(() => AddTank());
 
         NextTankButton.onClick.AddListener(() => NextTank());
         PrevTankButton.onClick.AddListener(() => PrevTank());
-        PopulateTank();hasStarted = true;
+        PopulateTank(); hasStarted = true;
     }
     void AddTank()
     {
@@ -61,9 +63,10 @@ public class TankUI : BaseUI
         foreach (Entity item in gameManager.getTank().entities)
         {
             TankItem tankItem = Instantiate(TankItem.gameObject, EntitiesGrid.transform).GetComponent<TankItem>();
-            tankItem.Setup(item);
+            tankItem.Setup(item, () => { CloseShop(); mouseUIManager.startPopup(item); });
             tankItem.setText(item.name);
             TankItems.Add(tankItem);
+
         }
     }
 }
