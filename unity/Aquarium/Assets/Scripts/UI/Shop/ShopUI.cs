@@ -9,7 +9,7 @@ public class ShopUI : BaseUI
     private GameObject ShopGrid;
     private ShopItem ShopItem;
     private Entity SelectedEntity;
-    private SelectedItem SelectedItemPreview;
+    private Preview SelectedItemPreview;
     private CategoryTabs categoryTabs;
 
     public List<ShopItem> ShopItems = new List<ShopItem>();
@@ -18,17 +18,26 @@ public class ShopUI : BaseUI
     {
         base.Start();
         ShopGrid = gameObject.transform.Find("ShopGrid").gameObject;
-        SelectedItemPreview = gameObject.transform.Find("SelectedItem").gameObject.GetComponent<SelectedItem>();
+        if (galleryMode)
+            SelectedItemPreview = gameObject.transform.Find("SelectedItem").gameObject.GetComponent<Preview>();
+        else
+            SelectedItemPreview = gameObject.transform.Find("SelectedItem").gameObject.GetComponent<SelectedItem>();
         categoryTabs = gameObject.transform.Find("CategoryTabs").gameObject.GetComponent<CategoryTabs>();
 
         ShopItem = Resources.Load<GameObject>("Shop/ShopItem").GetComponent<ShopItem>();
 
 
         SelectedEntity = gameManager.creatures[0];
-        SelectedItemPreview.Setup(SelectedEntity);
-        if (galleryMode)
+        if (!galleryMode)
+        {
+            SelectedItem selected = (SelectedItem)SelectedItemPreview;
+            selected.Setup(SelectedEntity);
+        }
+        else
+        {
+            SelectedItemPreview.Setup(SelectedEntity);
             SelectedItemPreview.setCollected(gameManager.isCollected(SelectedEntity));
-
+        }
         PopulateShop();
         categoryTabs.SetCategory();
         OnEnable();
@@ -67,7 +76,13 @@ public class ShopUI : BaseUI
     private void select(Entity entity)
     {
         SelectedEntity = entity;
-        SelectedItemPreview.ChangeSelected(SelectedEntity);
+        if (!galleryMode)
+        {
+            SelectedItem selected = (SelectedItem)SelectedItemPreview;
+            selected.ChangeSelected(SelectedEntity);
+        }
+        else
+            SelectedItemPreview.ChangeSelected(SelectedEntity);
         if (galleryMode)
             SelectedItemPreview.setCollected(gameManager.isCollected(SelectedEntity));
 

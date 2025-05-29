@@ -136,7 +136,7 @@ public class Preview : MonoBehaviour
     public void setCollected(bool collected = true)
     {
         if (collected)
-        { rawImage.color = new Color(255, 255, 255, 1); }
+        { rawImage.color = Color.white; }
         else
         { rawImage.color = new Color(0, 0, 0, 0); }
     }

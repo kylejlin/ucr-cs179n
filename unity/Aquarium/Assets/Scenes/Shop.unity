@@ -7497,7 +7497,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShopItems: []
-  galleryMode: 0
+  galleryMode: 1
 --- !u!114 &1647452712
 MonoBehaviour:
   m_ObjectHideFlags: 0
