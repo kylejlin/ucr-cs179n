@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -22,6 +23,7 @@ public class MobileCreature : Creature
     public BehaviorState state = BehaviorState.Idle;
 
     private Rigidbody mobileCreatureRB;
+    [SerializeField] protected Animator animator; 
 
     [SerializeField] protected double breedingCooldown = 10;
     [SerializeField] protected double predateCooldown = 0.5f; // how long between damage dealing events. can think of it like its dps. bigger values will require more "fighting"
@@ -33,9 +35,10 @@ public class MobileCreature : Creature
     {
         base.Awake(); //call Creature Start()
         mobileCreatureRB = GetComponent<Rigidbody>();
+        animator = GetComponentInChildren<Animator>();
 
         initSize();
-        
+
     }
     /// <summary> Set default values for trilobite bought from store. </summary>
 
@@ -82,6 +85,7 @@ public class MobileCreature : Creature
         else if (energy <= huntingEnergyThreshold)
         {
             state = BehaviorState.Hunting;
+            if (animator) animator.SetTrigger("hunt");
         }
         else
         {
@@ -146,6 +150,7 @@ public class MobileCreature : Creature
         if (distance <= maxEatingDistance * getMaturity())
         {
             //Eat based on consumeRate 
+            if (animator) animator.SetTrigger("eat");
             predate(closest);
             return;
         }
@@ -183,14 +188,6 @@ public class MobileCreature : Creature
         mobileCreatureRB.MoveRotation(Quaternion.LookRotation(angularVelocity, Vector3.forward));
     }
 
-    public override string getCurrStats()
-    {
-        return ("Name: " + name
-        + "\nEnergy: " + energy / maxEnergy * 100 + "%"
-        + "\nMaturity: " + getMaturity() / adultSize * 100 + "%"
-        + "\nMetabolism: " + metabolismRate + " energy/s"
-        + "\nSpace Requirement: " + minCMCubedPer + " cubic cm");
-    }
 
 
     /// <summary> scales up size and energy by the percentage passed in (wont exceed max size set) </summary>
@@ -228,7 +225,7 @@ public class MobileCreature : Creature
     public void duplicate<T>(Vector3 position, T partner) where T : MobileCreature
     {
         if (parentAquarium == null) { parentAquarium.setBreedingMutex(false); Debug.LogWarning("Could not find Aquarium parent"); return; }
-        if (partner == null) { parentAquarium.setBreedingMutex(false); Debug.LogWarning("Could not find breeding partner"); return; }
+        if (partner == null) { parentAquarium.setBreedingMutex(false);  return; } //Debug.LogWarning("Could not find breeding partner");
         if (!parentAquarium.isInBounds(position)) { parentAquarium.setBreedingMutex(false); return; } //keep w/in aquarium
 
         if (partner != null)
@@ -249,24 +246,24 @@ public class MobileCreature : Creature
     /// <summary> try to duplicate, but dont if there is a T too close to the attempted spawn location or too many of T in the aquarium as a whole. </summary>
     public override void tryDuplicate<T>(float minSpace = 0, float minCMCubedPerT = 0) //T constraint removed 
     {
-        
-        Vector3 randVecNearby = new Vector3(Random.Range(-spawnRadius, spawnRadius), 0, Random.Range(-spawnRadius, spawnRadius)) + transform.localPosition; 
-        
-        MobileCreature closestT = parentAquarium.FindClosest<MobileCreature>(randVecNearby); 
-        float closestTSqrDist =  Mathf.Infinity; 
-        if (closestT != default(T)) {closestTSqrDist = getSqrDistBw(closestT.transform.localPosition, randVecNearby); } 
-        
-        int numTInTank = parentAquarium.getAllOfType<T>().Length;
+
+        Vector3 randVecNearby = new Vector3(Random.Range(-spawnRadius, spawnRadius), 0, Random.Range(-spawnRadius, spawnRadius)) + transform.localPosition;
+
+        MobileCreature closestT = parentAquarium.FindClosestOfType(this, randVecNearby);
+        float closestTSqrDist = Mathf.Infinity;
+        if (closestT != default(T)) { closestTSqrDist = getSqrDistBw(closestT.transform.localPosition, randVecNearby); }
+
+        int numTInTank = parentAquarium.getAllOfType(this).Count;
         float currCMCubedPerT = Mathf.Infinity;
-        if ((numTInTank > 0 )) { currCMCubedPerT = parentAquarium.volume() / numTInTank; }
-        
-        MobileCreature potentialPartner = parentAquarium.FindClosest<MobileCreature>(this);
+        if ((numTInTank > 0)) { currCMCubedPerT = parentAquarium.volume() / numTInTank; }
+
+        MobileCreature potentialPartner = parentAquarium.FindClosestOfType(this);
 
         //Debug.Log("currPos "+ transform.localPosition);
         //Debug.Log("nrarbyPost "+ randVecNearby);
         //Debug.Log("closest "+ closestTSqrDist);
         //Debug.Log("curr units per T "+ currUnitsCubedPerT);
-        if ((closestTSqrDist > minSpace*minSpace) && (minCMCubedPerT < currCMCubedPerT) && !(parentAquarium.getBreedingMutex()) && (potentialPartner))
+        if ((closestTSqrDist > minSpace * minSpace) && (minCMCubedPerT < currCMCubedPerT) && !(parentAquarium.getBreedingMutex()) && (potentialPartner))
         {
             print("Call duplicate");
             parentAquarium.setBreedingMutex(true);
@@ -301,6 +298,8 @@ public class MobileCreature : Creature
 
     public void predate(Creature creature)
     {
+        
+
         predateCount += Time.deltaTime;
         if (predateCount < predateCooldown) return;
         else predateCount = 0;
@@ -308,10 +307,33 @@ public class MobileCreature : Creature
         float damageDone = creature.beingEaten(consumeRate);
         if (creature.mustBeKilledToBeEaten && (damageDone >= consumeRate)) return;
         //did not kill the prey and prey must be killed to be eaten, so gets nothing. Have to check w a roundabout method because Destroy() does not work immediately
-        //technically possible for prey to have the exact amount of energy as consumeRate and die and this creature gets no food anyways. 
+        //technically possible for prey to have the exact amount of energy as consumeRate and die and this creature gets no food anyways. lol
         eat(damageDone);
-        if (damageDone > maxEnergy) grow(growthRate); 
+        if (damageDone > maxEnergy) grow(growthRate);
         else grow(growthRate * damageDone / maxEnergy); // it shouldnt grow fast from taking a bunch of tiny bites super fast
+    }
+    
+    /// <summary>
+    /// Calculates happiness of MobileCreature from energy level, friends, and decorations in tank
+    /// </summary>
+    /// <returns>float happiness value</returns>
+    public override float getHappiness()
+    {
+        float happiness = energy / maxEnergy * 5;
+        if (parentAquarium.getAllOfType(this).Count > 1) //if creature is not the last of its kind
+        {
+            happiness += 5;
+        }
+
+        Decoration[] decorations = parentAquarium.getAllOfType<Decoration>(); 
+        happiness += decorations.Length * 5; //add based on qty of decorations
+
+        foreach (Decoration d in decorations) //add based on individual decoration value
+        {
+            happiness += d.moneyBonus/2;
+        }
+
+        return happiness;
     }
 
 }

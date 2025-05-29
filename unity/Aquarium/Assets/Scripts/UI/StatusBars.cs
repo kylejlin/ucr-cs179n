@@ -38,10 +38,11 @@ public class gameObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        happiness.value = gameManager.getHappiness();
-        happinessText.text = Mathf.RoundToInt(happiness.value * 100) + "%";
+        // happiness.value = gameManager.getHappiness(); //TODO: Fix happiness slider
+        //happinessText.text = Mathf.RoundToInt(happiness.value * 100) + "%";
+        happinessText.text = Mathf.RoundToInt(gameManager.getHappiness())+" happiness";
 
-        moneyText.text = "Money: " + gameManager.getMoney().ToString();
+        moneyText.text = gameManager.getMoney().ToString("F2");
 
         int hungerValue = gameManager.getHunger();
         int supplyValue = gameManager.getAlgaesHealth();
