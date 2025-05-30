@@ -6,6 +6,7 @@ public class MainMenu : MonoBehaviour
     GameObject mainMenu;
     GameObject settingsMenu;
     GameObject creditsMenu;
+    GameObject logo;
 
     Button playButton;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -14,6 +15,7 @@ public class MainMenu : MonoBehaviour
         mainMenu = gameObject.transform.Find("MainMenu").gameObject;
         settingsMenu = gameObject.transform.Find("SettingsMenu").gameObject;
         creditsMenu = gameObject.transform.Find("CreditsMenu").gameObject;
+        logo = gameObject.transform.Find("SpinningLogo").gameObject;
 
         mainMenu.SetActive(true);
         settingsMenu.SetActive(false);
@@ -36,16 +38,19 @@ public class MainMenu : MonoBehaviour
     public void OpenSettings()
     {
         mainMenu.SetActive(false);
+        logo.SetActive(false);
         settingsMenu.SetActive(true);
     }
     public void OpenCredits()
     {
         mainMenu.SetActive(false);
+        logo.SetActive(false);
         creditsMenu.SetActive(true);
     }
     public void BackToMain()
     {
         mainMenu.SetActive(true);
+        logo.SetActive(true);
         settingsMenu.SetActive(false);
         creditsMenu.SetActive(false);
     }
