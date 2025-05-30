@@ -5,8 +5,8 @@ public class Entity : MonoBehaviour
     [SerializeField] public int id; //id of the entity type, set in gamemanager
     private static double uniqueIDCount = 0;
     [SerializeField] private double uniqueID = -1; //unique ID of this gameobject only
-    [SerializeField] private int buyMoney;
-    [SerializeField] private int sellMoney;
+    [SerializeField] private float buyMoney;
+    [SerializeField] private float sellMoney;
     [SerializeField] private Rarity rarity;
     [SerializeField] protected bool bottomDweller = true; //should it spawn on the bottom of the tank. True for all decorations. For creatures, its true if it is immobile or only walks along the bottom, else false.
     [SerializeField] public Aquarium parentAquarium = null;
@@ -145,8 +145,8 @@ public class Entity : MonoBehaviour
     public void setOutline(bool enable) { outline.enabled = enable; }
     public int getID() { return id; }
     public double getUniqueID() { return uniqueID; }
-    public int getBuyMoney() { return buyMoney; }
-    public int getSellMoney() { return sellMoney; }
+    public float getBuyMoney() { return buyMoney; }
+    public float getSellMoney() { return sellMoney; }
     public float getScale() { return transform.localScale.x; }
     public Rarity GetRarity() { return rarity; }
     public bool isOutlined() { return outline.enabled; }
