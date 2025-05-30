@@ -265,7 +265,7 @@ public class MobileCreature : Creature
         //Debug.Log("curr units per T "+ currUnitsCubedPerT);
         if ((closestTSqrDist > minSpace * minSpace) && (minCMCubedPerT < currCMCubedPerT) && !(parentAquarium.getBreedingMutex()) && (potentialPartner))
         {
-            print("Call duplicate");
+            //print("Call duplicate");
             parentAquarium.setBreedingMutex(true);
             duplicate(randVecNearby, findPartner<MobileCreature>(potentialPartner));
         }
