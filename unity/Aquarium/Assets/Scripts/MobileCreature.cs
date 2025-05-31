@@ -164,7 +164,7 @@ public class MobileCreature : Creature
 
         if (closest == null)
         {
-            // No prey exists, so there's no point in pathfinding.
+            UpdateIdle();
             return;
         }
 

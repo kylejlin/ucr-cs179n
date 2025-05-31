@@ -574,8 +574,8 @@ public class Aquarium : MonoBehaviour
         }
 
         // spheres[voxelCoordsToBufIndex(bestVoxelCoords)].transform.localScale = new Vector3(10, 10, 10);
-        print(bestVoxelCoords);
-        print("world coords: "+voxelCoordsToAquariumCoords(bestVoxelCoords));
+        // print(bestVoxelCoords);
+        // print("world coords: "+voxelCoordsToAquariumCoords(bestVoxelCoords));
         return bestVoxelCoords;
     }
 
