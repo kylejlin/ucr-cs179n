@@ -57,6 +57,9 @@ MonoBehaviour:
   groundLevel: 6
   voxelGridBuf: []
   voxelSize: 2
+  sphereDebug: 0
+  debugSphere: {fileID: 0}
+  spheres: []
 --- !u!1 &7504216467442104774
 GameObject:
   m_ObjectHideFlags: 0

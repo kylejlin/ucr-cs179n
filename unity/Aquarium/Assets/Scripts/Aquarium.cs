@@ -6,17 +6,29 @@ public class Aquarium : MonoBehaviour
 {
     private int id;
     public List<Entity> entities = new List<Entity>(); // all creatures (and objects?) within the tank
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     public Vector3 dimensions; // hard coded to fit basic aquarium, should be changable later, set in inspector
     public float groundLevel; //position of bottom plane of aquarium, set in inspector
     private bool breedingMutex = false; //only allows one set of creatures to breed at a time
 
     public List<float> voxelGridBuf = new List<float>();
-
     public float voxelSize = 2;
+    public bool sphereDebug;
+    public GameObject debugSphere; //sphere to copy
+    public List<GameObject> spheres = new List<GameObject>();
+    // public Vector3Int testVoxel = new Vector3Int(10, 10, 10);
+
 
     void Start()
     {
+        if (sphereDebug)
+        {
+            spheres.Clear();
+            for (int i = 0; i < requiredVoxelGridBufSize(); ++i)
+            {
+                spheres.Add(Instantiate(debugSphere, voxelCoordsToAquariumCoords(bufIndexToVoxelCoords(i)), Quaternion.identity, transform));
+            }
+        }
+
 
     }
 
@@ -282,7 +294,7 @@ public class Aquarium : MonoBehaviour
     public float getSqrDistBwEntities(Entity e1, Entity e2) { return getSqrDistBw(e1.transform.position, e2.transform.position); }
     public Vector3 getMinAquariumCoords() { return new Vector3(-dimensions.x / 2, groundLevel, -dimensions.z / 2); } //hard coded for aquarium default value w scale 1
     public Vector3 getMaxAquariumCoords() { return new Vector3(dimensions.x / 2, dimensions.y, dimensions.z / 2); } //hard coded for aquarium default value w scale 1
-    public Vector3 transformAquariumCoordsToWorldCoords(Vector3 aquariumCoords) { return transform.TransformVector(aquariumCoords); }
+    public Vector3 transformAquariumCoordsToWorldCoords(Vector3 aquariumCoords) { return aquariumCoords + transform.position; } //assuming theres no scale or rotation
 
 
     public void UpdateScentGradient()
@@ -302,7 +314,7 @@ public class Aquarium : MonoBehaviour
         // For now, we assume the only scent blockers are creatures.
         // This means the navigation algorithm will ignore non-creatures (e.g., decorations).
         // However, we can expand this later.
-        List<Bounds> scentBlockerBoundses = getBoundsInAquariumCoords<Creature>();
+        List<Bounds> scentBlockerBoundses = getBoundsInAquariumCoords<Decoration>();
 
         // For now, we assume the only food sources are immobile creatures.
         List<Bounds> foodBoundses = getBoundsInAquariumCoords<ImmobileCreature>();
@@ -388,6 +400,46 @@ public class Aquarium : MonoBehaviour
                 // Debug.Log($"Enqueued voxel at {neighborVoxelCoords} with scent value {newNeighborScentValue}");
             }
         }
+        // debugSphere.transform.localPosition = voxelCoordsToAquariumCoords(testVoxel);
+        // float scentStrenght = voxelGridBuf[voxelCoordsToBufIndex(testVoxel)];
+        // debugSphere.transform.localScale = new Vector3(scentStrenght, scentStrenght, scentStrenght);
+        if (sphereDebug)
+        {
+            List<int> targetedBufIndices = new List<int>();
+
+            {
+                MobileCreature[] foundEntities = getAllOfType<MobileCreature>();
+                foreach (MobileCreature e in foundEntities)
+                {
+                    Vector3Int targetVoxelCoords = e.getTargetPositionInVoxelCoords();
+                    if (!areVoxelCoordsValid(targetVoxelCoords))
+                    {
+                        continue;
+                    }
+
+                    int targetBufIndex = voxelCoordsToBufIndex(targetVoxelCoords);
+
+                    if (targetedBufIndices.Contains(targetBufIndex))
+                    {
+                        continue; // The index is already in the list, so we skip it.
+                    }
+
+                    targetedBufIndices.Add(targetBufIndex);
+                }
+            }
+
+            for (int i = 0; i < voxelGridBuf.Count; i++)
+            {
+                if (voxelGridBuf[i] >= 0) spheres[i].transform.localScale = new Vector3(voxelGridBuf[i], voxelGridBuf[i], voxelGridBuf[i]);
+                else spheres[i].transform.localScale = Vector3.zero;
+
+                // if (targetedBufIndices.Contains(i))
+                // {
+                //     float big = 10f;
+                //     spheres[i].transform.localScale = new Vector3(big, big, big);
+                // }
+            }
+        }
     }
 
     public Vector3Int voxelGridSize()
@@ -432,7 +484,7 @@ public class Aquarium : MonoBehaviour
     public float getScentAt(Vector3Int voxelCoords)
     {
         int bufIndex = voxelCoordsToBufIndex(voxelCoords);
-        if (bufIndex < 0 || bufIndex >= voxelGridBuf.Count)
+        if ((bufIndex < 0) || (bufIndex >= voxelGridBuf.Count))
         {
             Debug.LogWarning("bufIndex out of bounds");
             return 0f;
@@ -446,6 +498,12 @@ public class Aquarium : MonoBehaviour
         Vector3 min = getMinAquariumCoords() + new Vector3(voxelCoords.x * voxelSize, voxelCoords.y * voxelSize, voxelCoords.z * voxelSize);
         Vector3 max = min + new Vector3(voxelSize, voxelSize, voxelSize);
         return new Bounds((min + max) / 2f, max - min);
+    }
+    public Vector3 voxelCoordsToAquariumCoords(Vector3 voxelCoords)
+    {
+        Vector3 min = getMinAquariumCoords() + new Vector3(voxelCoords.x * voxelSize, voxelCoords.y * voxelSize, voxelCoords.z * voxelSize);
+        Vector3 max = min + new Vector3(voxelSize, voxelSize, voxelSize);
+        return (max + min) * 0.5f; //average of max and min is the center of the voxel in aquarium coords
     }
 
     public static List<Vector3Int> getDeltasToNeighborsExcludingSelf()
@@ -470,7 +528,7 @@ public class Aquarium : MonoBehaviour
         return deltas;
     }
 
-    public Vector3 getBestNeighborCoordsInAquariumCoords(Vector3 startInAquariumCoords)
+    public Vector3Int getBestNeighborCoordsInVoxelCoords(Vector3 startInAquariumCoords)
     {
         Vector3 minAquariumCoords = getMinAquariumCoords();
         Vector3 maxAquariumCoords = getMaxAquariumCoords();
@@ -482,7 +540,7 @@ public class Aquarium : MonoBehaviour
         {
             {
                 Debug.LogWarning($"startInAquariumCoords is not in aquarium bounds. startInAquariumCoords: {startInAquariumCoords}; minAquariumCoords: {minAquariumCoords}; maxAquariumCoords: {maxAquariumCoords}");
-                return startInAquariumCoords;
+                return new Vector3Int(-1, -1, -1);
             }
         }
 
@@ -495,7 +553,7 @@ public class Aquarium : MonoBehaviour
         if (!areVoxelCoordsValid(startVoxelCoords))
         {
             Debug.LogWarning("startVoxelCoords is not valid");
-            return startInAquariumCoords;
+            return new Vector3Int(-1, -1, -1);
         }
 
         Vector3Int bestVoxelCoords = startVoxelCoords;
@@ -515,13 +573,16 @@ public class Aquarium : MonoBehaviour
             }
         }
 
-        Debug.Log($"Start voxel coords: {startVoxelCoords}, best voxel coords: {bestVoxelCoords}");
+        // spheres[voxelCoordsToBufIndex(bestVoxelCoords)].transform.localScale = new Vector3(10, 10, 10);
+        print(bestVoxelCoords);
+        print("world coords: "+voxelCoordsToAquariumCoords(bestVoxelCoords));
+        return bestVoxelCoords;
+    }
 
-        return minAquariumCoords + new Vector3(
-            bestVoxelCoords.x * voxelSize,
-            bestVoxelCoords.y * voxelSize,
-            bestVoxelCoords.z * voxelSize
-        ) - new Vector3(voxelSize / 2f, voxelSize / 2f, voxelSize / 2f);
+    public Vector3 getBestNeighborCoordsInAquariumCoords(Vector3 startInAquariumCoords)
+    {
+        Vector3Int bestVoxelCoords = getBestNeighborCoordsInVoxelCoords(startInAquariumCoords);
+        return voxelCoordsToAquariumCoords(bestVoxelCoords);
     }
 
 

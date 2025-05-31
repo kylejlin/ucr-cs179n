@@ -185,6 +185,7 @@ public class MobileCreature : Creature
         // ...Otherwise, move towards the scent of food.
         {
             Vector3 targetPositionInWorldCoords = getTargetPositionInWorldCoords();
+            print("target position " + targetPositionInWorldCoords);
 
             Vector3 delta = targetPositionInWorldCoords - transform.position;
 
@@ -194,6 +195,12 @@ public class MobileCreature : Creature
             transform.position += displacement;
             rotateTowards(delta);
         }
+    }
+
+    public Vector3Int getTargetPositionInVoxelCoords()
+    {
+        Vector3 positionInAquariumCoords = getPositionInAquariumCoords();
+        return parentAquarium.getBestNeighborCoordsInVoxelCoords(positionInAquariumCoords);
     }
 
     Vector3 getTargetPositionInWorldCoords()
