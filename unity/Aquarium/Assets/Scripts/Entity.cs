@@ -81,6 +81,11 @@ public class Entity : MonoBehaviour
         if (!gameObject.activeInHierarchy) { Debug.LogWarning("Object Inactive. No bounds"); return new Bounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0)); }
         Collider[] allColliders = GetComponentsInChildren<Collider>();
         if (allColliders.Length == 0) { Debug.LogWarning("No colliders"); return new Bounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0)); }
+    public Bounds getAllCollidersBoundingBox()
+    {
+        if (!gameObject.activeInHierarchy) { Debug.LogWarning("Object Inactive. No bounds"); return new Bounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0)); }
+        Collider[] allColliders = GetComponentsInChildren<Collider>();
+        if (allColliders.Length == 0) { Debug.LogWarning("No colliders"); return new Bounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0)); }
         Bounds colliderBounds = allColliders[0].bounds;
 
         foreach (Collider c in allColliders)

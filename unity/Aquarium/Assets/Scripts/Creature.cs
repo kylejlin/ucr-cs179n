@@ -32,6 +32,7 @@ public class Creature : Entity
 
     }
 
+
     protected void initSize()
     {
         setMaturity(spawnSize);
@@ -197,15 +198,32 @@ public class Creature : Entity
         }
         return happiness;
     }
-     
-        public override string getCurrStats()
+
+    public override string getCurrStats()
     {
         return ("Name: " + name
-        + "\nHappiness: "+ getHappiness()
+        + "\nHappiness: " + getHappiness()
         + "\nEnergy: " + energy / maxEnergy * 100 + "%"
         + "\nMaturity: " + getMaturity() / adultSize * 100 + "%"
         + "\nMetabolism: " + metabolismRate + " energy/s"
         + "\nSpace Requirement: " + minCMCubedPer + " cubic cm");
     }
+    
+        public Vector3 getPositionInAquariumCoords()
+    {
+        //assumes that this gameobject is a direct child of the aquarium it is in
+        Vector3 unclamped = transform.localPosition;
+
+        Vector3 min = parentAquarium.getMinAquariumCoords();
+        Vector3 max = parentAquarium.getMaxAquariumCoords();
+
+        return new Vector3(
+            Mathf.Clamp(unclamped.x, min.x, max.x),
+            Mathf.Clamp(unclamped.y, min.y, max.y),
+            Mathf.Clamp(unclamped.z, min.z, max.z)
+        );
+    }
+
+
 }
 
