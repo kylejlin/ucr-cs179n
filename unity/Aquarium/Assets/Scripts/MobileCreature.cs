@@ -141,7 +141,7 @@ public class MobileCreature : Creature
         die();
     }
 
-    void UpdateHunting()
+    protected virtual void UpdateHunting()
     {
         // You can toggle this to test the navigation system.
         bool USE_NAV = true;

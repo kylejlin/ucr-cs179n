@@ -24,7 +24,7 @@ public class Aquarium : MonoBehaviour
     void Update()
     {
         UpdateScentGradient();
-        PrintScentGradient();
+        // PrintScentGradient();
     }
 
     void PrintScentGradient()
@@ -526,7 +526,7 @@ public class Aquarium : MonoBehaviour
 
 
 
-    public int calcMoney()
+    public float calcMoney()
     {
         float currMoneyBonus = 1f; //start w 1 for the tank itself
         foreach (Entity e in entities) currMoneyBonus += e.calcMoneyBonus();

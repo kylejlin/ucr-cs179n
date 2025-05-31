@@ -55,6 +55,8 @@ MonoBehaviour:
   entities: []
   dimensions: {x: 49, y: 40, z: 49}
   groundLevel: 6
+  voxelGridBuf: []
+  voxelSize: 2
 --- !u!1 &7504216467442104774
 GameObject:
   m_ObjectHideFlags: 0
@@ -727,7 +729,7 @@ ParticleSystem:
     donutRadius: 0.2
     m_Position: {x: 0, y: 0, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
-    m_Scale: {x: 48, y: 48, z: 1}
+    m_Scale: {x: 40, y: 40, z: 1}
     placementMode: 0
     m_MeshMaterialIndex: 0
     m_MeshNormalOffset: 0
