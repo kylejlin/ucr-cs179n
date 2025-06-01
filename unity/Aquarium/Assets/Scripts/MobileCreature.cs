@@ -30,7 +30,7 @@ public class MobileCreature : Creature
     private float predateCount = 0f; //delta time tracking for ^
 
     public GameObject childPrefab; //used to instantiate new prefab for child 
-
+    
     protected new void Awake()
     {
         base.Awake(); //call Creature Start()
@@ -111,10 +111,22 @@ public class MobileCreature : Creature
     {
         Vector3 vec = new Vector3(0, 0, 1); //move forward
         move(vec);
-        Vector3 angVec = new Vector3(10, 10, 0); //rotate a little bit around axes
-        rotate(angVec);
+        float lookAheadDist = 10f * getMaturity(); //would be better for this to be based on collider size and not hard coded
+        if (!parentAquarium.checkVoxelInFrontForObstacle(getAllCollidersBoundingBox().center, transform.TransformVector(new Vector3(0, 0, 1)), lookAheadDist))
+        {
+            //if somethings in the way, rotate
+            Vector3 angVec = new Vector3(1, 50, 1);
+            rotate(angVec);
+        }
 
-        // mobileCreatureRB.AddRelativeTorque(0, 0, -transform.localEulerAngles.z/1000);
+
+        mobileCreatureRB.AddForce(0, -8, 0); //stay on the bottom
+        // todo: make it stay upright
+        // if(transform.localEulerAngles.z > 45) mobileCreatureRB.AddRelativeTorque(0, 0, 1); //keep upright
+        // if(transform.localEulerAngles.z < -45) mobileCreatureRB.AddRelativeTorque(0, 0, -1); //keep upright
+
+
+
 
         // rotate(new Vector3(10, 10, -transform.localEulerAngles.z));
         // print(transform.localEulerAngles.z);

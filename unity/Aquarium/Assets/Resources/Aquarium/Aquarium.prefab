@@ -163,7 +163,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entities: []
   dimensions: {x: 49, y: 40, z: 49}
-  groundLevel: 6
+  groundLevel: 5.9
   voxelGridBuf: []
   voxelSize: 2
   sphereDebug: 0

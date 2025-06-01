@@ -89,7 +89,6 @@ public class Entity : MonoBehaviour
             colliderBounds.Encapsulate(c.bounds.max);
         }
 
-
         return colliderBounds;
 
     }
