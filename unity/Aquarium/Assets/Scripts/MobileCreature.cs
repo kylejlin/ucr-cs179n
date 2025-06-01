@@ -18,7 +18,7 @@ public class MobileCreature : Creature
 
     public float huntingEnergyThreshold = 30;
     public static float metabolismRate = 1;
-    public static float maxEatingDistance = 7;
+    public static float maxEatingDistance = 1;
 
     public BehaviorState state = BehaviorState.Idle;
 
