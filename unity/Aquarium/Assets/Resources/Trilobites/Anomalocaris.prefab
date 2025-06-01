@@ -97,7 +97,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 1
   uniqueID: -1
-  buyMoney: 0
+  buyMoney: 100
   sellMoney: 50
   rarity: 1
   bottomDweller: 1
@@ -124,6 +124,7 @@ MonoBehaviour:
   huntingEnergyThreshold: 30
   maxEatingDistance: 6
   state: 0
+  animator: {fileID: 0}
   breedingCooldown: 10
   predateCooldown: 0.5
   childPrefab: {fileID: 7541186808266831616}

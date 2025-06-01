@@ -30,7 +30,7 @@ public class BaseUI : MonoBehaviour
 
     }
 
-    public void ShowToast(string message, float duration = 2f)
+    public void ShowToast(string message, float duration = 4f)
     {
         StartCoroutine(ShowToastCoroutine(message, duration));
     }
