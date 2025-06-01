@@ -30,12 +30,19 @@ public class MobileCreature : Creature
     private float predateCount = 0f; //delta time tracking for ^
 
     public GameObject childPrefab; //used to instantiate new prefab for child 
+    private AudioSource audioSource;
 
     protected new void Awake()
     {
         base.Awake(); //call Creature Start()
         mobileCreatureRB = GetComponent<Rigidbody>();
         animator = GetComponentInChildren<Animator>();
+        audioSource = GetComponent<AudioSource>();
+        if (!shopMode)
+        {
+            print("mobilecreature sound");
+            audioSource.Play();
+        }
 
         initSize();
 
@@ -87,11 +94,11 @@ public class MobileCreature : Creature
         //
         // We force the creature to always hunt so we can test the navigation system.
         //
-        // else if (energy <= huntingEnergyThreshold)
+        else if (energy <= huntingEnergyThreshold)
         //
         // This is another way of writing `else if (true)`,
         // except the compiler won't complain about unreachable code.
-        else if (System.Math.Cos(5) < 2)
+        //else if (System.Math.Cos(5) < 2)
         {
             state = BehaviorState.Hunting;
             if (animator) animator.SetTrigger("hunt");
