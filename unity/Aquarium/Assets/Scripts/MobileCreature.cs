@@ -189,12 +189,41 @@ public class MobileCreature : Creature
             return;
         }
 
-        // Eat the prey if it's within range.
+        // Eat the prey if it's close enough.
         {
-            Vector3 delta = closest.transform.position - transform.position;
-            float distance = delta.magnitude;
 
-            if (distance <= maxEatingDistance)
+            float simpleDistance = (closest.transform.position - transform.position).magnitude;
+
+            Bounds bounds = GetComponent<Collider>().bounds;
+            Bounds preyBounds = closest.GetComponent<Collider>().bounds;
+            Vector3[] corners = GetCorners(bounds);
+            Vector3[] preyCorners = GetCorners(preyBounds);
+            float minDistance = float.MaxValue;
+            foreach (var a in corners)
+            {
+                foreach (var b in preyCorners)
+                {
+                    float dist = Vector3.Distance(a, b);
+                    if (dist < minDistance)
+                    {
+                        minDistance = dist;
+                    }
+                }
+            }
+
+            // We can eat the prey if either:
+            //
+            // 1. The prey is within the maximum eating distance,
+            //    when we calculate distance using the default position reference point.
+            // 2. The prey is within the maximum eating distance,
+            //    when we calculate distance using the closest corner-to-corner distance.
+            // 3. We're _inside_ the prey.
+            //    Note that this assumes that the prey has a collider.
+            //    If it doesn't, this code will crash.
+
+            bool canEat = simpleDistance <= maxEatingDistance || minDistance <= maxEatingDistance || bounds.Intersects(preyBounds);
+
+            if (canEat)
             {
                 //Eat based on consumeRate 
                 eat(closest.beingEaten(consumeRate));
@@ -216,6 +245,24 @@ public class MobileCreature : Creature
             transform.position += displacement;
             rotateTowards(delta);
         }
+    }
+
+    static Vector3[] GetCorners(Bounds bounds)
+    {
+        Vector3 center = bounds.center;
+        Vector3 extents = bounds.extents;
+
+        return new Vector3[]
+        {
+            center + new Vector3(+extents.x, +extents.y, +extents.z),
+            center + new Vector3(+extents.x, +extents.y, -extents.z),
+            center + new Vector3(+extents.x, -extents.y, +extents.z),
+            center + new Vector3(+extents.x, -extents.y, -extents.z),
+            center + new Vector3(-extents.x, +extents.y, +extents.z),
+            center + new Vector3(-extents.x, +extents.y, -extents.z),
+            center + new Vector3(-extents.x, -extents.y, +extents.z),
+            center + new Vector3(-extents.x, -extents.y, -extents.z),
+        };
     }
 
     public Vector3Int getTargetPositionInVoxelCoords()
