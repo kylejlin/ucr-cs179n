@@ -82,16 +82,7 @@ public class MobileCreature : Creature
             // The creature starved to death. 
             state = BehaviorState.Dying;
         }
-        // TODO: Restore the original condition
-        // after we finish testing the navigation system.
-        //
-        // We force the creature to always hunt so we can test the navigation system.
-        //
-        // else if (energy <= huntingEnergyThreshold)
-        //
-        // This is another way of writing `else if (true)`,
-        // except the compiler won't complain about unreachable code.
-        else if (System.Math.Cos(5) < 2)
+        else if (energy <= huntingEnergyThreshold)
         {
             state = BehaviorState.Hunting;
             if (animator) animator.SetTrigger("hunt");
@@ -120,16 +111,14 @@ public class MobileCreature : Creature
     {
         Vector3 vec = new Vector3(0, 0, 1); //move forward
         move(vec);
-        if (transform.localRotation.eulerAngles.x > 45)
-        { //if creature pointed downwards, rotate upwards
-            // Vector3 angVec = new Vector3(30, 0, 0); 
-            // rotate(angVec);
-        }
-        else
-        {
-            Vector3 angVec = new Vector3(0, 10, 0); //rotate a little bit around axes
-            rotate(angVec);
-        }
+        Vector3 angVec = new Vector3(10, 10, 0); //rotate a little bit around axes
+        rotate(angVec);
+
+        // mobileCreatureRB.AddRelativeTorque(0, 0, -transform.localEulerAngles.z/1000);
+
+        // rotate(new Vector3(10, 10, -transform.localEulerAngles.z));
+        // print(transform.localEulerAngles.z);
+        // mobileCreatureRB.MoveRotation(mobileCreatureRB.rotation * Quaternion.Euler(new Vector3(0,0,-transform.localRotation.z*100) * Time.fixedDeltaTime));
 
     }
 
@@ -185,7 +174,6 @@ public class MobileCreature : Creature
         // ...Otherwise, move towards the scent of food.
         {
             Vector3 targetPositionInWorldCoords = getTargetPositionInWorldCoords();
-            print("target position " + targetPositionInWorldCoords);
 
             Vector3 delta = targetPositionInWorldCoords - transform.position;
 
@@ -252,7 +240,7 @@ public class MobileCreature : Creature
         mobileCreatureRB.MovePosition(mobileCreatureRB.position + mobileCreatureRB.rotation * velocity * speed * Time.fixedDeltaTime);
     }
 
-    //Takes in Vector3 angularVelocity to rotate mobileCreature
+    //Takes in Vector3 angularVelocity to rotate mobileCreature in local space
     protected void rotate(Vector3 angularVelocity)
     {
         if (shopMode) { Debug.LogWarning("Can't rotate in shop mode"); return; }
