@@ -98,7 +98,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 1
   uniqueID: -1
-  buyMoney: 100
+  buyMoney: 50
   sellMoney: 50
   rarity: 1
   bottomDweller: 1
@@ -123,12 +123,15 @@ MonoBehaviour:
   consumeRate: 100
   speed: 3
   huntingEnergyThreshold: 30
-  maxEatingDistance: 6
   state: 0
   animator: {fileID: 0}
   breedingCooldown: 10
   predateCooldown: 0.5
   childPrefab: {fileID: 7541186808266831616}
+  navigationTemperature: 0
+  previousTargetPosition: {x: 0, y: 0, z: 0}
+  isIgnoringNav: 0
+  ignoreNavTemperatureThreshold: 3
   demo: 0
 --- !u!82 &1024055047795309513
 AudioSource:

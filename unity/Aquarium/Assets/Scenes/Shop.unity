@@ -4735,6 +4735,7 @@ MonoBehaviour:
   mainCamera: {fileID: 2115515215}
   creatures: []
   decorations: []
+  money: 100
   level: 1
   xpCap: 0
   xp: 0
