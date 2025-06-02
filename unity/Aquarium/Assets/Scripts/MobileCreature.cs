@@ -117,6 +117,7 @@ public class MobileCreature : Creature
 
     protected virtual void UpdateIdle()
     {
+        if(!canSwim) mobileCreatureRB.AddForce(0, -8, 0); //stay on the bottom
         Vector3 vec = new Vector3(0, 0, 1); //move forward
         move(vec);
         float lookAheadDist = 10f * getMaturity(); //would be better for this to be based on collider size and not hard coded
@@ -128,7 +129,6 @@ public class MobileCreature : Creature
         }
 
 
-        if(!canSwim) mobileCreatureRB.AddForce(0, -8, 0); //stay on the bottom
         // todo: make it stay upright
         // if(transform.localEulerAngles.z > 45) mobileCreatureRB.AddRelativeTorque(0, 0, 1); //keep upright
         // if(transform.localEulerAngles.z < -45) mobileCreatureRB.AddRelativeTorque(0, 0, -1); //keep upright
@@ -152,6 +152,8 @@ public class MobileCreature : Creature
 
     protected virtual void UpdateHunting()
     {
+        if(!canSwim) mobileCreatureRB.AddForce(0, -8, 0); //stay on the bottom
+
         // You can toggle this to test the navigation system.
         bool USE_NAV = true;
 
@@ -215,7 +217,7 @@ public class MobileCreature : Creature
             //    Note that this assumes that the prey has a collider.
             //    If it doesn't, this code will crash.
 
-            bool canEat = simpleDistance <= maxEatingDistance || minDistance <= maxEatingDistance || bounds.Intersects(preyBounds);
+            bool canEat = (simpleDistance <= maxEatingDistance) || (minDistance <= maxEatingDistance) || (bounds.Intersects(preyBounds));
 
             if (canEat)
             {
@@ -250,7 +252,8 @@ public class MobileCreature : Creature
                 }
             }
 
-            if (bounds.Contains(targetPositionInWorldCoords)) return; //prevents flailing around voxel center point. If its already on the target just stop moving
+            //PROBLEM: if the target voxel is the one that the creature is already on top of, it spasms around on top of it. but if I add this line it wont eat for some reason
+            // if (bounds.Contains(targetPositionInWorldCoords)) return; //prevents flailing around voxel center point. If its already on the target just stop moving
 
             Vector3 delta = targetPositionInWorldCoords - transform.position;
 
