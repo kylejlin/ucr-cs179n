@@ -115,12 +115,12 @@ public class MobileCreature : Creature
         if (!parentAquarium.checkVoxelInFrontForObstacle(getAllCollidersBoundingBox().center, transform.TransformVector(new Vector3(0, 0, 1)), lookAheadDist))
         {
             //if somethings in the way, rotate
-            Vector3 angVec = new Vector3(1, 50, 1);
+            Vector3 angVec = new Vector3(10, 50, 1);
             rotate(angVec);
         }
 
 
-        mobileCreatureRB.AddForce(0, -8, 0); //stay on the bottom
+        if(!canSwim) mobileCreatureRB.AddForce(0, -8, 0); //stay on the bottom
         // todo: make it stay upright
         // if(transform.localEulerAngles.z > 45) mobileCreatureRB.AddRelativeTorque(0, 0, 1); //keep upright
         // if(transform.localEulerAngles.z < -45) mobileCreatureRB.AddRelativeTorque(0, 0, -1); //keep upright

@@ -8,7 +8,6 @@ public class Entity : MonoBehaviour
     [SerializeField] private float buyMoney;
     [SerializeField] private float sellMoney;
     [SerializeField] private Rarity rarity;
-    [SerializeField] protected bool bottomDweller = true; //should it spawn on the bottom of the tank. True for all decorations. For creatures, its true if it is immobile or only walks along the bottom, else false.
     [SerializeField] public Aquarium parentAquarium = null;
     [SerializeField] private Bounds AABB; // set on prefab in Gamemanager when the game starts. Applies to unrotated, unscaled prefab at 0,0,0. This seems janky but I couldn't find a better way because Bounds/Colliders dont update with the transform immediately which leads to a host of problems
     [SerializeField] protected bool shopMode = false; //true if this gameobject is being displayed in UI and so should spawn as an adult and not Update() (frozen, don't interact) 

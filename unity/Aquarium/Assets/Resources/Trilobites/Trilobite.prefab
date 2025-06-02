@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 6825346676113195874}
   - component: {fileID: 4710943548981468850}
   - component: {fileID: 6303874632496072109}
+  - component: {fileID: 1520555850482662853}
   m_Layer: 15
   m_Name: Trilobite
   m_TagString: Untagged
@@ -53,7 +54,6 @@ MonoBehaviour:
   buyMoney: 0
   sellMoney: 8
   rarity: 0
-  bottomDweller: 1
   parentAquarium: {fileID: 0}
   AABB:
     m_Center: {x: 0, y: 0, z: 0}
@@ -71,7 +71,7 @@ MonoBehaviour:
   minCMCubedPer: 10000
   scaleDownWhenEaten: 0
   mustBeKilledToBeEaten: 1
-  canSwim: 1
+  canSwim: 0
   consumeRate: 8
   speed: 3
   huntingEnergyThreshold: 30
@@ -100,8 +100,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 2.7, y: 0.595314, z: 3.4361496}
-  m_Center: {x: 0.03622341, y: 0.3098246, z: 0.13322449}
+  m_Size: {x: 2.7, y: 0.595314, z: 3.2776256}
+  m_Center: {x: 0.03622341, y: 0.3098246, z: 0.05396253}
 --- !u!212 &4710943548981468850
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -184,6 +184,29 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 2
+--- !u!136 &1520555850482662853
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6660640480602176354}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.19311285
+  m_Height: 1.469481
+  m_Direction: 0
+  m_Center: {x: 0.043953657, y: 0.14620358, z: 1.8530636}
 --- !u!1001 &201266257599801490
 PrefabInstance:
   m_ObjectHideFlags: 0

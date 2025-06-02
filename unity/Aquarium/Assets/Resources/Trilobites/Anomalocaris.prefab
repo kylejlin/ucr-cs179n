@@ -9,9 +9,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1151235212360066332}
-  - component: {fileID: 5568459008530074118}
   - component: {fileID: 6989968284421926450}
   - component: {fileID: 3497956201216702834}
+  - component: {fileID: 4398412163871078013}
+  - component: {fileID: 7031036835282299950}
+  - component: {fileID: 8817090951178689312}
+  - component: {fileID: 8984979669280077815}
   m_Layer: 0
   m_Name: Anomalocaris
   m_TagString: Untagged
@@ -35,27 +38,6 @@ Transform:
   - {fileID: 6741429222300720652}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &5568459008530074118
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7541186808266831616}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 2.4892142, y: 1.0102997, z: 10.87199}
-  m_Center: {x: -0.077439666, y: 2.992795, z: 0.4961548}
 --- !u!54 &6989968284421926450
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -100,7 +82,6 @@ MonoBehaviour:
   buyMoney: 100
   sellMoney: 50
   rarity: 1
-  bottomDweller: 1
   parentAquarium: {fileID: 0}
   AABB:
     m_Center: {x: 0, y: 0, z: 0}
@@ -129,6 +110,98 @@ MonoBehaviour:
   predateCooldown: 0.5
   childPrefab: {fileID: 7541186808266831616}
   demo: 0
+--- !u!136 &4398412163871078013
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7541186808266831616}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.84846497
+  m_Height: 2.3114657
+  m_Direction: 1
+  m_Center: {x: 0, y: 2.0260603, z: 5.767473}
+--- !u!136 &7031036835282299950
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7541186808266831616}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.0519307
+  m_Height: 6.505702
+  m_Direction: 2
+  m_Center: {x: -2.2840016, y: 2.8802752, z: -0.42039537}
+--- !u!136 &8817090951178689312
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7541186808266831616}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.1894672
+  m_Height: 13.891455
+  m_Direction: 2
+  m_Center: {x: 0.072963715, y: 2.8802752, z: -1.0829868}
+--- !u!136 &8984979669280077815
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7541186808266831616}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 1.1292467
+  m_Height: 6.1575694
+  m_Direction: 2
+  m_Center: {x: 2.496728, y: 2.8802752, z: -0.46633792}
 --- !u!1001 &6486563717844662759
 PrefabInstance:
   m_ObjectHideFlags: 0
