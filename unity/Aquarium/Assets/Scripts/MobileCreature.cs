@@ -330,7 +330,7 @@ public class MobileCreature : Creature
         Vector3 delta = closest.transform.position - transform.position;
         float distance = delta.magnitude;
 
-        if (distance <= maxEatingDistance * getMaturity())
+        if (distance <= maxEatingDistance * getMaturity() +2)
         {
             //Eat based on consumeRate 
             if (animator) animator.SetTrigger("eat");
@@ -338,22 +338,26 @@ public class MobileCreature : Creature
             return;
         }
 
-        Vector3 displacement = delta.normalized;
-        float k = speed * 3 * Time.deltaTime;
-        displacement.Scale(new Vector3(k, k, k));
-        transform.position += displacement;
-        rotateTowards(delta);
+        move(delta,true);
     }
 
 
 
-    //Takes in Vector3 velocity to move mobileCreature
-    protected void move(Vector3 velocity)
+    //Takes in Vector3 velocity to move mobileCreature, needs to have parameter true when creature is hunting
+    protected void move(Vector3 velocity, bool hunting = false)
     {
         if (shopMode) { Debug.LogWarning("Can't move in shop mode"); return; }
         //using rigidbody.MovePosition() will make transitioning to the new position smoother if interpolation is enabled
         //MovePosition(currentPosition + displacement)
-        mobileCreatureRB.MovePosition(mobileCreatureRB.position + mobileCreatureRB.rotation * velocity * speed * Time.fixedDeltaTime);
+        if (hunting)
+        {
+            mobileCreatureRB.MovePosition(mobileCreatureRB.position + velocity * (speed / 2) * Time.fixedDeltaTime);
+            rotateTowards(velocity);
+        }
+        else
+        {
+            mobileCreatureRB.MovePosition(mobileCreatureRB.position + mobileCreatureRB.rotation * velocity * speed * Time.fixedDeltaTime);
+        }
     }
 
     //Takes in Vector3 angularVelocity to rotate mobileCreature in local space
