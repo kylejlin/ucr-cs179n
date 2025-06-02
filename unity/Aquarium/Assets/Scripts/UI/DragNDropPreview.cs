@@ -15,6 +15,8 @@ public class DragNDropPreview : MonoBehaviour
     private BoxCollider myBC; //BC on this game object
     private GameObject XImage;
     private Renderer Xrenderer;
+    private AudioSource audioSource;
+
 
     private bool isColliding; // is currently colliding with another collider in the scene
     private bool canSpawn; // is in valid position right now to spawn entity
@@ -31,6 +33,8 @@ public class DragNDropPreview : MonoBehaviour
     {
 
         //set up all the variables
+        audioSource = GetComponent<AudioSource>();
+        audioSource.Play();
 
         aquarium = a;
         cam = c;

@@ -30,6 +30,7 @@ public class MobileCreature : Creature
     private float predateCount = 0f; //delta time tracking for ^
 
     public GameObject childPrefab; //used to instantiate new prefab for child 
+    private AudioSource audioSource;
 
     public float navigationTemperature = 0;
 
@@ -39,11 +40,17 @@ public class MobileCreature : Creature
 
     public float ignoreNavTemperatureThreshold = 3f;
 
-    /// <summary> Set default values for trilobite bought from store. </summary>
-    protected new void Awake()    {
+    protected new void Awake()
+    {
         base.Awake(); //call Creature Start()
         mobileCreatureRB = GetComponent<Rigidbody>();
         animator = GetComponentInChildren<Animator>();
+        audioSource = GetComponent<AudioSource>();
+        if (!shopMode)
+        {
+            print("mobilecreature sound");
+            audioSource.Play();
+        }
 
         initSize();
 
@@ -457,7 +464,7 @@ public class MobileCreature : Creature
         //Debug.Log("curr units per T "+ currUnitsCubedPerT);
         if ((closestTSqrDist > minSpace * minSpace) && (minCMCubedPerT < currCMCubedPerT) && !(parentAquarium.getBreedingMutex()) && (potentialPartner))
         {
-            print("Call duplicate");
+            //print("Call duplicate");
             parentAquarium.setBreedingMutex(true);
             duplicate(randVecNearby, findPartner<MobileCreature>(potentialPartner));
         }
