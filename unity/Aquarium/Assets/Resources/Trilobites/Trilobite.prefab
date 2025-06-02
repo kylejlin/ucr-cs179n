@@ -180,7 +180,7 @@ MonoBehaviour:
   maxEatingDistance: 1
   state: 0
   animator: {fileID: 0}
-  breedingCooldown: 2
+  breedingCooldown: 8
   predateCooldown: 0.5
   childPrefab: {fileID: 6660640480602176354}
   navigationTemperature: 0
