@@ -75,12 +75,15 @@ MonoBehaviour:
   consumeRate: 8
   speed: 3
   huntingEnergyThreshold: 30
-  maxEatingDistance: 2
   state: 0
   animator: {fileID: 0}
   breedingCooldown: 10
   predateCooldown: 0.5
   childPrefab: {fileID: 6660640480602176354}
+  navigationTemperature: 0
+  previousTargetPosition: {x: 0, y: 0, z: 0}
+  isIgnoringNav: 0
+  ignoreNavTemperatureThreshold: 3
 --- !u!65 &6825346676113195874
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -203,10 +206,10 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.19311285
+  m_Radius: 0.15922295
   m_Height: 1.469481
   m_Direction: 0
-  m_Center: {x: 0.043953657, y: 0.14620358, z: 1.8530636}
+  m_Center: {x: 0.043953657, y: 0.18009348, z: 1.8530636}
 --- !u!1001 &201266257599801490
 PrefabInstance:
   m_ObjectHideFlags: 0

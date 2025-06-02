@@ -18,7 +18,6 @@ public class MobileCreature : Creature
     public float speed = 1;
 
     public float huntingEnergyThreshold = 30;
-    public static float metabolismRate = 1;
     public static float maxEatingDistance = 1;
 
     public BehaviorState state = BehaviorState.Idle;
@@ -54,7 +53,7 @@ public class MobileCreature : Creature
 
     public void setChildValues(MobileCreature parent1, MobileCreature parent2)
     {
-        speed = parent1.speed + parent2.speed;
+        speed = (parent1.speed + parent2.speed)/2;
         count = 0;
         //color
     }
@@ -184,13 +183,13 @@ public class MobileCreature : Creature
             return;
         }
 
+        Bounds bounds = getAllCollidersBoundingBox(); //I want this in future code so moving it out of the {}
         // Eat the prey if it's close enough.
         {
 
             float simpleDistance = (closest.transform.position - transform.position).magnitude;
 
-            Bounds bounds = GetComponent<Collider>().bounds;
-            Bounds preyBounds = closest.GetComponent<Collider>().bounds;
+            Bounds preyBounds = closest.getAllCollidersBoundingBox();
             Vector3[] corners = GetCorners(bounds);
             Vector3[] preyCorners = GetCorners(preyBounds);
             float minDistance = float.MaxValue;
@@ -251,12 +250,13 @@ public class MobileCreature : Creature
                 }
             }
 
+            if (bounds.Contains(targetPositionInWorldCoords)) return; //prevents flailing around voxel center point. If its already on the target just stop moving
 
             Vector3 delta = targetPositionInWorldCoords - transform.position;
 
-            Vector3 displacement = delta.normalized;
-            float k = speed * 3 * Time.deltaTime;
-            displacement.Scale(new Vector3(k, k, k));
+            Vector3 displacement = delta.normalized * Time.deltaTime * speed;
+            // float k = speed * 3 * Time.deltaTime;
+            // displacement.Scale(new Vector3(k, k, k));
             transform.position += displacement;
             rotateTowards(delta);
         }
