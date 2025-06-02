@@ -25,10 +25,16 @@ public class ShopUI : BaseUI
 
 
         SelectedEntity = gameManager.creatures[0];
-        SelectedItemPreview.Setup(SelectedEntity);
-        if (galleryMode)
+        if (!galleryMode)
+        {
+            SelectedItem selected = (SelectedItem)SelectedItemPreview;
+            selected.Setup(SelectedEntity);
+        }
+        else
+        {
+            SelectedItemPreview.Setup(SelectedEntity);
             SelectedItemPreview.setCollected(gameManager.isCollected(SelectedEntity));
-
+        }
         PopulateShop();
         categoryTabs.SetCategory();
         OnEnable();
@@ -67,7 +73,13 @@ public class ShopUI : BaseUI
     private void select(Entity entity)
     {
         SelectedEntity = entity;
-        SelectedItemPreview.ChangeSelected(SelectedEntity);
+        if (!galleryMode)
+        {
+            SelectedItem selected = (SelectedItem)SelectedItemPreview;
+            selected.ChangeSelected(SelectedEntity);
+        }
+        else
+            SelectedItemPreview.ChangeSelected(SelectedEntity);
         if (galleryMode)
             SelectedItemPreview.setCollected(gameManager.isCollected(SelectedEntity));
 

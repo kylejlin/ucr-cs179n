@@ -155,13 +155,15 @@ MonoBehaviour:
   id: 2
   uniqueID: -1
   buyMoney: 10
-  sellMoney: 5
+  sellMoney: 8
   rarity: 0
   parentAquarium: {fileID: 0}
   AABB:
     m_Center: {x: 0.03622341, y: 0.4, z: 0.13322449}
     m_Extent: {x: 1.35, y: 0.2074816, z: 1.7180748}
   shopMode: 0
+  description: 'Little bottom feeding creatures that scuttle around the tank. Loves
+    munching on some nice plants! Eats- Algae Predator- Anomalocaris '
   energy: 2
   maxEnergy: 5
   growthRate: 0.1

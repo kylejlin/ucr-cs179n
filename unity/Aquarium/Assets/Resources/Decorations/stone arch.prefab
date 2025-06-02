@@ -157,17 +157,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 942109f3a88ad43f0ba45d3cb085ffde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 3
+  id: 6
   uniqueID: -1
   buyMoney: 30
-  sellMoney: 29
+  sellMoney: 24
   rarity: 1
-  bottomDweller: 1
   parentAquarium: {fileID: 0}
   AABB:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
+    m_Center: {x: -0.08440781, y: 8.052458, z: -0.17887783}
+    m_Extent: {x: 9.508376, y: 7.838972, z: 3.5352616}
   shopMode: 0
+  description: A wonderful archway shipped straight from Atlantis, perfect for a
+    pleasant ambiance!
   moneyBonus: 10
 --- !u!65 &1158029221117424562
 BoxCollider:

@@ -99,13 +99,15 @@ MonoBehaviour:
   id: 1
   uniqueID: -1
   buyMoney: 50
-  sellMoney: 50
+  sellMoney: 40
   rarity: 1
   parentAquarium: {fileID: 0}
   AABB:
     m_Center: {x: -0.077439666, y: 2.992795, z: 0.4961548}
     m_Extent: {x: 1.2446071, y: 0.50514984, z: 5.435995}
   shopMode: 0
+  description: "This speedy apex predator will surely strike fear into any poor unsuspecting
+    creature in the tank\u2026 Release with caution! Eats- Trilobite Predator- None "
   energy: 100
   maxEnergy: 100
   growthRate: 0.1

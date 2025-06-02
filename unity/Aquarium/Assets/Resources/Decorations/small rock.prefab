@@ -91,17 +91,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 942109f3a88ad43f0ba45d3cb085ffde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 0
+  id: 5
   uniqueID: -1
   buyMoney: 3
-  sellMoney: 1
+  sellMoney: 2
   rarity: 0
-  bottomDweller: 1
   parentAquarium: {fileID: 0}
   AABB:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
+    m_Center: {x: 0, y: 1.6442511, z: 0.00000035762787}
+    m_Extent: {x: 1.9999998, y: 1.633251, z: 1.9999995}
   shopMode: 0
+  description: 'Small rock. Good for small gaps on the aquarium floor! '
   moneyBonus: 2
 --- !u!1001 &2602549801293354149
 PrefabInstance:

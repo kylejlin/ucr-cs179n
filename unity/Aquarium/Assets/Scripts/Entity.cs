@@ -13,6 +13,8 @@ public class Entity : MonoBehaviour
     [SerializeField] protected bool shopMode = false; //true if this gameobject is being displayed in UI and so should spawn as an adult and not Update() (frozen, don't interact) 
     protected double count = 0; //to count deltaTime 
 
+    [SerializeField]
+    private string description;
     private Outline outline;
     public virtual void Awake()
     {
@@ -137,7 +139,13 @@ public class Entity : MonoBehaviour
     {
         return "Name: " + name;
     }
-
+    public string getShopStats()
+    {
+        return "Name: " + name + "\n" +
+            "Description: " + description + "\n" +
+            "Buy Price: " + buyMoney + "\n" +
+            "Sell Price: " + sellMoney;
+    }
     public float getSqrDistToEntity(Entity entity) { return (transform.localPosition - entity.transform.localPosition).sqrMagnitude; }
     public float getSqrDistBw(Vector3 vec1, Vector3 vec2) { return (vec1 - vec2).sqrMagnitude; }
     public void setOutline(bool enable) { outline.enabled = enable; }
