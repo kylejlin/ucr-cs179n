@@ -91,17 +91,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 942109f3a88ad43f0ba45d3cb085ffde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 1
+  id: 4
   uniqueID: -1
   buyMoney: 5
   sellMoney: 4
   rarity: 0
-  bottomDweller: 1
   parentAquarium: {fileID: 0}
   AABB:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
+    m_Center: {x: 0, y: 3.3135014, z: 0}
+    m_Extent: {x: 4.000001, y: 3.2665038, z: 4.000002}
   shopMode: 0
+  description: 'Medium rock. Very reasonably sized rock. '
   moneyBonus: 4
 --- !u!1001 &2602549801293354149
 PrefabInstance:

@@ -91,17 +91,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 942109f3a88ad43f0ba45d3cb085ffde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 0
+  id: 3
   uniqueID: -1
   buyMoney: 10
   sellMoney: 10
   rarity: 0
-  bottomDweller: 1
   parentAquarium: {fileID: 0}
   AABB:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
+    m_Center: {x: -0.16562462, y: 2.922916, z: 1.6774082}
+    m_Extent: {x: 8.634516, y: 2.8687787, z: 8.915657}
   shopMode: 0
+  description: 'Big rock!!! Surely all your creatures would love a big rock!!! '
   moneyBonus: 8
 --- !u!1001 &1574659676339120964
 PrefabInstance:
