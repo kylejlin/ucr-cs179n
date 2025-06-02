@@ -23,7 +23,7 @@ public class GameManager : MonoBehaviour
 
     private static Dictionary<Entity, bool> collection = new();
 
-    float money = 100f; 
+    [SerializeField] float money = 5f; 
     public int level = 1; // todo:
     public int xpCap = 0;
     public int xp = 0;
