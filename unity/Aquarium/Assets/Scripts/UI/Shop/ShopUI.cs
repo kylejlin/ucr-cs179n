@@ -18,10 +18,7 @@ public class ShopUI : BaseUI
     {
         base.Start();
         ShopGrid = gameObject.transform.Find("ShopGrid").gameObject;
-        if (galleryMode)
-            SelectedItemPreview = gameObject.transform.Find("SelectedItem").gameObject.GetComponent<Preview>();
-        else
-            SelectedItemPreview = gameObject.transform.Find("SelectedItem").gameObject.GetComponent<SelectedItem>();
+        SelectedItemPreview = gameObject.transform.Find("SelectedItem").gameObject.GetComponent<Preview>();
         categoryTabs = gameObject.transform.Find("CategoryTabs").gameObject.GetComponent<CategoryTabs>();
 
         ShopItem = Resources.Load<GameObject>("Shop/ShopItem").GetComponent<ShopItem>();
