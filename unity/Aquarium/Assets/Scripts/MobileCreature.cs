@@ -152,7 +152,7 @@ public class MobileCreature : Creature
 
     protected virtual void UpdateHunting()
     {
-        if(!canSwim) mobileCreatureRB.AddForce(0, -8, 0); //stay on the bottom
+        if(!canSwim) mobileCreatureRB.AddForce(0, -2, 0); //stay on the bottom
 
         // You can toggle this to test the navigation system.
         bool USE_NAV = true;
@@ -256,11 +256,11 @@ public class MobileCreature : Creature
             // if (bounds.Contains(targetPositionInWorldCoords)) return; //prevents flailing around voxel center point. If its already on the target just stop moving
 
             Vector3 delta = targetPositionInWorldCoords - transform.position;
+            move(delta,true);
 
-            Vector3 displacement = delta.normalized * speed;
+            // Vector3 displacement = delta.normalized;
             // float k = speed * 3 * Time.deltaTime;
             // displacement.Scale(new Vector3(k, k, k));
-            move(delta,true);
             // rotateTowards(delta);
         }
     }

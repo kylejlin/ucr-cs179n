@@ -23,7 +23,7 @@ public class Anomalocaris : MobileCreature
 
         if (closest == null)
         {
-            // Nothing to eat.
+            UpdateIdle();
             return;
         }
 
@@ -41,9 +41,10 @@ public class Anomalocaris : MobileCreature
         else
         {
             Vector3 displacement = delta.normalized;
-            float k = speed * 3 * Time.deltaTime;
-            displacement.Scale(new Vector3(k, k, k));
-            transform.position += displacement;
+            move(displacement, true);
+            // float k = speed * 3 * Time.deltaTime;
+            // displacement.Scale(new Vector3(k, k, k));
+            // transform.position += displacement;
             rotateTowards(delta);
         }
         
