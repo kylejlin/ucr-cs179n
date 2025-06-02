@@ -80,7 +80,6 @@ public class MobileCreature : Creature
             count += Time.deltaTime;
             if ((energy > adultEnergy * .75f) && (count > breedingCooldown))
             {
-                //print("Trying to duplicate");
                 tryDuplicate<MobileCreature>(minSpawnSpace, minCMCubedPer);
             }
         }
@@ -423,15 +422,13 @@ public class MobileCreature : Creature
         {
 
         }
-        print("Instantiating");
+        print("Instantiating new MobileCreature");
 
         MobileCreature child = (MobileCreature)parentAquarium.addEntity(childPrefab.GetComponent<Entity>(), position, transform.localRotation); //spawn nearby in same aquarium
         child.setChildValues(this, partner);
         count = 0;
         partner.count = 0;
         parentAquarium.setBreedingMutex(false);
-        // print(partner.count);
-        // print(partner.transform.position);
     }
 
     /// <summary> try to duplicate, but dont if there is a T too close to the attempted spawn location or too many of T in the aquarium as a whole. </summary>
@@ -456,7 +453,6 @@ public class MobileCreature : Creature
         //Debug.Log("curr units per T "+ currUnitsCubedPerT);
         if ((closestTSqrDist > minSpace * minSpace) && (minCMCubedPerT < currCMCubedPerT) && !(parentAquarium.getBreedingMutex()) && (potentialPartner))
         {
-            print("Call duplicate");
             parentAquarium.setBreedingMutex(true);
             duplicate(randVecNearby, findPartner<MobileCreature>(potentialPartner));
         }
