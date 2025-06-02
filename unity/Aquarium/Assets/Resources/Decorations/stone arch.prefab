@@ -158,10 +158,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 3
-  sellMoney: 5
-  rarity: 0
+  uniqueID: -1
+  buyMoney: 30
+  sellMoney: 29
+  rarity: 1
+  bottomDweller: 1
   parentAquarium: {fileID: 0}
-  count: 0
+  AABB:
+    m_Center: {x: 0, y: 0, z: 0}
+    m_Extent: {x: 0, y: 0, z: 0}
+  shopMode: 0
   moneyBonus: 10
 --- !u!65 &1158029221117424562
 BoxCollider:
