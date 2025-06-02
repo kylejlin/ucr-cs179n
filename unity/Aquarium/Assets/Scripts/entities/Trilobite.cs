@@ -8,7 +8,7 @@ public class Trilobite : MobileCreature
         base.Awake(); //call Creature Start()
         setValues(true); //but also the standard for other classes has been the base awake is called first
         //maybe better to set them in the editor? hm
-
+        
 
     }
     void FixedUpdate() {

@@ -91,14 +91,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 942109f3a88ad43f0ba45d3cb085ffde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  entityName: NoName
-  id: 0
-  buyMoney: 15
+  id: 1
   sellMoney: 10
   rarity: 0
-  shopMode: 0
   parentAquarium: {fileID: 0}
-  moneyBonus: 2
+  count: 0
+  moneyBonus: 4
 --- !u!1001 &2602549801293354149
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -125,11 +123,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a96c3b7e321b16348a9a20079e630cf3, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 3.74
+      value: 4.047
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a96c3b7e321b16348a9a20079e630cf3, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 0
+      value: -0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: a96c3b7e321b16348a9a20079e630cf3, type: 3}
       propertyPath: m_LocalRotation.w

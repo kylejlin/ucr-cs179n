@@ -15,6 +15,8 @@ public class DragNDropPreview : MonoBehaviour
     private BoxCollider myBC; //BC on this game object
     private GameObject XImage;
     private Renderer Xrenderer;
+    private AudioSource audioSource;
+
 
     private bool isColliding; // is currently colliding with another collider in the scene
     private bool canSpawn; // is in valid position right now to spawn entity
@@ -31,6 +33,8 @@ public class DragNDropPreview : MonoBehaviour
     {
 
         //set up all the variables
+        audioSource = GetComponent<AudioSource>();
+        audioSource.Play();
 
         aquarium = a;
         cam = c;
@@ -53,12 +57,9 @@ public class DragNDropPreview : MonoBehaviour
             entityPrefab = null;
             previewedEntity = e;
         }
-        Vector3 originalEntityPos = previewedEntity.transform.position;
         move(Vector3.zero, Quaternion.identity, false);
-        
         entityRB = previewedEntity.GetComponent<Rigidbody>(); // doesnt work in shopmode? bc disabled?
-        Bounds entityColliderBounds = previewedEntity.getAllCollidersBoundingBox(); //get its AABB for collision checks. cant nullify struct so a size 0 bounds means DNI. also doesnt work on inactive / prefab / disabled things
-        if (!prefab) entityColliderBounds.center -= originalEntityPos; //for some reason Bounds require this. it does not update immediately when I set the transform above. So if the object was not at 0,0,0, the center of the AABB has the original pos added to it incorrectly
+        Bounds entityColliderBounds = previewedEntity.getAABB(); //get its AABB for collision checks. cant nullify struct so a size 0 bounds means DNI. 
         previewedEntity.initShopMode(false, isPrefab); //it is in shop mode so it does not interfere w living real creatures
         if (!myBC || (entityColliderBounds.size == Vector3.zero) || !XImage) Debug.LogWarning("DragNDrog or entity missing components");
 
@@ -75,7 +76,7 @@ public class DragNDropPreview : MonoBehaviour
         //How this works:
         //spawn entity
         //get the bounding box of its colliders only
-        //turn on shopmode, so all of the entitie's colliders will be disabled and its RB will be deleted if it has one 
+        //turn on shopmode, so all of the entitie's colliders and RB will be disabled  
         //change the collider on this gameObject to match the size and placement of the entity's colliders so it can detect collisions (invalid spawning places)
 
         //Also:
@@ -95,9 +96,13 @@ public class DragNDropPreview : MonoBehaviour
             //move to mouse position & rotate
             move(hit.point, Quaternion.LookRotation(hit.normal) * Quaternion.Euler(90f, 0f, 0f), false);
 
-            if (isColliding || !aquarium.isInBounds(hit.point) || hit.collider.GetComponent<Creature>()) //detect invalid placement (collisions, out of aquarium, or on top of a creature)
+            if ((isColliding) || (!aquarium.isInBounds(hit.point)) || (hit.collider.GetComponent<Creature>())) //detect invalid placement (collisions, out of aquarium, or on top of a creature)
             {
+                // print("Cant spawn because of:");
                 setCanSpawn(false);
+                // if (isColliding) print("is Colliding");
+                // if (!aquarium.isInBounds(hit.point)) print("out of aquarium bounds: "+hit.point);
+                // if (hit.collider.GetComponent<Creature>()) print("hitting creature"); 
             }
             else setCanSpawn(true);
 
@@ -129,10 +134,12 @@ public class DragNDropPreview : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         isColliding = true;
+        // print("colliding with: "+other.gameObject.name);
     }
     private void OnTriggerExit(Collider other)
     {
         isColliding = false;
+        // print("stopped colliding");
     }
     private void setCanSpawn(bool enable)
     {
