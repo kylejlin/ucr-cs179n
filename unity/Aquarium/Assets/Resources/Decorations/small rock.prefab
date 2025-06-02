@@ -94,7 +94,7 @@ MonoBehaviour:
   id: 5
   uniqueID: -1
   buyMoney: 3
-  sellMoney: 1
+  sellMoney: 2
   rarity: 0
   parentAquarium: {fileID: 0}
   AABB:
