@@ -18,7 +18,8 @@ public class MobileCreature : Creature
     public float speed = 1;
 
     public float huntingEnergyThreshold = 30;
-    public float maxEatingDistance = 7;
+    public static float metabolismRate = 1;
+    public static float maxEatingDistance = 1;
 
     public BehaviorState state = BehaviorState.Idle;
 
@@ -31,6 +32,14 @@ public class MobileCreature : Creature
 
     public GameObject childPrefab; //used to instantiate new prefab for child 
     private AudioSource audioSource;
+
+    public float navigationTemperature = 0;
+
+    public Vector3 previousTargetPosition = Vector3.zero;
+
+    public bool isIgnoringNav = false;
+
+    public float ignoreNavTemperatureThreshold = 3f;
 
     protected new void Awake()
     {
@@ -165,6 +174,12 @@ public class MobileCreature : Creature
 
     void UpdateHuntingWithNav()
     {
+        if (isIgnoringNav)
+        {
+            UpdateHuntingWithIgnoredNav();
+            return;
+        }
+
         // I can't find the algae class, so for now,
         // I'm just targeting the closest entity.
         ImmobileCreature closest = parentAquarium.FindClosest<ImmobileCreature>(this);
@@ -175,12 +190,41 @@ public class MobileCreature : Creature
             return;
         }
 
-        // Eat the prey if it's within range.
+        // Eat the prey if it's close enough.
         {
-            Vector3 delta = closest.transform.position - transform.position;
-            float distance = delta.magnitude;
 
-            if (distance <= maxEatingDistance)
+            float simpleDistance = (closest.transform.position - transform.position).magnitude;
+
+            Bounds bounds = GetComponent<Collider>().bounds;
+            Bounds preyBounds = closest.GetComponent<Collider>().bounds;
+            Vector3[] corners = GetCorners(bounds);
+            Vector3[] preyCorners = GetCorners(preyBounds);
+            float minDistance = float.MaxValue;
+            foreach (var a in corners)
+            {
+                foreach (var b in preyCorners)
+                {
+                    float dist = Vector3.Distance(a, b);
+                    if (dist < minDistance)
+                    {
+                        minDistance = dist;
+                    }
+                }
+            }
+
+            // We can eat the prey if either:
+            //
+            // 1. The prey is within the maximum eating distance,
+            //    when we calculate distance using the default position reference point.
+            // 2. The prey is within the maximum eating distance,
+            //    when we calculate distance using the closest corner-to-corner distance.
+            // 3. We're _inside_ the prey.
+            //    Note that this assumes that the prey has a collider.
+            //    If it doesn't, this code will crash.
+
+            bool canEat = simpleDistance <= maxEatingDistance || minDistance <= maxEatingDistance || bounds.Intersects(preyBounds);
+
+            if (canEat)
             {
                 //Eat based on consumeRate 
                 eat(closest.beingEaten(consumeRate));
@@ -192,6 +236,27 @@ public class MobileCreature : Creature
         // ...Otherwise, move towards the scent of food.
         {
             Vector3 targetPositionInWorldCoords = getTargetPositionInWorldCoords();
+            if (previousTargetPosition != targetPositionInWorldCoords)
+            {
+                previousTargetPosition = targetPositionInWorldCoords;
+                navigationTemperature = 0;
+            }
+            else
+            {
+                // You can tweak the coefficient to change how quickly the creature
+                // gets impatient and starts ignoring the navigation system.
+                navigationTemperature += 1.0f * Time.deltaTime;
+
+                if (navigationTemperature >= ignoreNavTemperatureThreshold)
+                {
+                    // You can tweak this value to change how long the creature ignores the navigation system.
+                    navigationTemperature = 7.0f;
+
+                    isIgnoringNav = true;
+                    return;
+                }
+            }
+
             print("target position " + targetPositionInWorldCoords);
 
             Vector3 delta = targetPositionInWorldCoords - transform.position;
@@ -202,6 +267,45 @@ public class MobileCreature : Creature
             transform.position += displacement;
             rotateTowards(delta);
         }
+    }
+
+    static Vector3[] GetCorners(Bounds bounds)
+    {
+        Vector3 center = bounds.center;
+        Vector3 extents = bounds.extents;
+
+        return new Vector3[]
+        {
+            center + new Vector3(+extents.x, +extents.y, +extents.z),
+            center + new Vector3(+extents.x, +extents.y, -extents.z),
+            center + new Vector3(+extents.x, -extents.y, +extents.z),
+            center + new Vector3(+extents.x, -extents.y, -extents.z),
+            center + new Vector3(-extents.x, +extents.y, +extents.z),
+            center + new Vector3(-extents.x, +extents.y, -extents.z),
+            center + new Vector3(-extents.x, -extents.y, +extents.z),
+            center + new Vector3(-extents.x, -extents.y, -extents.z),
+        };
+    }
+
+    void UpdateHuntingWithIgnoredNav()
+    {
+        if (navigationTemperature <= 0f)
+        {
+            isIgnoringNav = false;
+            navigationTemperature = 0f;
+            return;
+        }
+
+        // You can tweak the coefficient to change how quickly the creature
+        // goes back to using the navigation system.
+        navigationTemperature -= 1.0f * Time.deltaTime;
+
+        // When we're ignoring the navigation system,
+        // we just move around randomly.
+        // For now, I'll use the `UpdateIdle` as a reasonable default.
+        // If you want to customize this behavior,
+        // feel free to replace this with your own logic.
+        UpdateIdle();
     }
 
     public Vector3Int getTargetPositionInVoxelCoords()
