@@ -257,11 +257,11 @@ public class MobileCreature : Creature
 
             Vector3 delta = targetPositionInWorldCoords - transform.position;
 
-            Vector3 displacement = delta.normalized * Time.deltaTime * speed;
+            Vector3 displacement = delta.normalized * speed;
             // float k = speed * 3 * Time.deltaTime;
             // displacement.Scale(new Vector3(k, k, k));
-            transform.position += displacement;
-            rotateTowards(delta);
+            move(delta,true);
+            // rotateTowards(delta);
         }
     }
 

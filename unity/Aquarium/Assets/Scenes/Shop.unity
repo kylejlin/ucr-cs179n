@@ -8807,7 +8807,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationSpeed: 5
-  zoomSpeed: 0.2
+  zoomSpeed: 0.6
   minFov: 10
   maxFov: 60
   zoomSmoothTime: 0.1
