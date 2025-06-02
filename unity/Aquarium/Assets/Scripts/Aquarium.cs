@@ -530,33 +530,35 @@ public class Aquarium : MonoBehaviour
 
     public Vector3Int getBestNeighborCoordsInVoxelCoords(Vector3 startInAquariumCoords)
     {
-        Vector3 minAquariumCoords = getMinAquariumCoords();
-        Vector3 maxAquariumCoords = getMaxAquariumCoords();
+        // Vector3 minAquariumCoords = getMinAquariumCoords();
+        // Vector3 maxAquariumCoords = getMaxAquariumCoords();
 
-        if (!(
-            minAquariumCoords.x <= startInAquariumCoords.x && startInAquariumCoords.x <= maxAquariumCoords.x
-            && minAquariumCoords.y <= startInAquariumCoords.y && startInAquariumCoords.y <= maxAquariumCoords.y
-            && minAquariumCoords.z <= startInAquariumCoords.z && startInAquariumCoords.z <= maxAquariumCoords.z))
-        {
-            {
-                Debug.LogWarning($"startInAquariumCoords is not in aquarium bounds. startInAquariumCoords: {startInAquariumCoords}; minAquariumCoords: {minAquariumCoords}; maxAquariumCoords: {maxAquariumCoords}");
-                return new Vector3Int(-1, -1, -1);
-            }
-        }
+        // if (!(
+        //     minAquariumCoords.x <= startInAquariumCoords.x && startInAquariumCoords.x <= maxAquariumCoords.x
+        //     && minAquariumCoords.y <= startInAquariumCoords.y && startInAquariumCoords.y <= maxAquariumCoords.y
+        //     && minAquariumCoords.z <= startInAquariumCoords.z && startInAquariumCoords.z <= maxAquariumCoords.z))
+        // {
+        //     {
+        //         Debug.LogWarning($"startInAquariumCoords is not in aquarium bounds. startInAquariumCoords: {startInAquariumCoords}; minAquariumCoords: {minAquariumCoords}; maxAquariumCoords: {maxAquariumCoords}");
+        //         return new Vector3Int(-1, -1, -1);
+        //     }
+        // }
 
-        Vector3 startRelativeToMin = startInAquariumCoords - minAquariumCoords;
-        Vector3Int startVoxelCoords = new Vector3Int(
-            Mathf.FloorToInt(startRelativeToMin.x / voxelSize),
-            Mathf.FloorToInt(startRelativeToMin.y / voxelSize),
-            Mathf.FloorToInt(startRelativeToMin.z / voxelSize)
-        );
-        if (!areVoxelCoordsValid(startVoxelCoords))
-        {
-            Debug.LogWarning("startVoxelCoords is not valid");
-            return new Vector3Int(-1, -1, -1);
-        }
+        // Vector3 startRelativeToMin = startInAquariumCoords - minAquariumCoords;
+        // Vector3Int startVoxelCoords = new Vector3Int(
+        //     Mathf.FloorToInt(startRelativeToMin.x / voxelSize),
+        //     Mathf.FloorToInt(startRelativeToMin.y / voxelSize),
+        //     Mathf.FloorToInt(startRelativeToMin.z / voxelSize)
+        // );
+        // if (!areVoxelCoordsValid(startVoxelCoords))
+        // {
+        //     Debug.LogWarning("startVoxelCoords is not valid");
+        //     return new Vector3Int(-1, -1, -1);
+        // }
 
+        Vector3Int startVoxelCoords = aquariumCoordsToVoxelCoords(startInAquariumCoords);
         Vector3Int bestVoxelCoords = startVoxelCoords;
+        
 
         List<Vector3Int> deltasToNeighborsExcludingSelf = getDeltasToNeighborsExcludingSelf();
         foreach (Vector3Int delta in deltasToNeighborsExcludingSelf)
@@ -585,6 +587,65 @@ public class Aquarium : MonoBehaviour
         return voxelCoordsToAquariumCoords(bestVoxelCoords);
     }
 
+    public Vector3Int aquariumCoordsToVoxelCoords(Vector3 startInAquariumCoords)
+    {
+        Vector3 minAquariumCoords = getMinAquariumCoords();
+        Vector3 maxAquariumCoords = getMaxAquariumCoords();
+
+        if (!(
+            minAquariumCoords.x <= startInAquariumCoords.x && startInAquariumCoords.x <= maxAquariumCoords.x
+            && minAquariumCoords.y <= startInAquariumCoords.y && startInAquariumCoords.y <= maxAquariumCoords.y
+            && minAquariumCoords.z <= startInAquariumCoords.z && startInAquariumCoords.z <= maxAquariumCoords.z))
+        {
+            {
+                Debug.LogWarning($"startInAquariumCoords is not in aquarium bounds. startInAquariumCoords: {startInAquariumCoords}; minAquariumCoords: {minAquariumCoords}; maxAquariumCoords: {maxAquariumCoords}");
+                return new Vector3Int(-1, -1, -1);
+            }
+        }
+
+        Vector3 startRelativeToMin = startInAquariumCoords - minAquariumCoords;
+        Vector3Int startVoxelCoords = new Vector3Int(
+            Mathf.FloorToInt(startRelativeToMin.x / voxelSize),
+            Mathf.FloorToInt(startRelativeToMin.y / voxelSize),
+            Mathf.FloorToInt(startRelativeToMin.z / voxelSize)
+        );
+        if (!areVoxelCoordsValid(startVoxelCoords))
+        {
+            Debug.LogWarning("startVoxelCoords is not valid");
+            return new Vector3Int(-1, -1, -1);
+        }
+        return startVoxelCoords;
+    }
+
+    //check voxel in path of creatures movement to check for obstacles to avoid. todo: check whole ray of voxels? it will fail for a thin barrier
+    public bool checkVoxelInFrontForObstacle(Vector3 startInAquariumCoords, Vector3 localFacingDirection, float lookAheadDist = 2)
+    {
+        Vector3 positionToCheck = startInAquariumCoords + (localFacingDirection.normalized * lookAheadDist);
+        if (!isInBounds(positionToCheck)) return false;
+        Vector3Int bestVoxelCoords = aquariumCoordsToVoxelCoords(positionToCheck);
+        // Vector3Int voxelInFront = bestVoxelCoords;
+        // if ((localFacingDirection.x * localFacingDirection.x >= localFacingDirection.y * localFacingDirection.y) && (localFacingDirection.x * localFacingDirection.x >= localFacingDirection.z * localFacingDirection.z))
+        // {
+        //     if (localFacingDirection.x < 0) voxelInFront.x -= lookAheadVoxels;
+        //     else voxelInFront.x += lookAheadVoxels;
+        // }
+        // else if ((localFacingDirection.y * localFacingDirection.y >= localFacingDirection.x * localFacingDirection.x) && (localFacingDirection.y * localFacingDirection.y >= localFacingDirection.z * localFacingDirection.z))
+        // {
+        //     if (localFacingDirection.y < 0) voxelInFront.y -= lookAheadVoxels;
+        //     else voxelInFront.y += lookAheadVoxels;
+        // }
+        // else
+        // {
+        //     if (localFacingDirection.z < 0) voxelInFront.z -= lookAheadVoxels;
+        //     else voxelInFront.z += lookAheadVoxels;
+        // }
+
+
+        if (getScentAt(bestVoxelCoords) < 0) return false;
+        if (!areVoxelCoordsValid(bestVoxelCoords)) return false;
+        return true;
+    }
+
 
 
     public float calcMoney()
@@ -592,7 +653,7 @@ public class Aquarium : MonoBehaviour
         float currMoneyBonus = 1f; //start w 1 for the tank itself
         foreach (Entity e in entities) currMoneyBonus += e.calcMoneyBonus();
         return currMoneyBonus;
-        
+
     }
 
     public int getHunger()

@@ -18,7 +18,6 @@ public class MobileCreature : Creature
     public float speed = 1;
 
     public float huntingEnergyThreshold = 30;
-    public static float metabolismRate = 1;
     public static float maxEatingDistance = 1;
 
     public BehaviorState state = BehaviorState.Idle;
@@ -31,7 +30,6 @@ public class MobileCreature : Creature
     private float predateCount = 0f; //delta time tracking for ^
 
     public GameObject childPrefab; //used to instantiate new prefab for child 
-    private AudioSource audioSource;
 
     public float navigationTemperature = 0;
 
@@ -41,17 +39,11 @@ public class MobileCreature : Creature
 
     public float ignoreNavTemperatureThreshold = 3f;
 
-    protected new void Awake()
-    {
+    /// <summary> Set default values for trilobite bought from store. </summary>
+    protected new void Awake()    {
         base.Awake(); //call Creature Start()
         mobileCreatureRB = GetComponent<Rigidbody>();
         animator = GetComponentInChildren<Animator>();
-        audioSource = GetComponent<AudioSource>();
-        if (!shopMode)
-        {
-            print("mobilecreature sound");
-            audioSource.Play();
-        }
 
         initSize();
 
@@ -61,7 +53,7 @@ public class MobileCreature : Creature
 
     public void setChildValues(MobileCreature parent1, MobileCreature parent2)
     {
-        speed = parent1.speed + parent2.speed;
+        speed = (parent1.speed + parent2.speed)/2;
         count = 0;
         //color
     }
@@ -98,16 +90,7 @@ public class MobileCreature : Creature
             // The creature starved to death. 
             state = BehaviorState.Dying;
         }
-        // TODO: Restore the original condition
-        // after we finish testing the navigation system.
-        //
-        // We force the creature to always hunt so we can test the navigation system.
-        //
         else if (energy <= huntingEnergyThreshold)
-        //
-        // This is another way of writing `else if (true)`,
-        // except the compiler won't complain about unreachable code.
-        //else if (System.Math.Cos(5) < 2)
         {
             state = BehaviorState.Hunting;
             if (animator) animator.SetTrigger("hunt");
@@ -134,18 +117,28 @@ public class MobileCreature : Creature
 
     protected virtual void UpdateIdle()
     {
+        if(!canSwim) mobileCreatureRB.AddForce(0, -8, 0); //stay on the bottom
         Vector3 vec = new Vector3(0, 0, 1); //move forward
         move(vec);
-        if (transform.localRotation.eulerAngles.x > 45)
-        { //if creature pointed downwards, rotate upwards
-            // Vector3 angVec = new Vector3(30, 0, 0); 
-            // rotate(angVec);
-        }
-        else
+        float lookAheadDist = 10f * getMaturity(); //would be better for this to be based on collider size and not hard coded
+        if (!parentAquarium.checkVoxelInFrontForObstacle(getAllCollidersBoundingBox().center, transform.TransformVector(new Vector3(0, 0, 1)), lookAheadDist))
         {
-            Vector3 angVec = new Vector3(0, 10, 0); //rotate a little bit around axes
+            //if somethings in the way, rotate
+            Vector3 angVec = new Vector3(10, 50, 1);
             rotate(angVec);
         }
+
+
+        // todo: make it stay upright
+        // if(transform.localEulerAngles.z > 45) mobileCreatureRB.AddRelativeTorque(0, 0, 1); //keep upright
+        // if(transform.localEulerAngles.z < -45) mobileCreatureRB.AddRelativeTorque(0, 0, -1); //keep upright
+
+
+
+
+        // rotate(new Vector3(10, 10, -transform.localEulerAngles.z));
+        // print(transform.localEulerAngles.z);
+        // mobileCreatureRB.MoveRotation(mobileCreatureRB.rotation * Quaternion.Euler(new Vector3(0,0,-transform.localRotation.z*100) * Time.fixedDeltaTime));
 
     }
 
@@ -159,6 +152,8 @@ public class MobileCreature : Creature
 
     protected virtual void UpdateHunting()
     {
+        if(!canSwim) mobileCreatureRB.AddForce(0, -8, 0); //stay on the bottom
+
         // You can toggle this to test the navigation system.
         bool USE_NAV = true;
 
@@ -190,13 +185,13 @@ public class MobileCreature : Creature
             return;
         }
 
+        Bounds bounds = getAllCollidersBoundingBox(); //I want this in future code so moving it out of the {}
         // Eat the prey if it's close enough.
         {
 
             float simpleDistance = (closest.transform.position - transform.position).magnitude;
 
-            Bounds bounds = GetComponent<Collider>().bounds;
-            Bounds preyBounds = closest.GetComponent<Collider>().bounds;
+            Bounds preyBounds = closest.getAllCollidersBoundingBox();
             Vector3[] corners = GetCorners(bounds);
             Vector3[] preyCorners = GetCorners(preyBounds);
             float minDistance = float.MaxValue;
@@ -222,7 +217,7 @@ public class MobileCreature : Creature
             //    Note that this assumes that the prey has a collider.
             //    If it doesn't, this code will crash.
 
-            bool canEat = simpleDistance <= maxEatingDistance || minDistance <= maxEatingDistance || bounds.Intersects(preyBounds);
+            bool canEat = (simpleDistance <= maxEatingDistance) || (minDistance <= maxEatingDistance) || (bounds.Intersects(preyBounds));
 
             if (canEat)
             {
@@ -257,15 +252,16 @@ public class MobileCreature : Creature
                 }
             }
 
-            print("target position " + targetPositionInWorldCoords);
+            //PROBLEM: if the target voxel is the one that the creature is already on top of, it spasms around on top of it. but if I add this line it wont eat for some reason
+            // if (bounds.Contains(targetPositionInWorldCoords)) return; //prevents flailing around voxel center point. If its already on the target just stop moving
 
             Vector3 delta = targetPositionInWorldCoords - transform.position;
 
-            Vector3 displacement = delta.normalized;
-            float k = speed * 3 * Time.deltaTime;
-            displacement.Scale(new Vector3(k, k, k));
-            transform.position += displacement;
-            rotateTowards(delta);
+            Vector3 displacement = delta.normalized * speed;
+            // float k = speed * 3 * Time.deltaTime;
+            // displacement.Scale(new Vector3(k, k, k));
+            move(delta,true);
+            // rotateTowards(delta);
         }
     }
 
@@ -337,7 +333,7 @@ public class MobileCreature : Creature
         Vector3 delta = closest.transform.position - transform.position;
         float distance = delta.magnitude;
 
-        if (distance <= maxEatingDistance * getMaturity())
+        if (distance <= maxEatingDistance * getMaturity() +2)
         {
             //Eat based on consumeRate 
             if (animator) animator.SetTrigger("eat");
@@ -345,25 +341,29 @@ public class MobileCreature : Creature
             return;
         }
 
-        Vector3 displacement = delta.normalized;
-        float k = speed * 3 * Time.deltaTime;
-        displacement.Scale(new Vector3(k, k, k));
-        transform.position += displacement;
-        rotateTowards(delta);
+        move(delta,true);
     }
 
 
 
-    //Takes in Vector3 velocity to move mobileCreature
-    protected void move(Vector3 velocity)
+    //Takes in Vector3 velocity to move mobileCreature, needs to have parameter true when creature is hunting
+    protected void move(Vector3 velocity, bool hunting = false)
     {
         if (shopMode) { Debug.LogWarning("Can't move in shop mode"); return; }
         //using rigidbody.MovePosition() will make transitioning to the new position smoother if interpolation is enabled
         //MovePosition(currentPosition + displacement)
-        mobileCreatureRB.MovePosition(mobileCreatureRB.position + mobileCreatureRB.rotation * velocity * speed * Time.fixedDeltaTime);
+        if (hunting)
+        {
+            mobileCreatureRB.MovePosition(mobileCreatureRB.position + velocity * (speed / 2) * Time.fixedDeltaTime);
+            rotateTowards(velocity);
+        }
+        else
+        {
+            mobileCreatureRB.MovePosition(mobileCreatureRB.position + mobileCreatureRB.rotation * velocity * speed * Time.fixedDeltaTime);
+        }
     }
 
-    //Takes in Vector3 angularVelocity to rotate mobileCreature
+    //Takes in Vector3 angularVelocity to rotate mobileCreature in local space
     protected void rotate(Vector3 angularVelocity)
     {
         if (shopMode) { Debug.LogWarning("Can't rotate in shop mode"); return; }
@@ -457,7 +457,7 @@ public class MobileCreature : Creature
         //Debug.Log("curr units per T "+ currUnitsCubedPerT);
         if ((closestTSqrDist > minSpace * minSpace) && (minCMCubedPerT < currCMCubedPerT) && !(parentAquarium.getBreedingMutex()) && (potentialPartner))
         {
-            //print("Call duplicate");
+            print("Call duplicate");
             parentAquarium.setBreedingMutex(true);
             duplicate(randVecNearby, findPartner<MobileCreature>(potentialPartner));
         }
