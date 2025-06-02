@@ -69,7 +69,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 0
   uniqueID: -1
-  buyMoney: 0
+  buyMoney: 1
   sellMoney: 0
   rarity: 0
   bottomDweller: 1

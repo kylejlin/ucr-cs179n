@@ -98,10 +98,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: 1
   uniqueID: -1
-  buyMoney: 100
+  buyMoney: 50
   sellMoney: 50
   rarity: 1
-  bottomDweller: 1
   parentAquarium: {fileID: 0}
   AABB:
     m_Center: {x: -0.077439666, y: 2.992795, z: 0.4961548}
@@ -109,10 +108,10 @@ MonoBehaviour:
   shopMode: 0
   energy: 100
   maxEnergy: 100
-  growthRate: 0.01
+  growthRate: 0.1
   adultEnergy: 100
   adultSize: 1
-  metabolismRate: 0.7
+  metabolismRate: 1.5
   spawnSize: 0.5
   spawnRadius: 5
   minSpawnSpace: 1
@@ -123,12 +122,16 @@ MonoBehaviour:
   consumeRate: 100
   speed: 3
   huntingEnergyThreshold: 30
-  maxEatingDistance: 6
+  maxEatingDistance: 3
   state: 0
   animator: {fileID: 0}
-  breedingCooldown: 10
+  breedingCooldown: 2
   predateCooldown: 0.5
   childPrefab: {fileID: 7541186808266831616}
+  navigationTemperature: 0
+  previousTargetPosition: {x: 0, y: 0, z: 0}
+  isIgnoringNav: 0
+  ignoreNavTemperatureThreshold: 3
   demo: 0
 --- !u!82 &1024055047795309513
 AudioSource:
@@ -140,9 +143,9 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: d5c65b44fed0f1d4ab9ca83271e32c75, type: 3}
-  m_Resource: {fileID: 8300000, guid: d5c65b44fed0f1d4ab9ca83271e32c75, type: 3}
-  m_PlayOnAwake: 0
+  m_audioClip: {fileID: 8300000, guid: ffc3e0e664cb73640b8f6a2daf1efd68, type: 3}
+  m_Resource: {fileID: 8300000, guid: ffc3e0e664cb73640b8f6a2daf1efd68, type: 3}
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

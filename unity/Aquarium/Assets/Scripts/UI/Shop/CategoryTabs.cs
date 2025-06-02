@@ -40,7 +40,7 @@ public class CategoryTabs : MonoBehaviour
     {
         foreach (ShopItem item in shopManager.ShopItems)
         {
-            if (item.GetComponent<ShopItem>().getEntity().GetType() == category)
+            if (category.IsAssignableFrom(item.GetComponent<ShopItem>().getEntity().GetType()))
             {
                 item.gameObject.SetActive(true);
             }

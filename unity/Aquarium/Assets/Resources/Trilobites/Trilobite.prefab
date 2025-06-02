@@ -9,11 +9,11 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5479246289493934708}
-  - component: {fileID: 4730127056220747094}
   - component: {fileID: 6825346676113195874}
   - component: {fileID: 4710943548981468850}
   - component: {fileID: 6303874632496072109}
-  - component: {fileID: 7512688682414885714}
+  - component: {fileID: 5249533142265135092}
+  - component: {fileID: -2639940797084666049}
   m_Layer: 15
   m_Name: Trilobite
   m_TagString: Untagged
@@ -34,54 +34,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children:
-  - {fileID: 378781640664502137}
+  - {fileID: 4782383916475507183}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4730127056220747094
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6660640480602176354}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bdbdd96ea906b6641ab6c8b634bf1a19, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  id: 2
-  uniqueID: -1
-  buyMoney: 0
-  sellMoney: 8
-  rarity: 0
-  bottomDweller: 1
-  parentAquarium: {fileID: 0}
-  AABB:
-    m_Center: {x: 0.03622341, y: 0.4, z: 0.13322449}
-    m_Extent: {x: 1.35, y: 0.2074816, z: 1.7180748}
-  shopMode: 0
-  energy: 100
-  maxEnergy: 100
-  growthRate: 0.1
-  adultEnergy: 100
-  adultSize: 1
-  metabolismRate: 1
-  spawnSize: 0.1
-  spawnRadius: 5
-  minSpawnSpace: 1
-  minCMCubedPer: 10000
-  scaleDownWhenEaten: 0
-  mustBeKilledToBeEaten: 1
-  canSwim: 1
-  consumeRate: 8
-  speed: 3
-  huntingEnergyThreshold: 30
-  maxEatingDistance: 2
-  state: 0
-  animator: {fileID: 0}
-  breedingCooldown: 10
-  predateCooldown: 0.5
-  childPrefab: {fileID: 6660640480602176354}
 --- !u!65 &6825346676113195874
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -185,7 +140,55 @@ Rigidbody:
   m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 2
---- !u!82 &7512688682414885714
+--- !u!114 &5249533142265135092
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6660640480602176354}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bdbdd96ea906b6641ab6c8b634bf1a19, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 2
+  uniqueID: -1
+  buyMoney: 10
+  sellMoney: 5
+  rarity: 0
+  parentAquarium: {fileID: 0}
+  AABB:
+    m_Center: {x: 0.03622341, y: 0.4, z: 0.13322449}
+    m_Extent: {x: 1.35, y: 0.2074816, z: 1.7180748}
+  shopMode: 0
+  energy: 2
+  maxEnergy: 5
+  growthRate: 0.1
+  adultEnergy: 20
+  adultSize: 1
+  metabolismRate: 1
+  spawnSize: 0.5
+  spawnRadius: 5
+  minSpawnSpace: 1
+  minCMCubedPer: 10000
+  scaleDownWhenEaten: 0
+  mustBeKilledToBeEaten: 1
+  canSwim: 0
+  consumeRate: 20
+  speed: 3
+  huntingEnergyThreshold: 30
+  maxEatingDistance: 1
+  state: 0
+  animator: {fileID: 0}
+  breedingCooldown: 8
+  predateCooldown: 0.5
+  childPrefab: {fileID: 6660640480602176354}
+  navigationTemperature: 0
+  previousTargetPosition: {x: 0, y: 0, z: 0}
+  isIgnoringNav: 0
+  ignoreNavTemperatureThreshold: 3
+--- !u!82 &-2639940797084666049
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -195,9 +198,9 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: d5c65b44fed0f1d4ab9ca83271e32c75, type: 3}
-  m_Resource: {fileID: 8300000, guid: d5c65b44fed0f1d4ab9ca83271e32c75, type: 3}
-  m_PlayOnAwake: 0
+  m_audioClip: {fileID: 8300000, guid: ffc3e0e664cb73640b8f6a2daf1efd68, type: 3}
+  m_Resource: {fileID: 8300000, guid: ffc3e0e664cb73640b8f6a2daf1efd68, type: 3}
+  m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -282,7 +285,7 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!1001 &201266257599801490
+--- !u!1001 &5031868407200155140
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -620,26 +623,26 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 62307cba477a78847a0d66b93657359e, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 7793190333989359538}
+      addedObject: {fileID: 5121283743035697376}
   m_SourcePrefab: {fileID: 100100000, guid: 62307cba477a78847a0d66b93657359e, type: 3}
---- !u!4 &378781640664502137 stripped
+--- !u!4 &4782383916475507183 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 62307cba477a78847a0d66b93657359e, type: 3}
-  m_PrefabInstance: {fileID: 201266257599801490}
+  m_PrefabInstance: {fileID: 5031868407200155140}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &1011730234326586819 stripped
+--- !u!1 &5266291784650079061 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 62307cba477a78847a0d66b93657359e, type: 3}
-  m_PrefabInstance: {fileID: 201266257599801490}
+  m_PrefabInstance: {fileID: 5031868407200155140}
   m_PrefabAsset: {fileID: 0}
---- !u!95 &7793190333989359538
+--- !u!95 &5121283743035697376
 Animator:
   serializedVersion: 7
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1011730234326586819}
+  m_GameObject: {fileID: 5266291784650079061}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 4db69cd3e4f5830418fb335822cf730e, type: 2}

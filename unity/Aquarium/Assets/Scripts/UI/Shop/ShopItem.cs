@@ -6,7 +6,7 @@ public class ShopItem : Preview
 {
     Button button;
     TMPro.TextMeshProUGUI nameText;
-    void Start()
+    void Awake()
     {
         nameText = gameObject.transform.Find("Name").GetComponent<TMPro.TextMeshProUGUI>();
     }
