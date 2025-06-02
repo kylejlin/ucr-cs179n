@@ -172,11 +172,12 @@ MonoBehaviour:
   minSpawnSpace: 1
   minCMCubedPer: 10000
   scaleDownWhenEaten: 0
-  mustBeKilledToBeEaten: 0
+  mustBeKilledToBeEaten: 1
   canSwim: 0
   consumeRate: 20
   speed: 3
   huntingEnergyThreshold: 30
+  maxEatingDistance: 1
   state: 0
   animator: {fileID: 0}
   breedingCooldown: 2

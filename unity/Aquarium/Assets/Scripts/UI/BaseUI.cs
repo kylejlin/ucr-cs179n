@@ -25,6 +25,7 @@ public class BaseUI : MonoBehaviour
 
     public void CloseShop()
     {
+        toast.SetActive(false);
         gameObject.SetActive(false);
         GameUI.SetActive(true);
 
