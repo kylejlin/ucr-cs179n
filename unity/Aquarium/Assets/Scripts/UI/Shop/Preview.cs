@@ -32,7 +32,7 @@ public class Preview : MonoBehaviour
         if (modelInstance.TryGetComponent<Entity>(out Entity entityInstance)) { entityInstance.initShopMode(); } //display mode turns off update() and sets creature to adult size
         modelInstance.layer = LayerMask.NameToLayer("ShopSelectedItem");
         SetLayerRecursively(modelInstance.transform, LayerMask.NameToLayer("ShopSelectedItem"));
-        Rigidbody rb = modelInstance.GetComponent<Rigidbody>(); //initShopMode() does this now as well
+        Rigidbody rb = modelInstance.GetComponent<Rigidbody>(); 
         if (rb != null)
         {
             Destroy(rb);

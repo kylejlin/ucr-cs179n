@@ -12,6 +12,22 @@ public class Decoration : Entity
     // Update is called once per frame
     void Update()
     {
-        
+
     }
+
+    public override float calcMoneyBonus()
+    {
+        switch (GetRarity())
+        {
+            case Rarity.Common:
+                return 1 + moneyBonus;
+            case Rarity.Rare:
+                return 3 + moneyBonus;
+            case Rarity.Epic:
+                return 7 + moneyBonus;
+            default:
+                return 1 + moneyBonus;
+        }
+    }
+
 }

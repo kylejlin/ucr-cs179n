@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -13,7 +14,7 @@ public class MobileCreature : Creature
 {
 
     public bool canSwim = false;
-    public float consumeRate = 20;
+    public float consumeRate = 20f;
     public float speed = 1;
 
     public float huntingEnergyThreshold = 30;
@@ -23,9 +24,14 @@ public class MobileCreature : Creature
     public BehaviorState state = BehaviorState.Idle;
 
     private Rigidbody mobileCreatureRB;
+    [SerializeField] protected Animator animator; 
 
-    protected double breedingCooldown = 10;
+    [SerializeField] protected double breedingCooldown = 10;
+    [SerializeField] protected double predateCooldown = 0.5f; // how long between damage dealing events. can think of it like its dps. bigger values will require more "fighting"
+    private float predateCount = 0f; //delta time tracking for ^
+
     public GameObject childPrefab; //used to instantiate new prefab for child 
+    private AudioSource audioSource;
 
     public float navigationTemperature = 0;
 
@@ -35,40 +41,23 @@ public class MobileCreature : Creature
 
     public float ignoreNavTemperatureThreshold = 3f;
 
-    /// <summary> Set default values for trilobite bought from store. </summary>
-    private void setValues(bool demo)
+    protected new void Awake()
     {
-        if (demo)
+        base.Awake(); //call Creature Start()
+        mobileCreatureRB = GetComponent<Rigidbody>();
+        animator = GetComponentInChildren<Animator>();
+        audioSource = GetComponent<AudioSource>();
+        if (!shopMode)
         {
-            growthRate = 0.1f;
-            adultEnergy = 40;
-            breedingCooldown = 50; //change 
-
-            spawnSize = .5f;
-            energy = maxEnergy = spawnSize * adultEnergy;
-            huntingEnergyThreshold = .75f * maxEnergy;
-            consumeRate = .5f * maxEnergy; //changed
-
-            spawnRadius = 20;
-            minSpawnSpace = 5;
-            minCMCubedPer = 10000; //changed
+            print("mobilecreature sound");
+            audioSource.Play();
         }
-        else
-        {
-            growthRate = 0.1f;
-            adultEnergy = 40;
-            breedingCooldown = 100; //change 
 
-            spawnSize = .5f;
-            energy = maxEnergy = spawnSize * adultEnergy;
-            huntingEnergyThreshold = .75f * maxEnergy;
-            consumeRate = .5f * maxEnergy; //changed
+        initSize();
 
-            spawnRadius = 5;
-            minSpawnSpace = 1;
-            minCMCubedPer = 200; //changed
-        }
     }
+    /// <summary> Set default values for trilobite bought from store. </summary>
+
 
     public void setChildValues(MobileCreature parent1, MobileCreature parent2)
     {
@@ -78,14 +67,6 @@ public class MobileCreature : Creature
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    protected new void Awake()
-    {
-        base.Awake(); //call Creature Start()
-        mobileCreatureRB = GetComponent<Rigidbody>();
-        setValues(true);
-
-        initSize();
-    }
 
     void Start()
     {
@@ -93,6 +74,11 @@ public class MobileCreature : Creature
 
     // FixedUpdate is called at fixed time intervals
     void FixedUpdate()
+    {
+        updateFSM();
+    }
+
+    protected virtual void updateFSM()
     {
         energy -= Time.deltaTime * metabolismRate / 2;
 
@@ -117,13 +103,14 @@ public class MobileCreature : Creature
         //
         // We force the creature to always hunt so we can test the navigation system.
         //
-        // else if (energy <= huntingEnergyThreshold)
+        else if (energy <= huntingEnergyThreshold)
         //
         // This is another way of writing `else if (true)`,
         // except the compiler won't complain about unreachable code.
-        else if (System.Math.Cos(5) < 2)
+        //else if (System.Math.Cos(5) < 2)
         {
             state = BehaviorState.Hunting;
+            if (animator) animator.SetTrigger("hunt");
         }
         else
         {
@@ -145,7 +132,7 @@ public class MobileCreature : Creature
         }
     }
 
-    void UpdateIdle()
+    protected virtual void UpdateIdle()
     {
         Vector3 vec = new Vector3(0, 0, 1); //move forward
         move(vec);
@@ -162,7 +149,7 @@ public class MobileCreature : Creature
 
     }
 
-    void UpdateDying()
+    protected virtual void UpdateDying()
     {
         // TODO
         // Vector3 angVec = new Vector3(0, 0, 180); //rotate a little bit around axes
@@ -170,7 +157,7 @@ public class MobileCreature : Creature
         die();
     }
 
-    void UpdateHunting()
+    protected virtual void UpdateHunting()
     {
         // You can toggle this to test the navigation system.
         bool USE_NAV = true;
@@ -199,7 +186,7 @@ public class MobileCreature : Creature
 
         if (closest == null)
         {
-            // No prey exists, so there's no point in pathfinding.
+            UpdateIdle();
             return;
         }
 
@@ -350,11 +337,11 @@ public class MobileCreature : Creature
         Vector3 delta = closest.transform.position - transform.position;
         float distance = delta.magnitude;
 
-        if (distance <= maxEatingDistance)
+        if (distance <= maxEatingDistance * getMaturity())
         {
             //Eat based on consumeRate 
-            eat(closest.beingEaten(consumeRate));
-            grow(growthRate);
+            if (animator) animator.SetTrigger("eat");
+            predate(closest);
             return;
         }
 
@@ -368,7 +355,7 @@ public class MobileCreature : Creature
 
 
     //Takes in Vector3 velocity to move mobileCreature
-    private void move(Vector3 velocity)
+    protected void move(Vector3 velocity)
     {
         if (shopMode) { Debug.LogWarning("Can't move in shop mode"); return; }
         //using rigidbody.MovePosition() will make transitioning to the new position smoother if interpolation is enabled
@@ -377,7 +364,7 @@ public class MobileCreature : Creature
     }
 
     //Takes in Vector3 angularVelocity to rotate mobileCreature
-    private void rotate(Vector3 angularVelocity)
+    protected void rotate(Vector3 angularVelocity)
     {
         if (shopMode) { Debug.LogWarning("Can't rotate in shop mode"); return; }
         //angularVelocity tells how many degrees to rotate in each axis
@@ -386,21 +373,13 @@ public class MobileCreature : Creature
     }
 
     //Takes in Vector3 angularVelocity to rotate mobileCreature towards direction of vector
-    private void rotateTowards(Vector3 angularVelocity)
+    protected void rotateTowards(Vector3 angularVelocity)
     {
         if (shopMode) { Debug.LogWarning("Can't rotate in shop mode"); return; }
         //rotates creature with respect to front of creature (head points towards rotation)
         mobileCreatureRB.MoveRotation(Quaternion.LookRotation(angularVelocity, Vector3.forward));
     }
 
-    public override string getCurrStats()
-    {
-        return ("Name: " + entityName
-        + "\nEnergy: " + energy / maxEnergy * 100 + "%"
-        + "\nMaturity: " + getMaturity() / adultSize * 100 + "%"
-        + "\nMetabolism: " + metabolismRate + " energy/s"
-        + "\nSpace Requirement: " + minCMCubedPer + " cubic cm");
-    }
 
 
     /// <summary> scales up size and energy by the percentage passed in (wont exceed max size set) </summary>
@@ -438,7 +417,7 @@ public class MobileCreature : Creature
     public void duplicate<T>(Vector3 position, T partner) where T : MobileCreature
     {
         if (parentAquarium == null) { parentAquarium.setBreedingMutex(false); Debug.LogWarning("Could not find Aquarium parent"); return; }
-        if (partner == null) { parentAquarium.setBreedingMutex(false); Debug.LogWarning("Could not find breeding partner"); return; }
+        if (partner == null) { parentAquarium.setBreedingMutex(false);  return; } //Debug.LogWarning("Could not find breeding partner");
         if (!parentAquarium.isInBounds(position)) { parentAquarium.setBreedingMutex(false); return; } //keep w/in aquarium
 
         if (partner != null)
@@ -452,8 +431,8 @@ public class MobileCreature : Creature
         count = 0;
         partner.count = 0;
         parentAquarium.setBreedingMutex(false);
-        print(partner.count);
-        print(partner.transform.position);
+        // print(partner.count);
+        // print(partner.transform.position);
     }
 
     /// <summary> try to duplicate, but dont if there is a T too close to the attempted spawn location or too many of T in the aquarium as a whole. </summary>
@@ -462,15 +441,15 @@ public class MobileCreature : Creature
 
         Vector3 randVecNearby = new Vector3(Random.Range(-spawnRadius, spawnRadius), 0, Random.Range(-spawnRadius, spawnRadius)) + transform.localPosition;
 
-        MobileCreature closestT = parentAquarium.FindClosest<MobileCreature>(randVecNearby);
+        MobileCreature closestT = parentAquarium.FindClosestOfType(this, randVecNearby);
         float closestTSqrDist = Mathf.Infinity;
         if (closestT != default(T)) { closestTSqrDist = getSqrDistBw(closestT.transform.localPosition, randVecNearby); }
 
-        int numTInTank = parentAquarium.getAllOfType<T>().Length;
+        int numTInTank = parentAquarium.getAllOfType(this).Count;
         float currCMCubedPerT = Mathf.Infinity;
         if ((numTInTank > 0)) { currCMCubedPerT = parentAquarium.volume() / numTInTank; }
 
-        MobileCreature potentialPartner = parentAquarium.FindClosest<MobileCreature>(this);
+        MobileCreature potentialPartner = parentAquarium.FindClosestOfType(this);
 
         //Debug.Log("currPos "+ transform.localPosition);
         //Debug.Log("nrarbyPost "+ randVecNearby);
@@ -478,7 +457,7 @@ public class MobileCreature : Creature
         //Debug.Log("curr units per T "+ currUnitsCubedPerT);
         if ((closestTSqrDist > minSpace * minSpace) && (minCMCubedPerT < currCMCubedPerT) && !(parentAquarium.getBreedingMutex()) && (potentialPartner))
         {
-            print("Call duplicate");
+            //print("Call duplicate");
             parentAquarium.setBreedingMutex(true);
             duplicate(randVecNearby, findPartner<MobileCreature>(potentialPartner));
         }
@@ -507,6 +486,46 @@ public class MobileCreature : Creature
             }
         }
         return false;
+    }
+
+    public void predate(Creature creature)
+    {
+        
+
+        predateCount += Time.deltaTime;
+        if (predateCount < predateCooldown) return;
+        else predateCount = 0;
+
+        float damageDone = creature.beingEaten(consumeRate);
+        if (creature.mustBeKilledToBeEaten && (damageDone >= consumeRate)) return;
+        //did not kill the prey and prey must be killed to be eaten, so gets nothing. Have to check w a roundabout method because Destroy() does not work immediately
+        //technically possible for prey to have the exact amount of energy as consumeRate and die and this creature gets no food anyways. lol
+        eat(damageDone);
+        if (damageDone > maxEnergy) grow(growthRate);
+        else grow(growthRate * damageDone / maxEnergy); // it shouldnt grow fast from taking a bunch of tiny bites super fast
+    }
+    
+    /// <summary>
+    /// Calculates happiness of MobileCreature from energy level, friends, and decorations in tank
+    /// </summary>
+    /// <returns>float happiness value</returns>
+    public override float getHappiness()
+    {
+        float happiness = energy / maxEnergy * 5;
+        if (parentAquarium.getAllOfType(this).Count > 1) //if creature is not the last of its kind
+        {
+            happiness += 5;
+        }
+
+        Decoration[] decorations = parentAquarium.getAllOfType<Decoration>(); 
+        happiness += decorations.Length * 5; //add based on qty of decorations
+
+        foreach (Decoration d in decorations) //add based on individual decoration value
+        {
+            happiness += d.moneyBonus/2;
+        }
+
+        return happiness;
     }
 
 }

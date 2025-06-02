@@ -2,19 +2,12 @@ using UnityEngine;
 
 public class ImmobileCreature : Creature
 {
-    [HideInInspector]
-    protected float eatRate = 5f; //how much it eats (through photosynthesis or filter feeding or w/e) per minute
+    [SerializeField] protected float eatRate = 5f; //how much it eats (through photosynthesis or filter feeding or w/e) per minute
+    [SerializeField] protected float growthCooldown = 60f; //how often it grows (by growthrate)
     protected new void Awake()
     {
-        
-        base.Awake();
-        growthRate = 0.1f; 
-        adultEnergy = 40; 
 
-        spawnSize = 0.1f;
-        spawnRadius = 20;
-        minSpawnSpace = 5; 
-        minCMCubedPer = 10000;
+        base.Awake();
         initSize();
 
     }
@@ -27,14 +20,19 @@ public class ImmobileCreature : Creature
     // Update is called once per frame
     void Update()
     {
-        count += Time.deltaTime;
-        if (count > 2) //sped up for demo
+        
+    }
+
+    protected void automaticGrowth(float deltaTime)
+    {
+        count += deltaTime;
+        if (count > growthCooldown) 
         {
             grow(growthRate);
             count = 0;
-            if ((getScale() == adultSize) && (energy == adultEnergy)) { tryDuplicate<ImmobileCreature>(minSpawnSpace, minCMCubedPer); }
+            if ((getScale() == adultSize) && (energy == adultEnergy)) { tryDuplicate<Algea>(minSpawnSpace, minCMCubedPer); }
         }
-        eat(eatRate/5 * Time.deltaTime);
+        eat(eatRate / 5 * deltaTime);
     }
 
 

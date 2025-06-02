@@ -2,30 +2,28 @@ using UnityEngine;
 
 public class Entity : MonoBehaviour
 {
-    public string entityName = "NoName";
-    [HideInInspector]
-    public int id; //id of the entity TYPE, set by gamemanager
-    [SerializeField]
+    [SerializeField] public int id; //id of the entity type, set in gamemanager
     private static double uniqueIDCount = 0;
-    private double uniqueID; //ID unique to every entity in the game
-    private int buyMoney;
-    [SerializeField]
-    private int sellMoney;
-    [SerializeField]
-    private Rarity rarity;
-    protected bool bottomDweller = true; //should it spawn on the bottom of the tank. True for all decorations. For creatures, its true if it is immobile or only walks along the bottom, else false.
-    public Aquarium parentAquarium = null;
-    [SerializeField]
+    [SerializeField] private double uniqueID = -1; //unique ID of this gameobject only
+    [SerializeField] private float buyMoney;
+    [SerializeField] private float sellMoney;
+    [SerializeField] private Rarity rarity;
+    [SerializeField] protected bool bottomDweller = true; //should it spawn on the bottom of the tank. True for all decorations. For creatures, its true if it is immobile or only walks along the bottom, else false.
+    [SerializeField] public Aquarium parentAquarium = null;
+    [SerializeField] private Bounds AABB; // set on prefab in Gamemanager when the game starts. Applies to unrotated, unscaled prefab at 0,0,0. This seems janky but I couldn't find a better way because Bounds/Colliders dont update with the transform immediately which leads to a host of problems
+    [SerializeField] protected bool shopMode = false; //true if this gameobject is being displayed in UI and so should spawn as an adult and not Update() (frozen, don't interact) 
     protected double count = 0; //to count deltaTime 
-    public bool shopMode = false; //true if this gameobject is being displayed in UI and so should spawn as an adult and not Update() (frozen, don't interact) 
 
     private Outline outline;
     public virtual void Awake()
     {
         SetLayerRecursively(transform, 15); //set to Entity layer for raycast masking
-        uniqueID = uniqueIDCount;
-        uniqueIDCount++;
-        name = entityName + " " + uniqueID;
+        if (uniqueID == -1) //need the if because awake is called when a gameobject is disactivated and activated again
+        {
+            name = name + " " + uniqueIDCount;
+            uniqueID = uniqueIDCount;
+            uniqueIDCount++;
+        }
         outline = gameObject.GetComponent<Outline>();
         if (!outline) outline = gameObject.AddComponent<Outline>(); //outline script that allows the creature or decor to be outlined when player clicks on them
         setOutline(false);
@@ -64,14 +62,14 @@ public class Entity : MonoBehaviour
     }
 
     /// <summary>
-    /// disable all colliders of this gameobject or its children. //doesnt get inactive colliders. Im not sure if it should??
+    /// disable/enable all colliders of this gameobject or its children. //doesnt get inactive colliders. Im not sure if it should??
     /// </summary>
-    public void disableAllColliders()
+    public void enableAllColliders(bool enable)
     {
         Collider[] allColliders = GetComponentsInChildren<Collider>();
         foreach (Collider c in allColliders)
-        { //go through all children colliders and disable them. They wont cause collisions or do anything
-            c.enabled = false;
+        {
+            c.enabled = enable;
         }
     }
     /// <summary>
@@ -85,11 +83,6 @@ public class Entity : MonoBehaviour
         if (allColliders.Length == 0) { Debug.LogWarning("No colliders"); return new Bounds(new Vector3(0, 0, 0), new Vector3(0, 0, 0)); }
         Bounds colliderBounds = allColliders[0].bounds;
 
-        // print(allColliders.Length);
-        // print(allColliders[0]);
-        // print(allColliders[0].bounds);
-        // print(colliderBounds);
-
         foreach (Collider c in allColliders)
         { //go through all children colliders and expand the bounds to hold them all
             colliderBounds.Encapsulate(c.bounds.min);
@@ -98,6 +91,23 @@ public class Entity : MonoBehaviour
 
 
         return colliderBounds;
+
+    }
+    public Vector3 getClosestPointOnColliders(Vector3 position)
+    {
+        Collider[] allColliders = GetComponentsInChildren<Collider>();
+        if (allColliders.Length == 0) { Debug.LogWarning("No colliders, returning original position"); return position; }
+        Vector3 closest = allColliders[0].ClosestPoint(position);
+        Vector3 temp;
+
+        foreach (Collider c in allColliders)
+        {
+            if (!c.enabled) Debug.LogWarning("Collider disabled, will return original position");
+            temp = c.ClosestPoint(position);
+            if ((temp - position).sqrMagnitude < closest.sqrMagnitude) closest = temp;
+        }
+
+        return closest;
 
     }
     /// <summary>
@@ -109,13 +119,25 @@ public class Entity : MonoBehaviour
     {
         this.enabled = false;  //no update()
         shopMode = true;
-        disableAllColliders(); //dont mess w collisions or raycasts etc
-        if (GetComponent<Rigidbody>()) Destroy(GetComponent<Rigidbody>()); //no physics please
-    } //get overridden by child classes. Also this is permenant, reenabling an object would be difficult and might break things in Awake()
+        enableAllColliders(false); //dont mess w collisions or raycasts etc
+
+        Rigidbody RB = GetComponent<Rigidbody>();
+        if (RB) RB.isKinematic = true; //no physics please
+    } //get overridden by child classes.
+
+    public virtual void disableShopMode()
+    {
+        this.enabled = true;
+        shopMode = false;
+        enableAllColliders(true);
+
+        Rigidbody RB = GetComponent<Rigidbody>();
+        if (RB) RB.isKinematic = false; //physics please
+    }
 
     public virtual string getCurrStats()
     {
-        return "Name: " + entityName;
+        return "Name: " + name;
     }
 
     public float getSqrDistToEntity(Entity entity) { return (transform.localPosition - entity.transform.localPosition).sqrMagnitude; }
@@ -123,9 +145,32 @@ public class Entity : MonoBehaviour
     public void setOutline(bool enable) { outline.enabled = enable; }
     public int getID() { return id; }
     public double getUniqueID() { return uniqueID; }
-    public int getBuyMoney() { return buyMoney; }
-    public int getSellMoney() { return sellMoney; }
+    public float getBuyMoney() { return buyMoney; }
+    public float getSellMoney() { return sellMoney; }
     public float getScale() { return transform.localScale.x; }
     public Rarity GetRarity() { return rarity; }
-    public bool isOutlined() { return outline.enabled; }    
+    public bool isOutlined() { return outline.enabled; }
+    public bool isShopMode() { return shopMode; }
+    public void setAABB(Bounds newAABB) { AABB = newAABB; }
+    public Bounds getAABB() { return AABB; }
+    public virtual float calcMoneyBonus()
+    {
+        switch (GetRarity())
+        {
+            case Rarity.Common:
+                return 1;
+            case Rarity.Rare:
+                return 3;
+            case Rarity.Epic:
+                return 7;
+            default:
+                return 1;
+        }
+    }
+
+    public virtual float getHappiness()
+    {
+        return 0;
+    }
+    
 }

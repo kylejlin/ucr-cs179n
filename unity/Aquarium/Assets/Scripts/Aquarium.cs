@@ -90,7 +90,7 @@ public class Aquarium : MonoBehaviour
         this.id = id;
     }
 
-    public Entity addEntity(Entity newEntity, Vector3 position, Quaternion rotation) //returns a reference to the newly created object 
+    public Entity addEntity(Entity newEntity, Vector3 position, Quaternion rotation) //returns a reference to the newly created object //GLOBAL positions
     {
         if (newEntity == null) { Debug.LogWarning("Null entity passed into addEntity"); return null; }
         if (!isInBounds(position)) { Debug.Log("not within bounds " + position); return null; } //keep within aquarium bounds
@@ -98,6 +98,7 @@ public class Aquarium : MonoBehaviour
         Entity e = Instantiate(newEntity.gameObject, position, rotation, gameObject.transform).GetComponent<Entity>();
         entities.Add(e);
         e.parentAquarium = this;
+
 
         return e;
     }
@@ -155,10 +156,11 @@ public class Aquarium : MonoBehaviour
 
     public void setBreedingMutex(bool value)
     {
-        print("Set mutex");
+        // print("Set mutex");
         breedingMutex = value;
     }
 
+    ///<summary> Must specify the class to search for in the <>. Finds closest one to aquariumPosition (in the same tank only). </summary>///
     /// <returns> entity of type T that is closest to Position (in aquarium space) or null if there are none found. </returns>
     public T FindClosest<T>(Vector3 aquariumPosition) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
     {
@@ -168,6 +170,8 @@ public class Aquarium : MonoBehaviour
         T closest = default(T);
         foreach (T e in foundEntities)
         {
+            if (!e.enabled) continue;
+
             float newDist = getSqrDistBw(aquariumPosition, transform.InverseTransformVector(e.transform.position));
 
             if (closest == default(T)) closest = e;
@@ -176,6 +180,7 @@ public class Aquarium : MonoBehaviour
         return closest;
     }
 
+    ///<summary> Must specify the class to search for in the <>. Finds closest one to the entity given (does NOT need to be the same type). </summary>///
     /// <returns> entity of type T that is closest to Position (in aquarium space) or null if there are none found. if excludeSelf it will exclude itself by checking its uniqueID </returns>
     public T FindClosest<T>(Entity entity, bool excludeSelf = true) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
     {
@@ -185,8 +190,9 @@ public class Aquarium : MonoBehaviour
         T closest = default(T);
         foreach (T e in foundEntities)
         {
-            float newDist = getSqrDistBwEntities(entity, e);
+            if (!e.enabled) continue;
 
+            float newDist = getSqrDistBwEntities(entity, e);
             if (excludeSelf && (e.getUniqueID() == entity.getUniqueID())) continue; // dont count yourself
 
             if (closest == default(T)) closest = e;
@@ -194,12 +200,69 @@ public class Aquarium : MonoBehaviour
         }
         return closest;
     }
-
+    /// <summary> returns an array of all of the entities in the tank with the type T. Can be any type in the inheritance hierarchy. If a parent class calls this it will search for that parent class type </summary>
     /// <returns> array of type T of all the found entities in this aquarium, or null if none were found </returns>
-    public T[] getAllOfType<T>() where T : Entity //RETURNS NULL IF EMPTY
+    public T[] getAllOfType<T>() where T : Entity
     {
         return GetComponentsInChildren<T>();
     }
+
+
+    ///<summary> Same as above, but it will search for ONLY the most derived class of entity, even if called in a parent class. 
+    /// Since entity is of type T, you do NOT need to specify the type on the <>. You can call like: parentAquarium.FindClosestOfType(this, true) </summary>
+    /// <returns> entity of type of T passed in that is closest to Position (in aquarium space) or null if there are none found. </returns>
+    public T FindClosestOfType<T>(T entity, Vector3 aquariumPosition) where T : Entity  //get all objects of one type, then check their positions and return the closest (excluding self)
+    {
+        List<Entity> foundEntities = getAllOfType(entity);
+        if (foundEntities == null) return default(T);
+
+        T closest = default(T);
+        foreach (T e in foundEntities)
+        {
+            if (!e.enabled) continue;
+
+            float newDist = getSqrDistBw(aquariumPosition, transform.InverseTransformVector(e.transform.position));
+
+            if (closest == default(T)) closest = e;
+            else if ((newDist < getSqrDistBw(aquariumPosition, closest.transform.localPosition))) closest = e;
+        }
+        return closest;
+    }
+    
+
+    ///<summary> Same as above, but it will search for ONLY the most derived class of entity, even if called in a parent class. 
+    /// Since entity is of type T, you do NOT need to specify the type on the <>. You can call like: parentAquarium.FindClosestOfType(this, true) </summary>
+    /// <returns> entity of type of T passed in that is closest to the position of entity, excluding entity itself if excludeSelf, or null if there are none found. </returns>
+    public T FindClosestOfType<T>(T entity, bool excludeSelf = true) where T : Entity //get all objects of one type, then check their positions and return the closest (excluding self)
+    {
+        List<Entity> foundEntities = getAllOfType(entity);
+        if (foundEntities == null) return null;
+
+        T closest = default(T);
+        foreach (T e in foundEntities)
+        {
+            if (!e.enabled) continue;
+
+            float newDist = getSqrDistBwEntities(entity, e);
+            if (excludeSelf && (e.getUniqueID() == entity.getUniqueID())) continue; // dont count yourself
+
+            if (closest == default(T)) closest = e;
+            else if (newDist < getSqrDistBwEntities(entity, closest)) closest = e;
+        }
+        return closest;
+    }
+
+    /// <summary> Return list of all entities in the tank with the type of the entity passed in. Uses the MOST derived class of entity, even if called by a parent class. </summary>
+    public List<Entity> getAllOfType(Entity entity)
+    {
+        List<Entity> allEntities = entities.FindAll(x => x.GetType() == entity.GetType());
+        if (allEntities == null)
+        {
+            return null;
+        }
+        return allEntities; //predicate defining a condition of what to find 
+    }
+
 
     /// <summary> gets the bounding boxes of all entities of type T in the aquarium, with their coords in the local aquarium space</summary>
     public List<Bounds> getBoundsInAquariumCoords<T>() where T : Entity
@@ -511,8 +574,8 @@ public class Aquarium : MonoBehaviour
         }
 
         // spheres[voxelCoordsToBufIndex(bestVoxelCoords)].transform.localScale = new Vector3(10, 10, 10);
-        print(bestVoxelCoords);
-        print("world coords: "+voxelCoordsToAquariumCoords(bestVoxelCoords));
+        // print(bestVoxelCoords);
+        // print("world coords: "+voxelCoordsToAquariumCoords(bestVoxelCoords));
         return bestVoxelCoords;
     }
 
@@ -524,9 +587,12 @@ public class Aquarium : MonoBehaviour
 
 
 
-    public int calcCoin()
+    public float calcMoney()
     {
-        return 10; // todo: calculate the coins based on the number of creatures and decorations
+        float currMoneyBonus = 1f; //start w 1 for the tank itself
+        foreach (Entity e in entities) currMoneyBonus += e.calcMoneyBonus();
+        return currMoneyBonus;
+        
     }
 
     public int getHunger()
@@ -535,7 +601,9 @@ public class Aquarium : MonoBehaviour
     }
     public float getHappiness() // todo: calulate happiness bonus based on the decorations
     {
-        return 0.10f;
+        float currHappiness = 1;
+        foreach (Entity e in entities) currHappiness += e.getHappiness();
+        return currHappiness;
     }
     public int getAlgaesHealth() // todo: calulate algaes health based on algaes
     {

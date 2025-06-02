@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2437054148225612216}
   - component: {fileID: 8392532934253901598}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: AquariumGlass
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -106,8 +106,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Size: {x: 1.3815848, y: 1, z: 1}
+  m_Center: {x: 0.0065408703, y: 0, z: 0}
 --- !u!1 &3580799863694479737
 GameObject:
   m_ObjectHideFlags: 0
@@ -121,7 +121,7 @@ GameObject:
   - component: {fileID: 4974436240710887155}
   - component: {fileID: 4225844767229029124}
   m_Layer: 0
-  m_Name: Cube (2)
+  m_Name: AquariumBottomEdge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -229,7 +229,7 @@ GameObject:
   - component: {fileID: 1263469523517530206}
   - component: {fileID: 4893309287022715642}
   m_Layer: 0
-  m_Name: Cube (1)
+  m_Name: AquariumTopEdge
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
