@@ -67,7 +67,7 @@ GameObject:
   - component: {fileID: 7208136563086529824}
   - component: {fileID: 2935311416565985082}
   m_Layer: 0
-  m_Name: Cube
+  m_Name: AquariumFloorCube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

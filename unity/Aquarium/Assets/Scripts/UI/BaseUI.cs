@@ -25,12 +25,13 @@ public class BaseUI : MonoBehaviour
 
     public void CloseShop()
     {
+        toast.SetActive(false);
         gameObject.SetActive(false);
         GameUI.SetActive(true);
 
     }
 
-    public void ShowToast(string message, float duration = 2f)
+    public void ShowToast(string message, float duration = 4f)
     {
         StartCoroutine(ShowToastCoroutine(message, duration));
     }

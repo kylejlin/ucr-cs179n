@@ -29,7 +29,7 @@ public class SelectedItem : Preview
         }
         else
         {
-            shopManager.ShowToast("Not enough coins", 1);
+            shopManager.ShowToast("Not enough money!", 4);
         }
     }
     public new void Setup(Entity selectedEntity)

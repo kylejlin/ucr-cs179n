@@ -4,11 +4,11 @@ public class Trilobite : MobileCreature
 {
     protected new void Awake()
     {
-        setValues(true); //things in creature and mobile creature need these values
+        // setValues(true); //things in creature and mobile creature need these values
         base.Awake(); //call Creature Start()
-        setValues(true); //but also the standard for other classes has been the base awake is called first
+        // setValues(true); //but also the standard for other classes has been the base awake is called first
         //maybe better to set them in the editor? hm
-
+        
 
     }
     void FixedUpdate() {
