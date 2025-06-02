@@ -13,6 +13,7 @@ public class TankUI : BaseUI
     private TankItem TankItem;
     private List<TankItem> TankItems = new List<TankItem>();
     private bool hasStarted = false;
+    [SerializeField] private float costOfTank = 100f;
     MouseUIManager mouseUIManager;
     protected new void Start()
     {
@@ -32,7 +33,15 @@ public class TankUI : BaseUI
     }
     void AddTank()
     {
-        gameManager.addTank();
+        if (gameManager.CanBuy(costOfTank))
+        {
+            gameManager.buy(costOfTank);
+            gameManager.addTank();
+        }
+        else
+        {
+            ShowToast("Not enough money!", 4);
+        }
     }
 
     void NextTank()

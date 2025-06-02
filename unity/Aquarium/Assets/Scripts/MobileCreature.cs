@@ -30,12 +30,19 @@ public class MobileCreature : Creature
     private float predateCount = 0f; //delta time tracking for ^
 
     public GameObject childPrefab; //used to instantiate new prefab for child 
+    private AudioSource audioSource;
 
     protected new void Awake()
     {
         base.Awake(); //call Creature Start()
         mobileCreatureRB = GetComponent<Rigidbody>();
         animator = GetComponentInChildren<Animator>();
+        audioSource = GetComponent<AudioSource>();
+        if (!shopMode)
+        {
+            print("mobilecreature sound");
+            audioSource.Play();
+        }
 
         initSize();
 
@@ -82,7 +89,16 @@ public class MobileCreature : Creature
             // The creature starved to death. 
             state = BehaviorState.Dying;
         }
+        // TODO: Restore the original condition
+        // after we finish testing the navigation system.
+        //
+        // We force the creature to always hunt so we can test the navigation system.
+        //
         else if (energy <= huntingEnergyThreshold)
+        //
+        // This is another way of writing `else if (true)`,
+        // except the compiler won't complain about unreachable code.
+        //else if (System.Math.Cos(5) < 2)
         {
             state = BehaviorState.Hunting;
             if (animator) animator.SetTrigger("hunt");
@@ -134,6 +150,76 @@ public class MobileCreature : Creature
 
     protected virtual void UpdateHunting()
     {
+        // You can toggle this to test the navigation system.
+        bool USE_NAV = true;
+
+        if (USE_NAV)
+        {
+            UpdateHuntingWithNav();
+        }
+        else
+        {
+            UpdateHuntingWithoutNav();
+        }
+    }
+
+    void UpdateHuntingWithNav()
+    {
+        // I can't find the algae class, so for now,
+        // I'm just targeting the closest entity.
+        ImmobileCreature closest = parentAquarium.FindClosest<ImmobileCreature>(this);
+
+        if (closest == null)
+        {
+            UpdateIdle();
+            return;
+        }
+
+        // Eat the prey if it's within range.
+        {
+            Vector3 delta = closest.transform.position - transform.position;
+            float distance = delta.magnitude;
+
+            if (distance <= maxEatingDistance)
+            {
+                //Eat based on consumeRate 
+                eat(closest.beingEaten(consumeRate));
+                grow(growthRate);
+                return;
+            }
+        }
+
+        // ...Otherwise, move towards the scent of food.
+        {
+            Vector3 targetPositionInWorldCoords = getTargetPositionInWorldCoords();
+            print("target position " + targetPositionInWorldCoords);
+
+            Vector3 delta = targetPositionInWorldCoords - transform.position;
+
+            Vector3 displacement = delta.normalized;
+            float k = speed * 3 * Time.deltaTime;
+            displacement.Scale(new Vector3(k, k, k));
+            transform.position += displacement;
+            rotateTowards(delta);
+        }
+    }
+
+    public Vector3Int getTargetPositionInVoxelCoords()
+    {
+        Vector3 positionInAquariumCoords = getPositionInAquariumCoords();
+        return parentAquarium.getBestNeighborCoordsInVoxelCoords(positionInAquariumCoords);
+    }
+
+    Vector3 getTargetPositionInWorldCoords()
+    {
+        Vector3 positionInAquariumCoords = getPositionInAquariumCoords();
+        Vector3 targetPositionInAquariumCoords = parentAquarium.getBestNeighborCoordsInAquariumCoords(positionInAquariumCoords);
+        return parentAquarium.transformAquariumCoordsToWorldCoords(targetPositionInAquariumCoords);
+    }
+
+    // This is the old hunting algorithm.
+    void UpdateHuntingWithoutNav()
+    {
         // I can't find the algae class, so for now,
         // I'm just targeting the closest entity.
         ImmobileCreature closest = parentAquarium.FindClosest<ImmobileCreature>(this);
@@ -161,6 +247,8 @@ public class MobileCreature : Creature
         transform.position += displacement;
         rotateTowards(delta);
     }
+
+
 
     //Takes in Vector3 velocity to move mobileCreature
     protected void move(Vector3 velocity)
@@ -265,7 +353,7 @@ public class MobileCreature : Creature
         //Debug.Log("curr units per T "+ currUnitsCubedPerT);
         if ((closestTSqrDist > minSpace * minSpace) && (minCMCubedPerT < currCMCubedPerT) && !(parentAquarium.getBreedingMutex()) && (potentialPartner))
         {
-            print("Call duplicate");
+            //print("Call duplicate");
             parentAquarium.setBreedingMutex(true);
             duplicate(randVecNearby, findPartner<MobileCreature>(potentialPartner));
         }

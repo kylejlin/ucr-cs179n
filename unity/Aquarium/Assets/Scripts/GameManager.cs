@@ -124,11 +124,11 @@ public class GameManager : MonoBehaviour
     {
         return money;
     }
-    public bool CanBuy(int price)
+    public bool CanBuy(float price)
     {
         return money >= price;
     }
-    public void buy(int price)
+    public void buy(float price)
     {
         money -= price;
     }
