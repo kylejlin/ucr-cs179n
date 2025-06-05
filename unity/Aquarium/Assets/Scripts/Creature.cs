@@ -18,6 +18,10 @@ public class Creature : Entity
     [SerializeField] protected float minCMCubedPer = 10000; //limits max population according to the size of the tank (each creature needs this amount of cm^3 of water)
     [SerializeField] protected bool scaleDownWhenEaten = false; //should the creature scale down when predated upon (ex. algea) or not (ex. animals) //set in editor 
     [SerializeField] public bool mustBeKilledToBeEaten = false; //does this creature need to die to be predated upon (ex. animals) for not (ex. algea)
+    [SerializeField] protected float socialHappinessWeight = 0.4f; //hardcoded atm. should be generated automatically to always add up to one no matter what combo you use
+    [SerializeField] protected float decorHappinessWeight = 0.4f;
+    [SerializeField] protected float energyHappinessWeight = 0.2f;
+    
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     protected new void Awake()
     {
@@ -191,18 +195,15 @@ public class Creature : Entity
 
     public override float getHappiness()
     {
-        float happiness = energy / maxEnergy * 5;
-        if (parentAquarium.getAllOfType(this).Count > 1) //if creature is not the last of its kind
-        {
-            happiness += 3;
-        }
-        return happiness;
+        //doesnt care about decor or social
+        float happiness = energy / maxEnergy;
+        return happiness * maxHappiness; //should revamp the system to not need this arbitrary multiplier
     }
 
     public override string getCurrStats()
     {
         return ("Name: " + name
-        + "\nHappiness: " + getHappiness()
+        + "\nHappiness: " + getHappiness() / maxHappiness * 100 + "%"
         + "\nEnergy: " + energy / maxEnergy * 100 + "%"
         + "\nMaturity: " + getMaturity() / adultSize * 100 + "%"
         + "\nMetabolism: " + metabolismRate + " energy/s"

@@ -38,9 +38,9 @@ public class gameObject : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // happiness.value = gameManager.getHappiness(); //TODO: Fix happiness slider
-        //happinessText.text = Mathf.RoundToInt(happiness.value * 100) + "%";
-        happinessText.text = Mathf.RoundToInt(gameManager.getHappiness())+" happiness";
+        float h = gameManager.getHappinessRatio();
+        happinessText.text = "Happiness: " + Mathf.RoundToInt(h*100) +"%"; //should it be by aquarium? I feel like a total value is not as helpful. show bars above each aquarium?
+        happiness.value = h;
 
         moneyText.text = gameManager.getMoney().ToString("F2");
 

@@ -56,7 +56,6 @@ public class GameManager : MonoBehaviour
         GameObject aquariumObject = Instantiate(aquariumPrefab, new Vector3(0, 0, 0), Quaternion.identity);
         tanks.Add(aquariumObject.GetComponent<Aquarium>());
         selectTank(0);
-        print(cameraController);
 
         // if (GameObject.Find("Main Camera")) mainCamera = GameObject.Find("Main Camera").GetComponent<Camera>();
         // else Debug.Log("Could not find main camera");
@@ -111,14 +110,16 @@ public class GameManager : MonoBehaviour
     {
         return tanks[selectedTank].getAlgaesHealth();
     }
-    public float getHappiness()
+    public float getHappinessRatio()
     {
         float happiness = 0;
+        float maxHappiness = 0;
         foreach (Aquarium aquarium in tanks)
         {
             happiness += aquarium.getHappiness();
+            maxHappiness += aquarium.getMaxHappiness();
         }
-        return happiness;
+        return happiness / maxHappiness;
     }
     public float getMoney()
     {
