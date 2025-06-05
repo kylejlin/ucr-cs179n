@@ -153,6 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 2
+  nameBase: Trilobite
   uniqueID: -1
   buyMoney: 10
   sellMoney: 8

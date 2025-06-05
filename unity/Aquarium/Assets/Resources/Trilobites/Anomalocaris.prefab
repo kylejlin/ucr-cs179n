@@ -97,6 +97,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 1
+  nameBase: Anomalocaris
   uniqueID: -1
   buyMoney: 50
   sellMoney: 40

@@ -3,8 +3,9 @@ using UnityEngine;
 public class Entity : MonoBehaviour
 {
     [SerializeField] public int id; //id of the entity type, set in gamemanager
+    [SerializeField] public string nameBase = "Entity"; //default name (name of the species) set in prefab editor
     private static double uniqueIDCount = 0;
-    [SerializeField] private double uniqueID = -1; //unique ID of this gameobject only
+    [SerializeField] private double uniqueID = -1; //unique ID of this gameobject only. 
     [SerializeField] private float buyMoney;
     [SerializeField] private float sellMoney;
     [SerializeField] private Rarity rarity;
@@ -19,12 +20,12 @@ public class Entity : MonoBehaviour
     public virtual void Awake()
     {
         SetLayerRecursively(transform, 15); //set to Entity layer for raycast masking
-        if (uniqueID == -1) //need the if because awake is called when a gameobject is disactivated and activated again
-        {
-            name = name + " " + uniqueIDCount;
+        // if (uniqueID == -1) 
+        // {
+            name = nameBase + " " + uniqueIDCount;
             uniqueID = uniqueIDCount;
             uniqueIDCount++;
-        }
+        // }
         outline = gameObject.GetComponent<Outline>();
         if (!outline) outline = gameObject.AddComponent<Outline>(); //outline script that allows the creature or decor to be outlined when player clicks on them
         setOutline(false);
