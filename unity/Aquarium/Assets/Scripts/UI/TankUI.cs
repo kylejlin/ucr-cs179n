@@ -9,6 +9,7 @@ public class TankUI : BaseUI
     private Button AddTankButton;
     private Button NextTankButton;
     private Button PrevTankButton;
+    [SerializeField]
     private GameObject EntitiesGrid;
     private TankItem TankItem;
     private List<TankItem> TankItems = new List<TankItem>();
@@ -18,7 +19,7 @@ public class TankUI : BaseUI
     protected new void Start()
     {
         base.Start();
-        EntitiesGrid = gameObject.transform.Find("EntitiesGrid").gameObject;
+        // EntitiesGrid = gameObject.transform.Find("EntitiesGrid").gameObject;
         AddTankButton = gameObject.transform.Find("AddTankButton").gameObject.GetComponent<Button>();
         NextTankButton = gameObject.transform.Find("NextTankButton").gameObject.GetComponent<Button>();
         PrevTankButton = gameObject.transform.Find("PrevTankButton").gameObject.GetComponent<Button>();
