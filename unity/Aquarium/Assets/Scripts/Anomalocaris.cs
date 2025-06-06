@@ -41,7 +41,7 @@ public class Anomalocaris : MobileCreature
         else
         {
             Vector3 displacement = delta.normalized;
-            mobileCreatureRB.MovePosition(transform.position + displacement * speed * 3 * Time.deltaTime);
+            move(displacement, true);
             // float k = speed * 3 * Time.deltaTime;
             // displacement.Scale(new Vector3(k, k, k));
             // transform.position += displacement;
