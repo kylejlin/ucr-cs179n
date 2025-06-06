@@ -118,7 +118,7 @@ public class MobileCreature : Creature
     {
         if(!canSwim) mobileCreatureRB.AddForce(0, -8, 0); //stay on the bottom
         Vector3 vec = new Vector3(0, 0, 1); //move forward
-        move(vec);
+        move(vec, false);
         float lookAheadDist = 10f * getMaturity(); //would be better for this to be based on collider size and not hard coded
         if (!parentAquarium.checkVoxelInFrontForObstacle(getAllCollidersBoundingBox().center, transform.TransformVector(new Vector3(0, 0, 1)), lookAheadDist))
         {
@@ -255,10 +255,11 @@ public class MobileCreature : Creature
             // if (bounds.Contains(targetPositionInWorldCoords)) return; //prevents flailing around voxel center point. If its already on the target just stop moving
 
             Vector3 delta = targetPositionInWorldCoords - transform.position;
-            // move(delta,true);
+            move(delta,true);
 
-            Vector3 displacement = delta.normalized * speed * 1.3f * Time.deltaTime;
-            mobileCreatureRB.MovePosition(transform.position + displacement);
+            // Vector3 displacement = delta.normalized * speed * 1.3f * Time.deltaTime;
+            // mobileCreatureRB.MovePosition(transform.position + displacement);
+
             rotateTowards(delta);
         }
     }
@@ -343,22 +344,24 @@ public class MobileCreature : Creature
     }
 
 
-
+    //there should be a force based swimming mode and a crawling mode where they are stuck to the surface..
     //Takes in Vector3 velocity to move mobileCreature, needs to have parameter true when creature is hunting
-    protected void move(Vector3 velocity, bool hunting = false)
+    protected void move(Vector3 direction, bool global = false)
     {
         if (shopMode) { Debug.LogWarning("Can't move in shop mode"); return; }
-        //using rigidbody.MovePosition() will make transitioning to the new position smoother if interpolation is enabled
-        //MovePosition(currentPosition + displacement)
-        if (hunting)
-        {
-            mobileCreatureRB.MovePosition(mobileCreatureRB.position + velocity * (speed / 2) * Time.fixedDeltaTime);
-            rotateTowards(velocity);
-        }
-        else
-        {
-            mobileCreatureRB.MovePosition(mobileCreatureRB.position + mobileCreatureRB.rotation * velocity * speed * Time.fixedDeltaTime);
-        }
+        if (global) mobileCreatureRB.AddForce(direction.normalized * speed);
+        else mobileCreatureRB.AddForce(transform.TransformDirection(direction).normalized * speed);
+        // //using rigidbody.MovePosition() will make transitioning to the new position smoother if interpolation is enabled
+        // //MovePosition(currentPosition + displacement)
+        // if (hunting)
+        // {
+        //     mobileCreatureRB.MovePosition(mobileCreatureRB.position + velocity * (speed / 2) * Time.fixedDeltaTime);
+        //     rotateTowards(velocity);
+        // }
+        // else
+        // {
+        //     mobileCreatureRB.MovePosition(mobileCreatureRB.position + mobileCreatureRB.rotation * velocity * speed * Time.fixedDeltaTime);
+        // }
     }
 
     //Takes in Vector3 angularVelocity to rotate mobileCreature in local space
