@@ -180,7 +180,7 @@ MonoBehaviour:
   consumeRate: 20
   speed: 15
   huntingEnergyThreshold: 30
-  maxEatingDistance: 1
+  maxEatingDistance: 0.1
   state: 0
   animator: {fileID: 0}
   breedingCooldown: 8
