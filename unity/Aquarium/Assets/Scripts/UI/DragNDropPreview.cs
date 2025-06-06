@@ -69,6 +69,8 @@ public class DragNDropPreview : MonoBehaviour
         temp.y = myBC.center.y + (myBC.size.y / 2); //this xtra step is necessary because of how transform works ig
         XImage.transform.position = temp; //move the X to be right on top of the entity
 
+        //TODO: fix the roundabout calculations using Rigidbody.PublishTransform. this updates the Transform right then and so the Bounds storage is not necessary and there wont hopefully be any more issues w inaccurate bounds?
+
         //How this works:
         //spawn entity
         //get the bounding box of its colliders only
