@@ -23,7 +23,8 @@ public class GameManager : MonoBehaviour
 
     private static Dictionary<Entity, bool> collection = new();
 
-    [SerializeField] float money = 5f; 
+    [SerializeField] float money = 5f;
+    private float moneyRate = 0f;
     public int level = 1; // todo:
     public int xpCap = 0;
     public int xp = 0;
@@ -77,10 +78,13 @@ public class GameManager : MonoBehaviour
     }
     public void calcMoneyTick(float timeStep)
     {
+        float moneyGained = 0f;
         foreach (Aquarium aquarium in tanks)
         {
-            money += aquarium.calcMoney() * timeStep * 0.01f;
+            moneyGained += aquarium.calcMoney() * timeStep * 0.01f;
         }
+        money += moneyGained;
+        moneyRate = moneyGained / timeStep;
         // this.levelUp(1); // todo: fix this to caluelate an xp
     }
 
@@ -124,6 +128,10 @@ public class GameManager : MonoBehaviour
     public float getMoney()
     {
         return money;
+    }
+    public float getMoneyRate()
+    {
+        return moneyRate;
     }
     public bool CanBuy(float price)
     {

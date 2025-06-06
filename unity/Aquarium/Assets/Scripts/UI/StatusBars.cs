@@ -42,7 +42,7 @@ public class gameObject : MonoBehaviour
         happinessText.text = "Happiness: " + Mathf.RoundToInt(h*100) +"%"; //should it be by aquarium? I feel like a total value is not as helpful. show bars above each aquarium?
         happiness.value = h;
 
-        moneyText.text = gameManager.getMoney().ToString("F2");
+        moneyText.text = gameManager.getMoney().ToString("F2") + "   Rate: "+ gameManager.getMoneyRate().ToString("F2") + " $/s";
 
         int hungerValue = gameManager.getHunger();
         int supplyValue = gameManager.getAlgaesHealth();
