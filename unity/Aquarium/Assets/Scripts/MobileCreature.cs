@@ -512,21 +512,22 @@ public class MobileCreature : Creature
     /// <returns>float happiness value</returns>
     public override float getHappiness()
     {
-        float happiness = energy / maxEnergy * 5;
+        float happiness = energy / maxEnergy * energyHappinessWeight;
         if (parentAquarium.getAllOfType(this).Count > 1) //if creature is not the last of its kind
         {
-            happiness += 5;
+            happiness += socialHappinessWeight;
         }
 
-        Decoration[] decorations = parentAquarium.getAllOfType<Decoration>(); 
-        happiness += decorations.Length * 5; //add based on qty of decorations
-
+        Decoration[] decorations = parentAquarium.getAllOfType<Decoration>();
+        float decorBonus = 0f;
         foreach (Decoration d in decorations) //add based on individual decoration value
         {
-            happiness += d.moneyBonus/2;
+            decorBonus += d.calcMoneyBonus() / 3; //also arbitrary. dont like it
         }
 
-        return happiness;
+        happiness += diminishingReturnsToOne(decorBonus) * decorHappinessWeight;
+
+        return happiness * maxHappiness;
     }
 
 }

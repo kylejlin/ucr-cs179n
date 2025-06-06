@@ -17,7 +17,7 @@ public class ShopItem : Preview
     public new void Setup(Entity selectedEntity)
     {
         base.Setup(selectedEntity);
-        nameText.text = selectedEntity.name;
+        nameText.text = selectedEntity.nameBase;
 
     }
     public Button getButton()

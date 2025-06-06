@@ -3,11 +3,13 @@ using UnityEngine;
 public class Entity : MonoBehaviour
 {
     [SerializeField] public int id; //id of the entity type, set in gamemanager
+    [SerializeField] public string nameBase = "Entity"; //default name (name of the species) set in prefab editor
     private static double uniqueIDCount = 0;
-    [SerializeField] private double uniqueID = -1; //unique ID of this gameobject only
+    [SerializeField] private double uniqueID = -1; //unique ID of this gameobject only. 
     [SerializeField] private float buyMoney;
     [SerializeField] private float sellMoney;
     [SerializeField] private Rarity rarity;
+    [SerializeField] public float maxHappiness = 0f;
     [SerializeField] public Aquarium parentAquarium = null;
     [SerializeField] private Bounds AABB; // set on prefab in Gamemanager when the game starts. Applies to unrotated, unscaled prefab at 0,0,0. This seems janky but I couldn't find a better way because Bounds/Colliders dont update with the transform immediately which leads to a host of problems
     [SerializeField] protected bool shopMode = false; //true if this gameobject is being displayed in UI and so should spawn as an adult and not Update() (frozen, don't interact) 
@@ -19,12 +21,12 @@ public class Entity : MonoBehaviour
     public virtual void Awake()
     {
         SetLayerRecursively(transform, 15); //set to Entity layer for raycast masking
-        if (uniqueID == -1) //need the if because awake is called when a gameobject is disactivated and activated again
-        {
-            name = name + " " + uniqueIDCount;
+        // if (uniqueID == -1) 
+        // {
+            name = nameBase + " " + uniqueIDCount;
             uniqueID = uniqueIDCount;
             uniqueIDCount++;
-        }
+        // }
         outline = gameObject.GetComponent<Outline>();
         if (!outline) outline = gameObject.AddComponent<Outline>(); //outline script that allows the creature or decor to be outlined when player clicks on them
         setOutline(false);
@@ -137,11 +139,11 @@ public class Entity : MonoBehaviour
 
     public virtual string getCurrStats()
     {
-        return "Name: " + name;
+        return "Name: " + nameBase;
     }
     public string getShopStats()
     {
-        return "Name: " + name + "\n" +
+        return "Name: " + nameBase + "\n" +
             "Description: " + description + "\n" +
             "Buy Price: " + buyMoney + "\n" +
             "Sell Price: " + sellMoney;
@@ -159,6 +161,7 @@ public class Entity : MonoBehaviour
     public bool isShopMode() { return shopMode; }
     public void setAABB(Bounds newAABB) { AABB = newAABB; }
     public Bounds getAABB() { return AABB; }
+    public float diminishingReturnsToOne(float x) { return 1 + 1 / (-x - 1);  }
     public virtual float calcMoneyBonus()
     {
         switch (GetRarity())

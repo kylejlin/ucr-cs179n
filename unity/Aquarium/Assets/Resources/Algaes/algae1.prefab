@@ -68,6 +68,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
+  nameBase: Algae
   uniqueID: -1
   buyMoney: 1
   sellMoney: 0
@@ -91,6 +92,10 @@ MonoBehaviour:
   minCMCubedPer: 10000
   scaleDownWhenEaten: 1
   mustBeKilledToBeEaten: 0
+  socialHappinessWeight: 0.4
+  decorHappinessWeight: 0.4
+  energyHappinessWeight: 0.2
+  maxHappiness: 5
   eatRate: 5
   growthCooldown: 60
   demo: 1

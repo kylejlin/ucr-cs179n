@@ -660,11 +660,17 @@ public class Aquarium : MonoBehaviour
     {
         return 20; // todo: calulate hunger percentage based on trilobites
     }
-    public float getHappiness() // todo: calulate happiness bonus based on the decorations
+    public float getHappiness() 
     {
         float currHappiness = 1;
         foreach (Entity e in entities) currHappiness += e.getHappiness();
         return currHappiness;
+    }
+    public float getMaxHappiness()
+    {
+        float maxHappiness = 1;
+        foreach (Entity e in entities) maxHappiness += e.maxHappiness;
+        return maxHappiness;
     }
     public int getAlgaesHealth() // todo: calulate algaes health based on algaes
     {

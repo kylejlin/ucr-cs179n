@@ -158,6 +158,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 6
+  nameBase: Stone Arch
   uniqueID: -1
   buyMoney: 30
   sellMoney: 24
