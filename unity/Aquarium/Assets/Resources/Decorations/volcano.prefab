@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 7
+  nameBase: Volcano
   uniqueID: -1
   buyMoney: 50
   sellMoney: 40

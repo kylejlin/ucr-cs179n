@@ -92,6 +92,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 4
+  nameBase: Medium Rock
   uniqueID: -1
   buyMoney: 5
   sellMoney: 4
