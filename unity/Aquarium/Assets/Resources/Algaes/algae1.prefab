@@ -68,7 +68,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   id: 0
-  nameBase: Algea
+  nameBase: Algae
   uniqueID: -1
   buyMoney: 1
   sellMoney: 0

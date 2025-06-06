@@ -138,11 +138,11 @@ public class Entity : MonoBehaviour
 
     public virtual string getCurrStats()
     {
-        return "Name: " + name;
+        return "Name: " + nameBase;
     }
     public string getShopStats()
     {
-        return "Name: " + name + "\n" +
+        return "Name: " + nameBase + "\n" +
             "Description: " + description + "\n" +
             "Buy Price: " + buyMoney + "\n" +
             "Sell Price: " + sellMoney;
