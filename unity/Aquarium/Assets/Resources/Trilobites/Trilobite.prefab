@@ -176,6 +176,10 @@ MonoBehaviour:
   minCMCubedPer: 10000
   scaleDownWhenEaten: 0
   mustBeKilledToBeEaten: 1
+  socialHappinessWeight: 0.4
+  decorHappinessWeight: 0.4
+  energyHappinessWeight: 0.2
+  maxHappiness: 10
   canSwim: 0
   consumeRate: 20
   speed: 3

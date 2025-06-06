@@ -101,6 +101,7 @@ MonoBehaviour:
   buyMoney: 50
   sellMoney: 40
   rarity: 1
+  maxHappiness: 20
   parentAquarium: {fileID: 0}
   AABB:
     m_Center: {x: -0.077439666, y: 2.992795, z: 0.4961548}
@@ -120,6 +121,9 @@ MonoBehaviour:
   minCMCubedPer: 16000
   scaleDownWhenEaten: 0
   mustBeKilledToBeEaten: 1
+  socialHappinessWeight: 0.1
+  decorHappinessWeight: 0.4
+  energyHappinessWeight: 0.5
   canSwim: 1
   consumeRate: 100
   speed: 3

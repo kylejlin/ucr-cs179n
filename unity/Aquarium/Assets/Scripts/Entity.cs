@@ -8,6 +8,7 @@ public class Entity : MonoBehaviour
     [SerializeField] private float buyMoney;
     [SerializeField] private float sellMoney;
     [SerializeField] private Rarity rarity;
+    [SerializeField] public float maxHappiness = 0f;
     [SerializeField] public Aquarium parentAquarium = null;
     [SerializeField] private Bounds AABB; // set on prefab in Gamemanager when the game starts. Applies to unrotated, unscaled prefab at 0,0,0. This seems janky but I couldn't find a better way because Bounds/Colliders dont update with the transform immediately which leads to a host of problems
     [SerializeField] protected bool shopMode = false; //true if this gameobject is being displayed in UI and so should spawn as an adult and not Update() (frozen, don't interact) 
@@ -159,6 +160,7 @@ public class Entity : MonoBehaviour
     public bool isShopMode() { return shopMode; }
     public void setAABB(Bounds newAABB) { AABB = newAABB; }
     public Bounds getAABB() { return AABB; }
+    public float diminishingReturnsToOne(float x) { return 1 + 1 / (-x - 1);  }
     public virtual float calcMoneyBonus()
     {
         switch (GetRarity())
