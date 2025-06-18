@@ -2,7 +2,7 @@
 
 ### Video
 
-Youtube video link: [Trilobyte- CS 179N Senior Project 
+Demo video link: [Trilobyte- CS 179N Senior Project 
 ](https://www.youtube.com/watch?v=UskI1BW1ZgI)
 ## Overview
 
